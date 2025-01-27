@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
-project(Modian)
+
+project(Modian-win)
 
 set(CMAKE_CXX_STANDARD 23)
 

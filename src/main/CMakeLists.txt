@@ -3,4 +3,4 @@ add_library(
     SHARED
     main.cpp
 )
-target_link_libraries(modian PRIVATE modian_core)
+target_link_libraries(modian PRIVATE modian_core ole32 msctf)

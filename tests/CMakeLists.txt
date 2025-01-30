@@ -16,7 +16,7 @@ add_executable(
 
 target_link_libraries(
     modian_tests
-    modian_lib
+    modian_core
     gtest_main
     gmock_main
 )

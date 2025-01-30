@@ -3,4 +3,4 @@ add_library(
     SHARED
     main.cpp
 )
-target_link_libraries(modian PRIVATE modian_lib)
+target_link_libraries(modian PRIVATE modian_core)

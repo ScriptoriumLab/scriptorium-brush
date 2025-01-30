@@ -1,5 +1,6 @@
-add_executable(
+add_library(
     modian
+    SHARED
     main.cpp
 )
 target_link_libraries(modian PRIVATE modian_lib)

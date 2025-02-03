@@ -81,6 +81,7 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD reason, LPVOID reserved) {
 	case DLL_PROCESS_DETACH:
 		g_h_instance = nullptr;
 		break;
+	default:;
 	}
 	return TRUE;
 }

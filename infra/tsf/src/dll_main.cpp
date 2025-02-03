@@ -19,7 +19,7 @@ __declspec(dllexport) STDAPI DllCanUnloadNow() {
 __declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 	if (!ppv) return E_POINTER;
 
-	class_factory* pFactory = new (std::nothrow) class_factory();
+	auto* pFactory = new (std::nothrow) class_factory();
 	if (!pFactory) return E_OUTOFMEMORY;
 
 	HRESULT hr = pFactory->QueryInterface(riid, ppv);

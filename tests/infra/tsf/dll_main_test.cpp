@@ -9,8 +9,8 @@ __declspec(dllimport) STDAPI DllRegisterServer();
 __declspec(dllimport) STDAPI DllUnregisterServer();
 }
 
-const wchar_t* CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
-const wchar_t* LANGUAGE_PROFILE_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
+const auto CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
+const auto LANGUAGE_PROFILE_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
 
 // 辅助函数：检查注册表项是否存在
 bool RegKeyExists(HKEY root, const wchar_t* path) {

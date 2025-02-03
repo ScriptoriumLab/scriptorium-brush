@@ -38,13 +38,14 @@ set_target_properties(modian PROPERTIES
 )
 
 if(WIN32)
+    set(MODIAN_DLL "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll")
     add_custom_command(TARGET modian POST_BUILD
-        COMMAND sudo regsvr32 -s \"$<TARGET_FILE:modian>\"
+        COMMAND sudo regsvr32 -s "${MODIAN_DLL}"
         COMMENT "Register Modian"
     )
 
     add_custom_target(unregister_modian
-        COMMAND sudo regsvr32 -s /u \"$<TARGET_FILE:modian>\"
+        COMMAND sudo regsvr32 -s /u "${MODIAN_DLL}"
         COMMENT "Unregister Modian"
     )
 endif()

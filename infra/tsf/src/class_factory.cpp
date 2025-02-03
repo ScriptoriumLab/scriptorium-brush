@@ -31,7 +31,7 @@ STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& rii
 	if (!service) return E_OUTOFMEMORY;
 
 	InterlockedIncrement(&g_active_objects);
-	HRESULT hr = service->QueryInterface(riid, ppv);
+	const HRESULT hr = service->QueryInterface(riid, ppv);
 	if (FAILED(hr)) InterlockedDecrement(&g_active_objects);
 
 	return hr;

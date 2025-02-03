@@ -6,9 +6,10 @@
 extern volatile long g_server_lock;
 extern volatile long g_active_objects;
 
-class class_factory : public IClassFactory {
+class class_factory final : public IClassFactory {
 public:
-  	// IUnknown
+	virtual ~class_factory() = default;
+	// IUnknown
 	STDMETHODIMP QueryInterface(REFIID riid, void** ppv) override;
     STDMETHODIMP_(ULONG) AddRef() override;
     STDMETHODIMP_(ULONG) Release() override;

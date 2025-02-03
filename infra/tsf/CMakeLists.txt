@@ -36,3 +36,15 @@ target_link_options(modian PRIVATE "/delayload:msctf.dll")
 set_target_properties(modian PROPERTIES
     OUTPUT_NAME "ModianTSF"
 )
+
+if(WIN32)
+    add_custom_command(TARGET modian POST_BUILD
+        COMMAND sudo regsvr32 -s \"$<TARGET_FILE:modian>\"
+        COMMENT "Register Modian"
+    )
+
+    add_custom_target(unregister_modian
+        COMMAND sudo regsvr32 -s /u \"$<TARGET_FILE:modian>\"
+        COMMENT "Unregister Modian"
+    )
+endif()

@@ -28,19 +28,37 @@ __declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, voi
 }
 
 __declspec(dllexport) STDAPI DllRegisterServer() {
+	// 获取 CLSID 的字符串表示
 	wchar_t clsid_str[40];
 	StringFromGUID2(CLSID_MODIAN_TEXT_SERVICE, clsid_str, ARRAYSIZE(clsid_str));
 
+	// 注册输入法
 	HKEY hkey;
-	if (const auto key_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}"; RegCreateKeyExW(HKEY_LOCAL_MACHINE, key_path, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
+	const wchar_t* key_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
+	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, key_path, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
 		return E_ACCESSDENIED;
 	}
 
-	// 设置默认值
-	RegSetValueExW(hkey, L"", 0, REG_SZ, reinterpret_cast<const BYTE*>(L"Modian Input Method"), (wcslen(L"Modian Input Method") + 1) * sizeof(wchar_t));
+	// 设置输入法描述
+	const wchar_t* description = L"Modian";
+	RegSetValueExW(hkey, L"Description", 0, REG_SZ, reinterpret_cast<const BYTE*>(description), (wcslen(description) + 1) * sizeof(wchar_t));
 
-	// 设置 Description 值
-	RegSetValueExW(hkey, L"Description", 0, REG_SZ, reinterpret_cast<const BYTE*>(L"Modian Input Method"), (wcslen(L"Modian Input Method") + 1) * sizeof(wchar_t));
+	// 注册语言配置文件
+	const wchar_t* language_profile_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
+	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, language_profile_path, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
+		return E_ACCESSDENIED;
+	}
+
+	// 设置语言配置文件的描述
+	RegSetValueExW(hkey, L"Description", 0, REG_SZ, reinterpret_cast<const BYTE*>(description), (wcslen(description) + 1) * sizeof(wchar_t));
+
+	// 设置输入法的图标文件路径（如果有）
+	const wchar_t* icon_file = L"C:\\Path\\To\\Your\\Icon.ico"; // 请替换为实际路径
+	RegSetValueExW(hkey, L"IconFile", 0, REG_SZ, reinterpret_cast<const BYTE*>(icon_file), (wcslen(icon_file) + 1) * sizeof(wchar_t));
+
+	// 设置语言配置文件的启用状态
+	DWORD enable = 1; // 1 表示启用，0 表示禁用
+	RegSetValueExW(hkey, L"Enable", 0, REG_DWORD, reinterpret_cast<const BYTE*>(&enable), sizeof(enable));
 
 	RegCloseKey(hkey);
 

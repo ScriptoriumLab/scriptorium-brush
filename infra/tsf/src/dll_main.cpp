@@ -7,16 +7,16 @@
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
 constexpr auto KEY_PATH{L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}"};
 
-HINSTANCE g_h_instance = nullptr;
-volatile long g_server_lock = 0;
-volatile long g_active_objects = 0;
+HINSTANCE g_h_instance{nullptr};
+volatile long g_server_lock{0};
+volatile long g_active_objects{0};
 
 extern "C" {
 __declspec(dllexport) STDAPI DllCanUnloadNow() {
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
-__declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
+__declspec(dllexport) STDAPI DllGetClassObject(REFCLSID, REFIID riid, void** ppv) {
 	if (!ppv) return E_POINTER;
 
 	auto* pFactory = new (std::nothrow) class_factory();

@@ -22,7 +22,7 @@ bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
 }
 
 // 辅助函数：读取注册表字符串值
-std::wstring read_reg_string(HKEY root, const wchar_t* path, const wchar_t* valueName) {
+std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
     HKEY hKey;
     DWORD size = 0;
     std::wstring result;

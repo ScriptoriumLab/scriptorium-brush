@@ -4,8 +4,8 @@
 #include <vector>
 
 extern "C" {
-__declspec(dllimport) STDAPI DllRegisterServer();
-__declspec(dllimport) STDAPI DllUnregisterServer();
+STDAPI DllRegisterServer();
+STDAPI DllUnregisterServer();
 }
 
 const auto CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";

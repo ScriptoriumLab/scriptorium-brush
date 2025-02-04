@@ -21,11 +21,11 @@ volatile long g_server_lock{0};
 volatile long g_active_objects{0};
 
 extern "C" {
-__declspec(dllexport) STDAPI DllCanUnloadNow() {
+STDAPI DllCanUnloadNow() {
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
-__declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
+STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 	if (!ppv) return E_POINTER;
 
 	auto* pFactory = new (std::nothrow) class_factory();
@@ -36,7 +36,7 @@ __declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, voi
 	return hr;
 }
 
-__declspec(dllexport) STDAPI DllRegisterServer() {
+STDAPI DllRegisterServer() {
 	// 获取 CLSID 的字符串表示
 	wchar_t clsid_str[40];
 	StringFromGUID2(CLSID_MODIAN_TEXT_SERVICE, clsid_str, ARRAYSIZE(clsid_str));
@@ -72,7 +72,7 @@ __declspec(dllexport) STDAPI DllRegisterServer() {
 	return S_OK;
 }
 
-__declspec(dllexport) STDAPI DllUnregisterServer() {
+STDAPI DllUnregisterServer() {
 	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, KEY_PATH) == ERROR_SUCCESS ? S_OK : S_FALSE;
 }
 }

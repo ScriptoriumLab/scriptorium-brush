@@ -40,13 +40,13 @@ std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_
 }
 
 // 辅助函数：读取注册表 DWORD 值
-DWORD RegReadDWORD(HKEY root, const wchar_t* path, const wchar_t* valueName) {
+DWORD read_reg_dword(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
     HKEY hKey;
-    DWORD value = 0;
+    DWORD value{0};
     DWORD size = sizeof(DWORD);
 
     if (RegOpenKeyExW(root, path, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-        RegQueryValueExW(hKey, valueName, nullptr, nullptr, (LPBYTE)&value, &size);
+        RegQueryValueExW(hKey, valueName, nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &size);
         RegCloseKey(hKey);
     }
     return value;
@@ -86,7 +86,7 @@ TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
     EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian");
 
     // 验证启用状态
-    EXPECT_EQ(RegReadDWORD(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
+    EXPECT_EQ(read_reg_dword(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
 }
 
 TEST_F(InputMethodRegistryTest, IconFileConfiguration) {

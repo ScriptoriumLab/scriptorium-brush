@@ -12,8 +12,7 @@ __declspec(dllimport) STDAPI DllUnregisterServer();
 const auto CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
 const auto LANGUAGE_PROFILE_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
 
-// 辅助函数：检查注册表项是否存在
-bool RegKeyExists(HKEY root, const wchar_t* path) {
+bool is_reg_key_exists(HKEY root, const wchar_t* path) {
     HKEY hKey;
     LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey);
     if (result == ERROR_SUCCESS) {
@@ -73,7 +72,7 @@ TEST_F(InputMethodRegistryTest, BasicRegistration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     // 验证主注册表项
-    EXPECT_TRUE(RegKeyExists(HKEY_LOCAL_MACHINE, CLSID_KEY));
+    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
 
     // 验证描述信息
     EXPECT_EQ(RegReadString(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
@@ -83,7 +82,7 @@ TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     // 验证语言配置文件路径
-    EXPECT_TRUE(RegKeyExists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
+    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
 
     // 验证描述信息
     EXPECT_EQ(RegReadString(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian");
@@ -105,6 +104,6 @@ TEST_F(InputMethodRegistryTest, Unregistration) {
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 
     // 验证所有相关项已删除
-    EXPECT_FALSE(RegKeyExists(HKEY_LOCAL_MACHINE, CLSID_KEY));
-    EXPECT_FALSE(RegKeyExists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
+    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
+    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
 }

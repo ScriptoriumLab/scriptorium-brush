@@ -62,7 +62,7 @@ protected:
     }
 };
 
-TEST_F(modian_registry_test, BasicRegistration) {
+TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
@@ -70,7 +70,7 @@ TEST_F(modian_registry_test, BasicRegistration) {
     EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
 }
 
-TEST_F(modian_registry_test, LanguageProfileConfiguration) {
+TEST_F(modian_registry_test, should_get_language_profile_info_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
@@ -80,14 +80,14 @@ TEST_F(modian_registry_test, LanguageProfileConfiguration) {
     EXPECT_EQ(read_reg_dword(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
 }
 
-TEST_F(modian_registry_test, IconFileConfiguration) {
+TEST_F(modian_registry_test, should_get_icon_path_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     const std::wstring expectedIcon = L"C:\\Path\\To\\Your\\Icon.ico";
     EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"IconFile"), expectedIcon);
 }
 
-TEST_F(modian_registry_test, Unregistration) {
+TEST_F(modian_registry_test, should_successfully_unregister_modian_after_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 

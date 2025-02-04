@@ -6,6 +6,7 @@
 #include <windows.h>
 
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE = {0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
+constexpr auto KEY_PATH = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
 
 HINSTANCE g_h_instance = nullptr;
 volatile long g_server_lock = 0;
@@ -34,8 +35,7 @@ __declspec(dllexport) STDAPI DllRegisterServer() {
 
 	// 注册输入法
 	HKEY hkey;
-	const wchar_t* key_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
-	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, key_path, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
+	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, KEY_PATH, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
 		return E_ACCESSDENIED;
 	}
 
@@ -66,9 +66,7 @@ __declspec(dllexport) STDAPI DllRegisterServer() {
 }
 
 __declspec(dllexport) STDAPI DllUnregisterServer() {
-	const auto key_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
-
-	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, key_path) == ERROR_SUCCESS ? S_OK : S_FALSE;
+	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, KEY_PATH) == ERROR_SUCCESS ? S_OK : S_FALSE;
 }
 }
 

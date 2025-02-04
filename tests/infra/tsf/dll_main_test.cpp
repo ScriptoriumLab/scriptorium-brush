@@ -51,7 +51,7 @@ DWORD read_reg_dword(const HKEY& root, const wchar_t* path, const wchar_t* value
     return value;
 }
 
-class InputMethodRegistryTest : public ::testing::Test {
+class modian_registry_test : public ::testing::Test {
 protected:
     void SetUp() override {
         DllUnregisterServer();
@@ -62,7 +62,7 @@ protected:
     }
 };
 
-TEST_F(InputMethodRegistryTest, BasicRegistration) {
+TEST_F(modian_registry_test, BasicRegistration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
@@ -70,7 +70,7 @@ TEST_F(InputMethodRegistryTest, BasicRegistration) {
     EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
 }
 
-TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
+TEST_F(modian_registry_test, LanguageProfileConfiguration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
@@ -80,14 +80,14 @@ TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
     EXPECT_EQ(read_reg_dword(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
 }
 
-TEST_F(InputMethodRegistryTest, IconFileConfiguration) {
+TEST_F(modian_registry_test, IconFileConfiguration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     const std::wstring expectedIcon = L"C:\\Path\\To\\Your\\Icon.ico";
     EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"IconFile"), expectedIcon);
 }
 
-TEST_F(InputMethodRegistryTest, Unregistration) {
+TEST_F(modian_registry_test, Unregistration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 

@@ -10,7 +10,11 @@ constexpr size_t KEY_PATH_SIZE{66};
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
 wchar_t KEY_PATH[KEY_PATH_SIZE]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
 // TODO: extract concat later
-const auto _ = wcscat_s(KEY_PATH, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
+auto concat_key_path_res = wcscat_s(KEY_PATH, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
+
+wchar_t LANGUAGE_PROFILE_PATH[132]{L""};
+auto concat_lang_profile_step1 = wcscat_s(LANGUAGE_PROFILE_PATH, KEY_PATH);
+auto concat_lang_profile_res = wcscat_s(LANGUAGE_PROFILE_PATH, L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}");
 
 HINSTANCE g_h_instance{nullptr};
 volatile long g_server_lock{0};
@@ -44,12 +48,11 @@ __declspec(dllexport) STDAPI DllRegisterServer() {
 	}
 
 	// 设置输入法描述
-	const wchar_t* description = L"Modian";
+	const auto description = L"Modian";
 	RegSetValueExW(hkey, L"Description", 0, REG_SZ, reinterpret_cast<const BYTE*>(description), (wcslen(description) + 1) * sizeof(wchar_t));
 
 	// 注册语言配置文件
-	const wchar_t* language_profile_path = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
-	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, language_profile_path, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
+	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_PATH, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {
 		return E_ACCESSDENIED;
 	}
 

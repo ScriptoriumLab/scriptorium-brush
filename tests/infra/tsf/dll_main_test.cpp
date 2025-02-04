@@ -39,7 +39,6 @@ std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_
     return result;
 }
 
-// 辅助函数：读取注册表 DWORD 值
 DWORD read_reg_dword(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
     HKEY hKey;
     DWORD value{0};

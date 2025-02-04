@@ -39,7 +39,7 @@ set_target_properties(modian PROPERTIES
 
 if(WIN32)
     set(MODIAN_DLL "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll")
-    add_custom_command(TARGET modian POST_BUILD
+    add_custom_target(register_modian
         COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '\"${MODIAN_DLL}\"' -Verb RunAs"
         COMMENT "Registering Modian DLL"
     )

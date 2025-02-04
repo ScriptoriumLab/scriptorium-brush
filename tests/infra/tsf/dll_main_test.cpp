@@ -23,7 +23,7 @@ bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
 
 std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
     HKEY hKey;
-    DWORD size = 0;
+    DWORD size{0};
     std::wstring result;
 
     if (RegOpenKeyExW(root, path, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {

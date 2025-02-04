@@ -63,19 +63,6 @@ constexpr std::array<wchar_t, 39> convert_clsid_to_wchar_t(const CLSID& guid) {
 }
 
 template<size_t L, size_t R>
-constexpr std::array<wchar_t, L + R - 1> concat(const wchar_t (&A)[L], const wchar_t (&B)[R]) {
-	std::array<wchar_t, L + R - 1> res{};
-	for (int i = 0; i < L - 1; ++i) {
-		res[i] = A[i];
-	}
-	for (int i = 0; i < R; ++i) {
-		res[L - 1 + i] = B[i];
-	}
-
-	return res;
-}
-
-template<size_t L, size_t R>
 constexpr std::array<wchar_t, L + R - 1> concat(const wchar_t (&A)[L], const std::array<wchar_t, R>& B) {
 	std::array<wchar_t, L + R - 1> res{};
 	for (int i = 0; i < L - 1; ++i) {

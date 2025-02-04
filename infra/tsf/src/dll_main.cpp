@@ -16,7 +16,7 @@ __declspec(dllexport) STDAPI DllCanUnloadNow() {
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
-__declspec(dllexport) STDAPI DllGetClassObject(REFCLSID, REFIID riid, void** ppv) {
+__declspec(dllexport) STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 	if (!ppv) return E_POINTER;
 
 	auto* pFactory = new (std::nothrow) class_factory();

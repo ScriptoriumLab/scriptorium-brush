@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-// 导入 DLL 导出的注册函数
 extern "C" {
 __declspec(dllimport) STDAPI DllRegisterServer();
 __declspec(dllimport) STDAPI DllUnregisterServer();

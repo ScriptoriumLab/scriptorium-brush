@@ -1,11 +1,14 @@
 #include <new>
 #include <windows.h>
 
+#include "util.h"
+
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/class_factory.h"
 
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
-constexpr auto KEY_PATH{L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}"};
+wchar_t KEY_PATH[66]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
+const auto _ = wcscat_s(KEY_PATH, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
 
 HINSTANCE g_h_instance{nullptr};
 volatile long g_server_lock{0};

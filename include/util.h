@@ -2,7 +2,6 @@
 #define UTIL_H
 
 #include <Windows.h>
-#include <vector>
 #include <array>
 
 // 将一个 4 位数字转换为对应的十六进制宽字符（大写字母）
@@ -60,24 +59,6 @@ constexpr std::array<wchar_t, 39> convert_clsid_to_wchar_t(const CLSID& guid) {
 	str[38] = L'\0';
 
 	return str;
-}
-
-// TODO: 有时间可以加上 concept 限制能够转为 span 的类型，做提前检查
-template <typename X, typename Y>
-std::vector<wchar_t> concat(const X& a, const Y& b) {
-	const auto A = std::span<const wchar_t>(a);
-	const auto B = std::span<const wchar_t>(b);
-	const size_t L = A.size();
-	const size_t R = B.size();
-
-	std::vector<wchar_t> res(L + R - 1);
-	for (size_t i = 0; i < L - 1; ++i) {
-		res[i] = A[i];
-	}
-	for (size_t i = 0; i < R; ++i) {
-		res[L - 1 + i] = B[i];
-	}
-	return res;
 }
 
 #endif //UTIL_H

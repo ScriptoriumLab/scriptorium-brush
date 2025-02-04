@@ -9,13 +9,3 @@ TEST(convert_clsid_to_wchart_test, should_successfully_convert_to_wchart_when_pa
 	ASSERT_EQ(res.size(), 39);
 	ASSERT_STREQ(res.data(), L"{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\0");
 }
-
-TEST(concat_test, should_concat_wchart_raw_array_and_std_array_successfully) {
-	constexpr wchar_t ROOT_PATH[28]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
-	const auto KEY_PATH = concat(ROOT_PATH, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE));
-
-	ASSERT_EQ(KEY_PATH.size(), 66);
-	ASSERT_STREQ(KEY_PATH.data(), L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}");
-
-	ASSERT_STREQ(ROOT_PATH, L"SOFTWARE\\Microsoft\\CTF\\TIP\\");
-}

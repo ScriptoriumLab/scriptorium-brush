@@ -9,6 +9,7 @@
 constexpr size_t KEY_PATH_SIZE{66};
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
 wchar_t KEY_PATH[KEY_PATH_SIZE]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
+// TODO: extract concat later
 const auto _ = wcscat_s(KEY_PATH, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
 
 HINSTANCE g_h_instance{nullptr};

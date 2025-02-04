@@ -12,10 +12,9 @@ __declspec(dllimport) STDAPI DllUnregisterServer();
 const auto CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
 const auto LANGUAGE_PROFILE_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
 
-bool is_reg_key_exists(HKEY root, const wchar_t* path) {
+bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
     HKEY hKey;
-    LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey);
-    if (result == ERROR_SUCCESS) {
+    if (const LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey); result == ERROR_SUCCESS) {
         RegCloseKey(hKey);
         return true;
     }

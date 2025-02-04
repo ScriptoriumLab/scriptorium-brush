@@ -22,7 +22,7 @@ bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
 }
 
 // 辅助函数：读取注册表字符串值
-std::wstring RegReadString(HKEY root, const wchar_t* path, const wchar_t* valueName) {
+std::wstring read_reg_string(HKEY root, const wchar_t* path, const wchar_t* valueName) {
     HKEY hKey;
     DWORD size = 0;
     std::wstring result;
@@ -74,7 +74,7 @@ TEST_F(InputMethodRegistryTest, BasicRegistration) {
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
 
     // 验证描述信息
-    EXPECT_EQ(RegReadString(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
+    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
 }
 
 TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
@@ -84,7 +84,7 @@ TEST_F(InputMethodRegistryTest, LanguageProfileConfiguration) {
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
 
     // 验证描述信息
-    EXPECT_EQ(RegReadString(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian");
+    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian");
 
     // 验证启用状态
     EXPECT_EQ(RegReadDWORD(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
@@ -94,7 +94,7 @@ TEST_F(InputMethodRegistryTest, IconFileConfiguration) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
     const std::wstring expectedIcon = L"C:\\Path\\To\\Your\\Icon.ico";
-    EXPECT_EQ(RegReadString(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"IconFile"), expectedIcon);
+    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"IconFile"), expectedIcon);
 }
 
 TEST_F(InputMethodRegistryTest, Unregistration) {

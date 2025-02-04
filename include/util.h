@@ -2,8 +2,8 @@
 #define UTIL_H
 
 #include <Windows.h>
+#include <vector>
 #include <array>
-#include <iostream>
 
 // 将一个 4 位数字转换为对应的十六进制宽字符（大写字母）
 constexpr wchar_t nibble_to_wchar(uint8_t nibble) {
@@ -62,16 +62,21 @@ constexpr std::array<wchar_t, 39> convert_clsid_to_wchar_t(const CLSID& guid) {
 	return str;
 }
 
-template<size_t L, size_t R>
-constexpr std::array<wchar_t, L + R - 1> concat(const wchar_t (&A)[L], const std::array<wchar_t, R>& B) {
-	std::array<wchar_t, L + R - 1> res{};
-	for (int i = 0; i < L - 1; ++i) {
+// TODO: 有时间可以加上 concept 限制能够转为 span 的类型，做提前检查
+template <typename X, typename Y>
+std::vector<wchar_t> concat(const X& a, const Y& b) {
+	const auto A = std::span<const wchar_t>(a);
+	const auto B = std::span<const wchar_t>(b);
+	const size_t L = A.size();
+	const size_t R = B.size();
+
+	std::vector<wchar_t> res(L + R - 1);
+	for (size_t i = 0; i < L - 1; ++i) {
 		res[i] = A[i];
 	}
-	for (int i = 0; i < R; ++i) {
+	for (size_t i = 0; i < R; ++i) {
 		res[L - 1 + i] = B[i];
 	}
-
 	return res;
 }
 

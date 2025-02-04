@@ -31,7 +31,7 @@ std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_
         // 获取数据大小
         if (RegQueryValueExW(hKey, valueName, nullptr, nullptr, nullptr, &size) == ERROR_SUCCESS) {
             std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 1);
-            if (RegQueryValueExW(hKey, valueName, nullptr, nullptr, (LPBYTE)buffer.data(), &size) == ERROR_SUCCESS) {
+            if (RegQueryValueExW(hKey, valueName, nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer.data()), &size) == ERROR_SUCCESS) {
                 result = buffer.data();
             }
         }

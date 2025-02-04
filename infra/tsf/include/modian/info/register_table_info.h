@@ -3,11 +3,11 @@
 
 #include "util.h"
 
-constexpr size_t KEY_PATH_SIZE{66};
+constexpr size_t CLSID_KEY_SIZE{66};
 constexpr size_t LANGUAGE_PROFILE_KEY_SIZE{132};
 
 constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
-inline wchar_t CLSID_KEY[KEY_PATH_SIZE]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
+inline wchar_t CLSID_KEY[CLSID_KEY_SIZE]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
 // TODO: extract concat later
 inline auto concat_key_path_res = wcscat_s(CLSID_KEY, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
 

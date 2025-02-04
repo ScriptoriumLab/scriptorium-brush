@@ -3,13 +3,22 @@
 #include <string>
 #include <vector>
 
+#include "util.h"
+
 extern "C" {
 STDAPI DllRegisterServer();
 STDAPI DllUnregisterServer();
 }
 
-const auto CLSID_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}";
-const auto LANGUAGE_PROFILE_KEY = L"SOFTWARE\\Microsoft\\CTF\\TIP\\{F7A3B6D1-EC88-41A2-9F5D-7A0E3C8A7B89}\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}";
+constexpr size_t KEY_PATH_SIZE{66};
+
+constexpr CLSID CLSID_MODIAN_TEXT_SERVICE{0xf7a3b6d1, 0xec88, 0x41a2, {0x9f, 0x5d, 0x7a, 0xe, 0x3c, 0x8a, 0x7b, 0x89}};
+wchar_t CLSID_KEY[KEY_PATH_SIZE]{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
+auto concat_key_path_res = wcscat_s(CLSID_KEY, convert_clsid_to_wchar_t(CLSID_MODIAN_TEXT_SERVICE).data());
+
+wchar_t LANGUAGE_PROFILE_KEY[132]{L""};
+auto concat_lang_profile_step1 = wcscat_s(LANGUAGE_PROFILE_KEY, CLSID_KEY);
+auto concat_lang_profile_res = wcscat_s(LANGUAGE_PROFILE_KEY, L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}");
 
 bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
     HKEY hKey;

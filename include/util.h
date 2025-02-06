@@ -1,5 +1,4 @@
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include <Windows.h>
 #include <array>
@@ -60,5 +59,3 @@ constexpr std::array<wchar_t, 39> convert_clsid_to_wchar_t(const CLSID& guid) {
 
 	return str;
 }
-
-#endif //UTIL_H

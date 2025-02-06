@@ -1,5 +1,4 @@
-#ifndef CLASS_FACTORY_H
-#define CLASS_FACTORY_H
+#pragma once
 
 #include <Unknwn.h>
 
@@ -18,5 +17,3 @@ public:
     STDMETHODIMP CreateInstance(IUnknown *p_unk_outer, REFIID riid, void **ppv) override;
     STDMETHODIMP LockServer(BOOL f_lock) override;
 };
-
-#endif //CLASS_FACTORY_H

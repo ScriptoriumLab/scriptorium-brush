@@ -1,5 +1,4 @@
-#ifndef REGISTER_TABLE_INFO_H
-#define REGISTER_TABLE_INFO_H
+#pragma once
 
 #include "util.h"
 
@@ -14,5 +13,3 @@ inline auto concat_key_path_res = wcscat_s(CLSID_KEY, convert_clsid_to_wchar_t(C
 inline wchar_t LANGUAGE_PROFILE_KEY[LANGUAGE_PROFILE_KEY_SIZE]{L""};
 inline auto concat_lang_profile_step1 = wcscat_s(LANGUAGE_PROFILE_KEY, CLSID_KEY);
 inline auto concat_lang_profile_res = wcscat_s(LANGUAGE_PROFILE_KEY, L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}");
-
-#endif //REGISTER_TABLE_INFO_H

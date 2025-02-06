@@ -1,5 +1,4 @@
-#ifndef INPUT_ENGINE_H
-#define INPUT_ENGINE_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -14,5 +13,3 @@ namespace modian::core {
           virtual void load_dictionary(const std::string& path) = 0;
 	};
 }
-
-#endif //INPUT_ENGINE_H

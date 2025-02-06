@@ -1,5 +1,4 @@
-#ifndef TSF_TEXT_SERVICE_H
-#define TSF_TEXT_SERVICE_H
+#pragma once
 
 #include <windows.h>
 #include <msctf.h>
@@ -20,5 +19,3 @@ namespace modian::tsf {
         ITfThreadMgr* thread_mgr_ = nullptr;
 	};
 }
-
-#endif //TSF_TEXT_SERVICE_H

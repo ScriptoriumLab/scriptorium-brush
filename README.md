@@ -6,4 +6,4 @@ This repository is for the Windows version of Modian. Modian is a simple and eas
 
 ## TODO
 
-- [ ] Use `#pragma once` instead of `#ifndef` in header file
+- [x] Use `#pragma once` instead of `#ifndef` in header file

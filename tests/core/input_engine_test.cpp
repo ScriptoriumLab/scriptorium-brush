@@ -5,7 +5,7 @@
 
 TEST(pinyin_engine_test, should_successfully_load_dictionary_and_show_candidates_when_input_correct_pinyin) {
 	modian::core::pinyin_engine engine;
-	engine.load_dictionary(std::string{PROJECT_SOURCE_DIR}.append("/core/include/modian/data/pinyin_dictionary.txt"));
+	engine.load_dictionary(std::string{PROJECT_SOURCE_DIR}.append("/data/pinyin_dictionary.txt"));
 
 	const auto candidates = engine.convert(L"ni");
 

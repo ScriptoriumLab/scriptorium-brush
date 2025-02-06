@@ -1,18 +1,19 @@
+#include <codecvt>
+
 #include "gtest/gtest.h"
-#include "modian/core/input_engine.h"
+#include "modian/core/pinyin_engine.h"
+#include <iostream>
 
-class dummy_engine : public modian::core::input_engine {
-public:
-	std::vector<std::wstring> convert(const std::wstring& input) override {
-		return {L"测试"};
-	}
+TEST(pinyin_engine_test, should_successfully_load_dictionary_and_show_candidates_when_input_correct_pinyin) {
+	modian::core::pinyin_engine engine;
+	engine.load_dictionary("C:/Users/NoaLand/CLionProjects/Modian-win/core/include/modian/data/pinyin_dictionary.txt");
 
-	void load_dictionary(const std::string& path) override {}
-};
+	const auto candidates = engine.convert(L"ni");
 
-TEST(input_engine_test, should_successfully_return_dummy_return) {
-	dummy_engine engine;
-	auto result = engine.convert(L"test");
-	ASSERT_FALSE(result.empty());
-	EXPECT_EQ(result[0], L"测试");
+	ASSERT_EQ(candidates.size(), 3);
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	ASSERT_EQ(converter.to_bytes(candidates.at(0)), std::string{"你"});
+	ASSERT_EQ(converter.to_bytes(candidates.at(1)), std::string{"尼"});
+	ASSERT_EQ(converter.to_bytes(candidates.at(2)), std::string{"泥"});
 }

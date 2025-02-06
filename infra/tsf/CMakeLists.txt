@@ -39,14 +39,29 @@ set_target_properties(modian PROPERTIES
 )
 
 if(WIN32)
+    # 定义 DLL 路径
     set(MODIAN_DLL "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll")
+    # 利用环境变量获取当前用户的主目录
+    set(USER_HOME "$ENV{USERPROFILE}")
+    # 目标词库目录：例如放在 %USERPROFILE%\Modian\Local 下
+    set(MODIAN_ROOT_DIR "${USER_HOME}/Modian/")
+    set(DICTIONARY_DIR "${USER_HOME}/Modian/Local")
+
     add_custom_target(register_modian
+        # 创建 Modian 根目录
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${DICTIONARY_DIR}"
+        # 拷贝词库文件到目标目录
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/data/pinyin_dictionary.txt" "${DICTIONARY_DIR}/pinyin_dictionary.txt"
+        # 使用 regsvr32 注册 Modian
         COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '\"${MODIAN_DLL}\"' -Verb RunAs"
-        COMMENT "Registering Modian DLL"
+        COMMENT "Registering Modian DLL and installing dictionary"
     )
 
     add_custom_target(unregister_modian
+        # 取消注册 DLL
         COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '/u','\"${MODIAN_DLL}\"' -Verb RunAs"
-        COMMENT "Unregistering Modian DLL"
+        # 删除 Modian app 相关所有文件
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${MODIAN_ROOT_DIR}"
+        COMMENT "Unregistering Modian DLL and removing installed dictionary folder"
     )
 endif()

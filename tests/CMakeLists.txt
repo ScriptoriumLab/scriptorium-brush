@@ -25,6 +25,8 @@ target_link_libraries(modian_test
     Advapi32
 )
 
+target_compile_definitions(modian_test PRIVATE PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+
 add_custom_command(TARGET modian_test POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll" $<TARGET_FILE_DIR:modian_test>

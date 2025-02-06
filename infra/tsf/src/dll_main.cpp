@@ -27,10 +27,6 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 }
 
 STDAPI DllRegisterServer() {
-	// 获取 CLSID 的字符串表示
-	wchar_t clsid_str[40];
-	StringFromGUID2(CLSID_MODIAN_TEXT_SERVICE, clsid_str, ARRAYSIZE(clsid_str));
-
 	// 注册输入法
 	HKEY hkey;
 	if (RegCreateKeyExW(HKEY_LOCAL_MACHINE, CLSID_KEY, 0, nullptr, 0, KEY_WRITE, nullptr, &hkey, nullptr) != ERROR_SUCCESS) {

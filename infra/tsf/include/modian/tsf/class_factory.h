@@ -7,6 +7,7 @@ extern volatile long g_active_objects;
 
 class class_factory final : public IClassFactory {
 public:
+	class_factory() : m_ref_count{1} {}
 	virtual ~class_factory() = default;
 	// IUnknown
 	STDMETHODIMP QueryInterface(REFIID riid, void** ppv) override;
@@ -16,4 +17,6 @@ public:
     // IClassFactory
     STDMETHODIMP CreateInstance(IUnknown *p_unk_outer, REFIID riid, void **ppv) override;
     STDMETHODIMP LockServer(BOOL f_lock) override;
+private:
+	LONG m_ref_count;
 };

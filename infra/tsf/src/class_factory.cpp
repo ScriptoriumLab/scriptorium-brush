@@ -17,11 +17,15 @@ STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
 }
 
 STDMETHODIMP_(ULONG) class_factory::AddRef() {
-	return 2;
+	return InterlockedIncrement(&m_ref_count);
 }
 
 STDMETHODIMP_(ULONG) class_factory::Release() {
-	return 1;
+	ULONG count = InterlockedDecrement(&m_ref_count);
+	if (count == 0) {
+		delete this;
+	}
+	return count;
 }
 
 STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {

@@ -1,7 +1,7 @@
 #include <new>
 #include <windows.h>
 
-#include "modian/info/register_table_info.h"
+#include "modian/info/registry_info.h"
 
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/class_factory.h"

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "modian/info/register_table_info.h"
+#include "modian/info/registry_info.h"
 
 extern "C" {
 STDAPI DllRegisterServer();

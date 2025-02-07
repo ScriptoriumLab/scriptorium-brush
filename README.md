@@ -7,3 +7,4 @@ This repository is for the Windows version of Modian. Modian is a simple and eas
 ## TODO
 
 - [x] Use `#pragma once` instead of `#ifndef` in header file
+- [ ] Introduce `application` layer to control status of input_engine and dictionary

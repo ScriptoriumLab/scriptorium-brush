@@ -4,6 +4,11 @@
 #include <fstream>
 #include <sstream>
 
+modian::core::pinyin_engine& modian::core::pinyin_engine::get_instance(const std::string& path) {
+	static pinyin_engine instance{path};
+	return instance;
+}
+
 std::vector<std::wstring> modian::core::pinyin_engine::convert(const std::wstring& input) {
 	if (auto it = dictionary_.find(input); it != dictionary_.end()) {
 		return it->second;
@@ -26,4 +31,9 @@ void modian::core::pinyin_engine::load_dictionary(const std::string& path) {
 			}
 		}
 	}
+}
+
+modian::core::pinyin_engine::pinyin_engine(const std::string& path) {
+	// TODO: 考虑未来异步加载词库
+	this->pinyin_engine::load_dictionary(path);
 }

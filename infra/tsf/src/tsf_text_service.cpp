@@ -1,6 +1,11 @@
 #include "modian/tsf/tsf_text_service.h"
 
+#include <modian/core/pinyin_engine.h>
+
 namespace modian::tsf {
+	tsf_text_service::tsf_text_service() {
+		core::pinyin_engine::get_instance(std::string{DICTIONARY_ROOT}.append("/pinyin_dictionary.txt"));
+	}
 
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		thread_mgr_ = p_thread_mgr;

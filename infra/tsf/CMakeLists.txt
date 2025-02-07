@@ -46,6 +46,7 @@ if(WIN32)
     # 目标词库目录：例如放在 %USERPROFILE%\Modian\Local 下
     set(MODIAN_ROOT_DIR "${USER_HOME}/Modian/")
     set(DICTIONARY_DIR "${USER_HOME}/Modian/Local")
+    target_compile_definitions(modian PRIVATE DICTIONARY_ROOT="${DICTIONARY_DIR}")
 
     add_custom_target(register_modian
         # 创建 Modian 根目录

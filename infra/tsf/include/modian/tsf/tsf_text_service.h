@@ -6,6 +6,7 @@
 namespace modian::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
 	public:
+		tsf_text_service();
 		virtual ~tsf_text_service() = default;
 		STDMETHODIMP Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) override;
 		STDMETHODIMP Deactivate() override;

@@ -6,6 +6,7 @@
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/class_factory.h"
 
+// TODO: maybe need to move to a global info namespace later
 HINSTANCE g_h_instance{nullptr};
 volatile long g_server_lock{0};
 volatile long g_active_objects{0};
@@ -63,16 +64,37 @@ STDAPI DllUnregisterServer() {
 }
 }
 
-BOOL APIENTRY DllMain(HMODULE h_module, DWORD reason, LPVOID reserved) {
-	switch (reason) {
+BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
+	switch (dw_reason) {
 	case DLL_PROCESS_ATTACH:
-		g_h_instance = h_module;
-		DisableThreadLibraryCalls(h_module);
+		g_h_instance = h_instance;
+
+		/**
+		 * TODO: when introduce multi thread, need to add create critical logic:
+		 * if (!InitializeCriticalSectionAndSpinCount(&cs, 0)) {
+		 *     return FALSE;
+		 * }
+		 */
+
+		/**
+		 * TODO: when need to create a UI
+		 * if (!register_window_class()) {
+		 *     return FALSE;
+		 * }
+		 */
+
 		break;
 	case DLL_PROCESS_DETACH:
-		g_h_instance = nullptr;
+		/**
+		 * TODO: when introduce multi thread, need to add delete critical section logic:
+		 * DeleteCriticalSection(cs);
+		 */
 		break;
-	default:;
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
 	}
+
 	return TRUE;
 }

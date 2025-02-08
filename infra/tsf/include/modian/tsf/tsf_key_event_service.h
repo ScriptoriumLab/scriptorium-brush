@@ -3,7 +3,7 @@
 #include <msctf.h>
 
 namespace modian::tsf {
-	class tsf_key_event_service : public ITfKeyEventSink {
+	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
 		tsf_key_event_service();
 		virtual ~tsf_key_event_service() = default;

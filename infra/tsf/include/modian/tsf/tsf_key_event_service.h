@@ -1,6 +1,7 @@
 #pragma once
 
 #include <msctf.h>
+#include <string>
 
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
@@ -21,5 +22,7 @@ namespace modian::tsf {
 		STDMETHODIMP_(ULONG) Release() override;
 	private:
 		LONG ref_count_;
+
+		std::wstring input_pinyin_;
 	};
 }

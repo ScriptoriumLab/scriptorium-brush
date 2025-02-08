@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 
+// TODO: change to get no param
 modian::core::pinyin_engine& modian::core::pinyin_engine::get_instance(const std::string& path) {
 	static pinyin_engine instance{path};
 	return instance;

@@ -11,7 +11,6 @@ HINSTANCE g_h_instance{nullptr};
 volatile long g_server_lock{0};
 volatile long g_active_objects{0};
 
-extern "C" {
 STDAPI DllCanUnloadNow() {
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
@@ -61,7 +60,6 @@ STDAPI DllRegisterServer() {
 
 STDAPI DllUnregisterServer() {
 	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY) == ERROR_SUCCESS ? S_OK : S_FALSE;
-}
 }
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {

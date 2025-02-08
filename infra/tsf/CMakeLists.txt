@@ -14,6 +14,7 @@ add_library(modian SHARED
     src/tsf_key_event_service.cpp
     src/class_factory.cpp
     src/dll/main.cpp
+    src/dll/server.cpp
 )
 
 target_include_directories(modian PUBLIC

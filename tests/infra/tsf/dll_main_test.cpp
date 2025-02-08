@@ -5,10 +5,8 @@
 
 #include "modian/info/registry_info.h"
 
-extern "C" {
 STDAPI DllRegisterServer();
 STDAPI DllUnregisterServer();
-}
 
 bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
     HKEY hKey;

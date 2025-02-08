@@ -10,13 +10,29 @@ namespace modian::tsf {
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		thread_mgr_ = p_thread_mgr;
 		client_id_ = tf_client_id;
-		return S_OK;
+
+		ITfKeystrokeMgr* keystroke_mgr{nullptr};
+		HRESULT hr = p_thread_mgr->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
+		if (SUCCEEDED(hr)) {
+			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
+			p_thread_mgr->Release();
+		}
+
+		return hr;
 	}
 
 	STDMETHODIMP tsf_text_service::Deactivate() {
+		ITfKeystrokeMgr* keystroke_mgr{nullptr};
+		HRESULT hr = thread_mgr_->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
+		if (SUCCEEDED(hr)) {
+			hr = keystroke_mgr->UnadviseKeyEventSink(client_id_);
+			keystroke_mgr->Release();
+		}
+
 		thread_mgr_ = nullptr;
 		client_id_ = TF_CLIENTID_NULL;
-		return S_OK;
+
+		return hr;
 	}
 
 	STDMETHODIMP tsf_text_service::QueryInterface(REFIID riid, void** ppv_obj) {
@@ -27,6 +43,7 @@ namespace modian::tsf {
 			AddRef();
 			return S_OK;
 		}
+
 		*ppv_obj = nullptr;
 		return E_NOINTERFACE;
 	}

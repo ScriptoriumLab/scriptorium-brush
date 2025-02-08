@@ -11,6 +11,7 @@ FetchContent_MakeAvailable(WIL)
 
 add_library(modian SHARED
     src/tsf_text_service.cpp
+    src/tsf_key_event_service.cpp
     src/class_factory.cpp
     src/dll_main.cpp
 )

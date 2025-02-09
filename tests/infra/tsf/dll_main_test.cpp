@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <modian/tsf/dll/register.h>
 
 #include "modian/info/registry_info.h"
 
@@ -56,6 +57,8 @@ protected:
     void TearDown() override {
         DllUnregisterServer();
     }
+private:
+    modian::tsf::dll::auto_com ac{};
 };
 
 TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {

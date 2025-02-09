@@ -12,10 +12,11 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ---
 
-## TODO
+## Tech debt
 
 ### C++ Practice
 - [x] Use `#pragma once` instead of `#ifndef` in header file
+- [ ] Move `class_factory` into `namespace modian::tsf`
 
 ### Architecture
 - [ ] Introduce `application` layer to control status of input_engine and dictionary

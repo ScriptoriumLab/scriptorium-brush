@@ -1,8 +1,11 @@
 #include <windows.h>
 
+#include "modian/tsf/dll/register.h"
 #include "modian/info/registry_info.h"
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
+	modian::tsf::dll::auto_com ac;
+
 	switch (dw_reason) {
 	case DLL_PROCESS_ATTACH:
 		g_h_instance = h_instance;

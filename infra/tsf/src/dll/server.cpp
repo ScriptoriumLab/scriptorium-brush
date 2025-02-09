@@ -19,6 +19,10 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 	return hr;
 }
 
+STDAPI DllUnregisterServer() {
+	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY) == ERROR_SUCCESS ? S_OK : S_FALSE;
+}
+
 STDAPI DllRegisterServer() {
 	// 注册输入法
 	HKEY hkey;
@@ -49,8 +53,4 @@ STDAPI DllRegisterServer() {
 	RegCloseKey(hkey);
 
 	return S_OK;
-}
-
-STDAPI DllUnregisterServer() {
-	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY) == ERROR_SUCCESS ? S_OK : S_FALSE;
 }

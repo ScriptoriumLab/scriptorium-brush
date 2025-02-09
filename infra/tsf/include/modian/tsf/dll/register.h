@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-
 namespace modian::tsf::dll {
 	struct auto_com {
 		auto_com();

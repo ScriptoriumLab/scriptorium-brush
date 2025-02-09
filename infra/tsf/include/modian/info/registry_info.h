@@ -2,6 +2,8 @@
 
 #include "util.h"
 
+inline HINSTANCE g_h_instance{nullptr};
+
 constexpr size_t CLSID_KEY_SIZE{66};
 constexpr size_t LANGUAGE_PROFILE_KEY_SIZE{132};
 

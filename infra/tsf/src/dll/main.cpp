@@ -1,7 +1,6 @@
 #include <windows.h>
 
-// TODO: maybe need to move to a global info namespace later
-HINSTANCE g_h_instance{nullptr};
+#include "modian/info/registry_info.h"
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
 	switch (dw_reason) {

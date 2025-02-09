@@ -10,12 +10,16 @@ namespace modian::tsf::dll {
 		bool b_init;
 	};
 
-	bool register_server();
-	void unregister_server();
+	struct com_registration {
+		com_registration() = delete;
 
-	bool register_profiles();
-	void unregister_profiles();
+		static bool register_server();
+		static void unregister_server();
 
-	bool register_categories();
-	void unregister_categories();
+		static bool register_profiles();
+		static void unregister_profiles();
+
+		static bool register_categories();
+		static void unregister_categories();
+	};
 }

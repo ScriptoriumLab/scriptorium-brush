@@ -20,6 +20,13 @@ inline auto concat_lang_profile_step1 = wcscat_s(LANGUAGE_PROFILE_KEY, CLSID_KEY
 inline auto concat_lang_profile_res = wcscat_s(LANGUAGE_PROFILE_KEY, L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}");
 
 namespace modian::tsf::dll {
+	#define MODIAN_IME_MODEL L"Apartment"
+
+	static constexpr size_t CLSID_STRLEN{38};
+	static constexpr WCHAR MODIAN_IME_REGINFO_PREFIX_CLSID[]{L"CLSID\\"};
+	static constexpr WCHAR MODIAN_IME_REGINFO_KEY_INPROSVR32[]{L"InProcServer32"};
+	static constexpr WCHAR MODIAN_IME_REGINFO_KEY_THREADMODEL[]{L"ThreadingModel"};
+
 	static constexpr auto MODIAN_IME_LANG_ID{MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED)};
 
 	static constexpr WCHAR MODIAN_IME_DESC[]{L"Modian Input Method"};

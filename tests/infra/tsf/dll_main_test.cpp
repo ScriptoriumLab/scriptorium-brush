@@ -1,8 +1,10 @@
+#include <msctf.h>
 #include <gtest/gtest.h>
 #include <windows.h>
 #include <string>
 #include <vector>
-#include <modian/tsf/dll/register.h>
+
+#include "modian/tsf/dll/register.h"
 
 #include "modian/info/registry_info.h"
 
@@ -66,24 +68,26 @@ TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_mo
 
     EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
 
-    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, CLSID_KEY, L"Description"), L"Modian");
+    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian Input Method");
 }
 
-TEST_F(modian_registry_test, should_get_language_profile_info_when_successfully_register_modian) {
+TEST_F(modian_registry_test, should_get_categories_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
-    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
+	ITfCategoryMgr* category_mgr{nullptr};
+	EXPECT_TRUE(CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, reinterpret_cast<void**>(&category_mgr)) == S_OK);
 
-    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian");
+    IEnumGUID* categories;
+    EXPECT_TRUE(category_mgr->EnumCategoriesInItem(modian::tsf::dll::MODIAN_IME_CLSID, &categories) == S_OK);
 
-    EXPECT_EQ(read_reg_dword(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Enable"), 1UL);
-}
-
-TEST_F(modian_registry_test, should_get_icon_path_when_successfully_register_modian) {
-    ASSERT_EQ(DllRegisterServer(), S_OK);
-
-    const std::wstring expectedIcon = L"C:\\Path\\To\\Your\\Icon.ico";
-    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"IconFile"), expectedIcon);
+    GUID guid;
+    ULONG fetched{0};
+    size_t size{0};
+    while (categories->Next(1, &guid, &fetched) == S_OK) {
+        ASSERT_TRUE(std::ranges::find(modian::tsf::dll::MODIAN_SUPPORT_CATEGORIES.begin(), modian::tsf::dll::MODIAN_SUPPORT_CATEGORIES.end(), guid) != modian::tsf::dll::MODIAN_SUPPORT_CATEGORIES.end());
+        ++size;
+    }
+    ASSERT_EQ(size, modian::tsf::dll::MODIAN_SUPPORT_CATEGORIES.size());
 }
 
 TEST_F(modian_registry_test, should_successfully_unregister_modian_after_register_modian) {

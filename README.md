@@ -37,7 +37,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [ ] refactor code in tsf
 
 ### Feature
-- [ ] Introduce logger framework
+- [x] Introduce logger framework -- introduced `spdlog`
 
 ### Architecture
 - [ ] Introduce `application` layer to control status of input_engine and dictionary

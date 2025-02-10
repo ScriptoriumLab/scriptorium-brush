@@ -51,15 +51,14 @@ if(WIN32)
     set(MODIAN_ROOT_DIR "${USER_HOME}/Modian/")
     set(DICTIONARY_DIR "${USER_HOME}/Modian/Local")
     set(MODIAN_LOG_DIR "${USER_HOME}/Modian/Log")
-    set(LOG_FILE "${MODIAN_LOG_DIR}/log")
+    set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}/modian.log")
     target_compile_definitions(modian PRIVATE DICTIONARY_ROOT="${DICTIONARY_DIR}")
-    target_compile_definitions(modian PRIVATE LOG_ROOT="${MODIAN_LOG_DIR}/log")
 
     add_custom_target(register_modian
         # 创建 Modian 根目录、Log 以及本地字典目录
         COMMAND ${CMAKE_COMMAND} -E make_directory "${DICTIONARY_DIR}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${MODIAN_LOG_DIR}"
-        COMMAND ${CMAKE_COMMAND} -E echo "Modian Log" > ${LOG_FILE}
+        COMMAND ${CMAKE_COMMAND} -E touch ${MODIAN_LOG_FILE}
         # 拷贝词库文件到目标目录
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/data/pinyin_dictionary.txt" "${DICTIONARY_DIR}/pinyin_dictionary.txt"
         # 使用 regsvr32 注册 Modian

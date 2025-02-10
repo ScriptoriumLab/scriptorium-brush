@@ -26,7 +26,6 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 			ss << word << L" ";
 		}
 		ss << L"\n";
-		log_message(ss.str().c_str());
 	}
 
 	return S_OK;

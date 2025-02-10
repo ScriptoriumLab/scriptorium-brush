@@ -11,6 +11,14 @@ add_definitions(
     /DUNICODE=1
 )
 
+include(FetchContent)
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.10.0   # 根据需要选择版本
+)
+FetchContent_MakeAvailable(spdlog)
+
 # add subdirectory
 add_subdirectory(core)
 add_subdirectory(infra/tsf)

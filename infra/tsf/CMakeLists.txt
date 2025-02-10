@@ -31,6 +31,7 @@ target_link_libraries(modian
     ole32
     delayimp
     runtimeobject.lib
+    spdlog::spdlog
 )
 
 target_compile_definitions(modian PRIVATE _WIN32_DCOM=1)

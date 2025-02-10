@@ -21,11 +21,10 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 }
 
 STDAPI DllUnregisterServer() {
-	// modian::tsf::dll::com_registration::unregister_profiles();
-	// modian::tsf::dll::com_registration::unregister_categories();
-	// modian::tsf::dll::com_registration::unregister_server();
-	//
-	// return S_OK;
+	modian::tsf::dll::com_registration::unregister_profiles();
+	modian::tsf::dll::com_registration::unregister_categories();
+	modian::tsf::dll::com_registration::unregister_server();
+
 	return RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY) == ERROR_SUCCESS ? S_OK : S_FALSE;
 }
 

@@ -57,7 +57,7 @@ namespace modian::util::logger {
         try {
             const auto logger = spdlog::basic_logger_mt("file_logger", log_path);
             spdlog::set_default_logger(logger);
-            spdlog::set_level(spdlog::level::info);
+            spdlog::set_level(spdlog::level::debug);
             g_loggerInitialized = true;
             spdlog::info("spdlog initialized. Logging to {}", log_path);
         } catch (const spdlog::spdlog_ex &ex) {

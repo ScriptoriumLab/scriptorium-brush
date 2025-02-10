@@ -18,6 +18,7 @@ FetchContent_Declare(
         GIT_TAG v1.10.0   # 根据需要选择版本
 )
 FetchContent_MakeAvailable(spdlog)
+add_compile_definitions(SPDLOG_HEADER_ONLY)
 
 # add subdirectory
 add_subdirectory(core)

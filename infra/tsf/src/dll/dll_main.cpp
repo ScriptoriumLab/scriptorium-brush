@@ -11,9 +11,6 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
 	case DLL_PROCESS_ATTACH:
 		g_h_instance = h_instance;
 
-		modian::util::logger::init_logger();
-		spdlog::info("\n{}", modian::util::logger::ascii_modian_ime);
-
 		/**
 		 * TODO: when introduce multi thread, need to add create critical logic:
 		 * if (!InitializeCriticalSectionAndSpinCount(&cs, 0)) {

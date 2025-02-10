@@ -17,6 +17,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 ### C++ Practice
 - [x] Use `#pragma once` instead of `#ifndef` in header file
 - [ ] Move `class_factory` into `namespace modian::tsf`
+- [ ] refactor code in tsf
 
 ### Feature
 - [ ] Introduce logger framework

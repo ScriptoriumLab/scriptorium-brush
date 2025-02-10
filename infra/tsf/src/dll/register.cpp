@@ -66,3 +66,37 @@ void modian::tsf::dll::com_registration::unregister_profiles() {
 		input_processor_profile_mgr->Release();
 	}
 }
+
+bool modian::tsf::dll::com_registration::register_categories() {
+	ITfCategoryMgr* category_mgr{nullptr};
+	HRESULT hr{S_OK};
+
+	hr = CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, reinterpret_cast<void**>(&category_mgr));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	for (const auto& guid : MODIAN_SUPPORT_CATEGORIES) {
+		hr = category_mgr->RegisterCategory(MODIAN_IME_CLSID, guid, MODIAN_IME_CLSID);
+	}
+
+	category_mgr->Release();
+
+	return (hr == S_OK);
+}
+
+void modian::tsf::dll::com_registration::unregister_categories() {
+	ITfCategoryMgr* category_mgr{nullptr};
+	HRESULT hr{S_OK};
+
+	hr = CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, reinterpret_cast<void**>(&category_mgr));
+	if (FAILED(hr)) {
+		return;
+	}
+
+	for (const auto& guid : MODIAN_SUPPORT_CATEGORIES) {
+		category_mgr->UnregisterCategory(MODIAN_IME_CLSID, guid, MODIAN_IME_CLSID);
+	}
+
+	category_mgr->Release();
+}

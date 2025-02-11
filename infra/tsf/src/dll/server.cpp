@@ -1,6 +1,7 @@
 #include <modian/util/log_util.h>
 #include <spdlog/spdlog.h>
 
+#include "../../../../cmake-build-debug/_deps/spdlog-src/include/spdlog/fmt/bundled/chrono.h"
 #include "modian/info/registry_info.h"
 #include "modian/tsf/class_factory.h"
 #include "modian/tsf/dll/register.h"
@@ -13,12 +14,14 @@ STDAPI DllCanUnloadNow() {
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
+	spdlog::info("Getting class object...");
 	if (!ppv) return E_POINTER;
 
 	auto* pFactory = new (std::nothrow) class_factory();
 	if (!pFactory) return E_OUTOFMEMORY;
 
 	HRESULT hr = pFactory->QueryInterface(riid, ppv);
+	spdlog::info("Class factory returned with {:x}", hr);
 	pFactory->Release(); // 避免内存泄漏
 	return hr;
 }
@@ -33,7 +36,8 @@ STDAPI DllUnregisterServer() {
 	const auto hr = RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY);
 
 	spdlog::info("Successfully unregister Modian IME dll");
-	spdlog::shutdown();
+	// TODO: should shutdown spdlog here, but this will make tests fail, fix this later
+	// spdlog::shutdown();
 
 	return hr == ERROR_SUCCESS ? S_OK : S_FALSE;
 }

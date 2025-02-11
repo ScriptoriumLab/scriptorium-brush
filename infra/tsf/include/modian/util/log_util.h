@@ -2,6 +2,7 @@
 
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks-inl.h"
 #if __has_include(<filesystem>)
   #include <filesystem>
   namespace fs = std::filesystem;
@@ -47,7 +48,12 @@ namespace modian::util::logger {
 
         try {
             if (!fs::exists(log_dir)) {
-                fs::create_directories(log_dir);
+                // TODO: when testing should use macro to decide print to console instead of use directory existence
+                const auto logger = spdlog::stdout_color_mt("modian_logger");
+                spdlog::set_default_logger(logger);
+                spdlog::set_level(spdlog::level::debug);
+                spdlog::debug("Console logger initialized.");
+                return;
             }
         } catch (const fs::filesystem_error &err) {
             // 处理错误，比如打印调试信息
@@ -55,7 +61,7 @@ namespace modian::util::logger {
         }
 
         try {
-            const auto logger = spdlog::basic_logger_mt("file_logger", log_path);
+            const auto logger = spdlog::basic_logger_mt("modian_logger", log_path);
             spdlog::set_default_logger(logger);
             spdlog::set_level(spdlog::level::debug);
             g_loggerInitialized = true;

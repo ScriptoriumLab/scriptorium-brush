@@ -2,7 +2,10 @@
 #include "modian/tsf/tsf_text_service.h"
 #include <wil/com.h>
 
+#include "spdlog/spdlog.h"
+
 STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
+	spdlog::info("Querying interface for class_factory...");
 	if (ppv == nullptr) {
 		return E_POINTER;
 	}
@@ -29,6 +32,7 @@ STDMETHODIMP_(ULONG) class_factory::Release() {
 }
 
 STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {
+	spdlog::info("Creating class_factory instance...");
 	if (p_unk_outer) return CLASS_E_NOAGGREGATION;
 
 	const wil::com_ptr_nothrow service = new (std::nothrow) modian::tsf::tsf_text_service();

@@ -7,6 +7,7 @@
 
 namespace modian::tsf {
 	tsf_text_service::tsf_text_service() {
+		spdlog::info("Initializing tsf_text_service...");
 		core::pinyin_engine::get_instance(DICTIONARY_PATH);
 	}
 

@@ -41,7 +41,6 @@ STDAPI DllUnregisterServer() {
 
 STDAPI DllRegisterServer() {
 	modian::tsf::util::logger::init_logger();
-	spdlog::info("\n{}", modian::tsf::util::logger::ascii_modian_ime);
 
 	spdlog::info("Registering Modian IME dll...");
 

@@ -63,6 +63,7 @@ namespace modian::tsf::util::logger {
                 spdlog::set_default_logger(logger);
                 spdlog::set_level(spdlog::level::debug);
                 spdlog::debug("Console logger initialized.");
+                spdlog::info("\n{}", ascii_modian_ime);
                 g_loggerInitialized = true;
                 return;
             }
@@ -75,7 +76,7 @@ namespace modian::tsf::util::logger {
             spdlog::set_default_logger(logger);
             spdlog::set_level(spdlog::level::debug);
             g_loggerInitialized = true;
-            spdlog::info("spdlog initialized. Logging to {}", log_path);
+            spdlog::info("\n{}", ascii_modian_ime);
         } catch (const spdlog::spdlog_ex &ex) {
             // TODO: add failed exception handler
         }

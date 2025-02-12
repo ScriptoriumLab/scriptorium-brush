@@ -37,9 +37,19 @@ namespace modian::tsf::util::logger {
         if (g_loggerInitialized)
             return;
 
+        // 检查是否已经存在同名日志器
+        auto existing_logger = spdlog::get("modian_logger");
+        if (existing_logger) {
+            spdlog::set_default_logger(existing_logger);
+            spdlog::set_level(spdlog::level::debug);
+            g_loggerInitialized = true;
+            spdlog::debug("Using existing logger: modian_logger");
+            return;
+        }
+
+        // 正常的初始化流程…
         const char* userprofile = std::getenv("USERPROFILE");
         if (!userprofile) {
-            // 如果没有获取到环境变量，可以选择一个默认路径或者直接返回
             return;
         }
 
@@ -53,10 +63,10 @@ namespace modian::tsf::util::logger {
                 spdlog::set_default_logger(logger);
                 spdlog::set_level(spdlog::level::debug);
                 spdlog::debug("Console logger initialized.");
+                g_loggerInitialized = true;
                 return;
             }
         } catch (const fs::filesystem_error &err) {
-            // 处理错误，比如打印调试信息
             return;
         }
 

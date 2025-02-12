@@ -13,7 +13,7 @@ namespace fs = std::experimental::filesystem;
 #error "No filesystem support"
 #endif
 
-namespace modian::util::logger {
+namespace modian::tsf::util::logger {
     static constexpr auto ascii_modian_ime = R"(
         =======================================================================================================================
 

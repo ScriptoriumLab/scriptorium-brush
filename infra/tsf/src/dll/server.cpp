@@ -1,7 +1,6 @@
-#include <modian/util/log_util.h>
 #include <spdlog/spdlog.h>
 
-#include "../../../../cmake-build-debug/_deps/spdlog-src/include/spdlog/fmt/bundled/chrono.h"
+#include "modian/util/logger/log_util.h"
 #include "modian/info/registry_info.h"
 #include "modian/tsf/class_factory.h"
 #include "modian/tsf/dll/register.h"

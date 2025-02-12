@@ -1,5 +1,4 @@
 #include <windows.h>
-#include <modian/util/log_util.h>
 
 #include "modian/tsf/dll/register.h"
 #include "modian/info/registry_info.h"

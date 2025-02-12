@@ -4,7 +4,6 @@
 
 #include "modian/info/modian_info.h"
 #include "modian/core/pinyin_engine.h"
-#include "modian/util/log_util.h"
 
 modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {}
 

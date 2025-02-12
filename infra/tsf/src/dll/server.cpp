@@ -35,8 +35,6 @@ STDAPI DllUnregisterServer() {
 	const auto hr = RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY);
 
 	spdlog::info("Successfully unregister Modian IME dll");
-	// TODO: should shutdown spdlog here, but this will make tests fail, fix this later
-	// spdlog::shutdown();
 
 	return hr == ERROR_SUCCESS ? S_OK : S_FALSE;
 }

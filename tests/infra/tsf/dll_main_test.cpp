@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "spdlog/spdlog.h"
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/dll/register.h"
 #include "modian/info/registry_info.h"
@@ -58,6 +59,7 @@ protected:
 
     void TearDown() override {
         DllUnregisterServer();
+        spdlog::shutdown();
     }
 private:
     modian::tsf::dll::auto_com ac{};

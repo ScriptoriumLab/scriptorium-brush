@@ -39,6 +39,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 ### Feature
 - [x] Introduce logger framework -- introduced `spdlog`
   - [x] Shutdown spdlog when Modian is unregistered from the system
+  - [ ] spdlog cannot log to `modian.log`
 
 ### Architecture
 - [ ] Introduce `application` layer to control status of input_engine and dictionary

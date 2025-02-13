@@ -44,14 +44,14 @@ set_target_properties(modian PROPERTIES
 
 if(WIN32)
     # 定义 DLL 路径
-    set(MODIAN_DLL "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll")
+    set(MODIAN_DLL "${CMAKE_BINARY_DIR}\\infra\\tsf\\Release\\ModianTSF.dll")
     # 利用环境变量获取当前用户的主目录
     set(USER_HOME "$ENV{USERPROFILE}")
     # 目标词库目录：例如放在 %USERPROFILE%\Modian\Local 下
-    set(MODIAN_ROOT_DIR "${USER_HOME}/Modian/")
-    set(DICTIONARY_DIR "${USER_HOME}/Modian/Local")
-    set(MODIAN_LOG_DIR "${USER_HOME}/Modian/Log")
-    set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}/modian.log")
+    set(MODIAN_ROOT_DIR "${USER_HOME}\\Modian\\")
+    set(DICTIONARY_DIR "${USER_HOME}\\Modian\\Local")
+    set(MODIAN_LOG_DIR "${USER_HOME}\\Modian\\Log")
+    set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}\\modian.log")
     target_compile_definitions(modian PRIVATE DICTIONARY_ROOT="${DICTIONARY_DIR}")
 
     add_custom_target(register_modian
@@ -60,7 +60,7 @@ if(WIN32)
         COMMAND ${CMAKE_COMMAND} -E make_directory "${MODIAN_LOG_DIR}"
         COMMAND ${CMAKE_COMMAND} -E touch ${MODIAN_LOG_FILE}
         # 拷贝词库文件到目标目录
-        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/data/pinyin_dictionary.txt" "${DICTIONARY_DIR}/pinyin_dictionary.txt"
+        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}\\data\\pinyin_dictionary.txt" "${DICTIONARY_DIR}\\pinyin_dictionary.txt"
         # 使用 regsvr32 注册 Modian
         COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '\"${MODIAN_DLL}\"' -Verb RunAs"
         COMMENT "Registering Modian DLL and installing dictionary"

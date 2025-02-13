@@ -50,6 +50,7 @@ namespace modian::tsf::util::logger {
         // 正常的初始化流程…
         const char* userprofile = std::getenv("USERPROFILE");
         if (!userprofile) {
+            spdlog::error("Failed to get USERPROFILE environment variable.");
             return;
         }
 
@@ -67,18 +68,17 @@ namespace modian::tsf::util::logger {
                 g_loggerInitialized = true;
                 return;
             }
-        } catch (const fs::filesystem_error &err) {
-            return;
-        }
 
-        try {
             const auto logger = spdlog::basic_logger_mt("modian_logger", log_path);
             spdlog::set_default_logger(logger);
             spdlog::set_level(spdlog::level::debug);
+            spdlog::flush_on(spdlog::level::info);
             g_loggerInitialized = true;
-            spdlog::info("\n{}", ascii_modian_ime);
+            spdlog::debug("File logger initialized.");
+        } catch (const fs::filesystem_error &err) {
+            spdlog::error("Filesystem error: {}", err.what());
         } catch (const spdlog::spdlog_ex &ex) {
-            // TODO: add failed exception handler
+            spdlog::error("Spdlog initialization failed: {}", ex.what());
         }
     }
 }

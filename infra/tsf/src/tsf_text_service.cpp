@@ -29,6 +29,7 @@ namespace modian::tsf {
 	}
 
 	STDMETHODIMP tsf_text_service::Deactivate() {
+		spdlog::info("Deactivating Modian IME...");
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
 		HRESULT hr = thread_mgr_->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
 		if (SUCCEEDED(hr)) {

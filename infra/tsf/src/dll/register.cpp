@@ -41,7 +41,8 @@ bool modian::tsf::dll::com_registration::register_profiles() {
 	}
 
 	// TODO: extract -12 to variable
-	hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), ach_icon_file, cch_a, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
+	// hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), ach_icon_file, cch_a, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
+	hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), nullptr, 0, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
 
 	Exit:
 	if (input_processor_profile_mgr) {

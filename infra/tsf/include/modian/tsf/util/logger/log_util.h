@@ -1,5 +1,7 @@
 #pragma once
 
+#include <WeakReference.h>
+
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/stdout_color_sinks-inl.h"
@@ -80,5 +82,15 @@ namespace modian::tsf::util::logger {
         } catch (const spdlog::spdlog_ex &ex) {
             spdlog::error("Spdlog initialization failed: {}", ex.what());
         }
+    }
+
+    inline std::string wstring_to_string(const std::wstring& wstr) {
+        if (wstr.empty()) {
+            return {};
+        }
+        int sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), nullptr, 0, nullptr, nullptr);
+        std::string str(sizeNeeded, 0);
+        WideCharToMultiByte(CP_UTF8, 0, &wstr[0], (int)wstr.size(), &str[0], sizeNeeded, nullptr, nullptr);
+        return str;
     }
 }

@@ -1,13 +1,18 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <sstream>
+#include <modian/tsf/util/logger/log_util.h>
+#include <spdlog/spdlog.h>
 
 #include "modian/info/modian_info.h"
 #include "modian/core/pinyin_engine.h"
 
-modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {}
+modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
+	spdlog::info("Creating tsf_key_event_service");
+}
 
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
+	spdlog::info("Handling on key down");
 	// TODO: 改一下处理键盘输入的逻辑
 	if (!pf_eaten) return E_POINTER;
 
@@ -17,16 +22,13 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 		auto& engine = modian::core::pinyin_engine::get_instance(DICTIONARY_PATH);
 		std::vector<std::wstring> candidates = engine.convert(input_pinyin_);
 
-		// 在这里，可以调用候选词 UI 模块来更新显示候选词
-		// 例如，输出调试信息：
-		std::wstringstream ss;
-		ss << L"Current composition: " << input_pinyin_ << L"\nCandidates: ";
-		for (const auto& word : candidates) {
-			ss << word << L" ";
+		spdlog::debug("Current composition: {}", util::logger::wstring_to_string(input_pinyin_));
+		for (const auto& candidate : candidates) {
+			spdlog::debug("Candidates: {}", util::logger::wstring_to_string(candidate));
 		}
-		ss << L"\n";
 	}
 
+	spdlog::debug("Finished handling on key down");
 	return S_OK;
 }
 

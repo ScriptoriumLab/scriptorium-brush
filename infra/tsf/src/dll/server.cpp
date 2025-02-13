@@ -9,11 +9,13 @@ volatile long g_server_lock{0};
 volatile long g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
+	modian::tsf::util::logger::init_logger();
 	spdlog::info("Start unloading...");
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
+	modian::tsf::util::logger::init_logger();
 	spdlog::info("Getting class object...");
 	if (!ppv) return E_POINTER;
 
@@ -27,6 +29,7 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 }
 
 STDAPI DllUnregisterServer() {
+	modian::tsf::util::logger::init_logger();
 	spdlog::info("Unregistering Modian IME dll...");
 
 	modian::tsf::dll::com_registration::unregister_profiles();
@@ -43,6 +46,7 @@ STDAPI DllUnregisterServer() {
 STDAPI DllRegisterServer() {
 	modian::tsf::util::logger::init_logger();
 
+    spdlog::info("\n{}", modian::tsf::util::logger::ascii_modian_ime);
 	spdlog::info("Registering Modian IME dll...");
 
 	if (!modian::tsf::dll::com_registration::register_server()

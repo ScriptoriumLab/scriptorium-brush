@@ -9,6 +9,7 @@ volatile long g_server_lock{0};
 volatile long g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
+	spdlog::info("Start unloading...");
 	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
 }
 

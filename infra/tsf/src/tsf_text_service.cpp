@@ -6,7 +6,7 @@
 #include "modian/core/pinyin_engine.h"
 
 namespace modian::tsf {
-	tsf_text_service::tsf_text_service() : input_engine_{std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(DICTIONARY_PATH))} {}
+	tsf_text_service::tsf_text_service() : input_engine_{std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(DICTIONARY_PATH))}, key_event_service_{input_engine_} {}
 
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		spdlog::info("Activating Modian IME...");

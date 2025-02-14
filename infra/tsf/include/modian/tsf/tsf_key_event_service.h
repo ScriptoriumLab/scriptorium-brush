@@ -2,11 +2,14 @@
 
 #include <msctf.h>
 #include <string>
+#include <memory>
+
+#include "modian/core/input_engine.h"
 
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		tsf_key_event_service();
+		explicit tsf_key_event_service(const std::shared_ptr<core::input_engine>& input_engine);
 		virtual ~tsf_key_event_service() = default;
 
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
@@ -24,5 +27,7 @@ namespace modian::tsf {
 		LONG ref_count_;
 
 		std::wstring input_pinyin_;
+
+		std::shared_ptr<core::input_engine> input_engine_;
 	};
 }

@@ -1,5 +1,4 @@
 add_library(modian_core STATIC
-    src/input_engine.cpp
     src/pinyin_engine.cpp
 )
 

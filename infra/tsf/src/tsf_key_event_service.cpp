@@ -17,11 +17,13 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 	if (const auto character{static_cast<wchar_t>(w_param)}; (character >= L'a' && character <= L'z') || (character >= L'A' && character <= L'Z')) {
 		input_pinyin_.push_back(towlower(character));
 
-		std::vector<std::wstring> candidates = input_engine_->convert(input_pinyin_);
+		if (const auto candidates = input_engine_->convert(input_pinyin_); !candidates.empty()) {
+            spdlog::info("Get potential candidates");
+            for (const auto& candidate : candidates) {
+                spdlog::info("Candidates: {}", util::logger::wstring_to_string(candidate));
+            }
 
-		spdlog::debug("Current composition: {}", util::logger::wstring_to_string(input_pinyin_));
-		for (const auto& candidate : candidates) {
-			spdlog::debug("Candidates: {}", util::logger::wstring_to_string(candidate));
+			input_pinyin_.clear();
 		}
 	}
 

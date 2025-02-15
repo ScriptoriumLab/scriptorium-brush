@@ -11,6 +11,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(modian_test
     core/input_engine_test.cpp
     infra/tsf/dll_main_test.cpp
+    infra/tsf/tsf_key_event_service_test.cpp
     util/util_test.cpp
 )
 

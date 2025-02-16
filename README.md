@@ -33,7 +33,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ### C++ Code
 - [x] Use `#pragma once` instead of `#ifndef` in header file
-- [ ] Move `class_factory` into `namespace modian::tsf`
+- [x] Move `class_factory` into `namespace modian::tsf`
 - [ ] Refactor code in tsf
 - [x] Introduce logger framework -- introduced `spdlog`
   - [x] Shutdown spdlog when Modian is unregistered from the system

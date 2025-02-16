@@ -5,12 +5,12 @@
 #include "modian/tsf/class_factory.h"
 #include "modian/tsf/dll/register.h"
 
-volatile long g_server_lock{0};
-volatile long g_active_objects{0};
+volatile long modian::tsf::g_server_lock{0};
+volatile long modian::tsf::g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
 	spdlog::info("Start unloading...");
-	return (g_server_lock == 0 && g_active_objects == 0) ? S_OK : S_FALSE;
+	return (modian::tsf::g_server_lock == 0 && modian::tsf::g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
@@ -18,7 +18,7 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 	spdlog::info("Getting class object...");
 	if (!ppv) return E_POINTER;
 
-	auto* pFactory = new (std::nothrow) class_factory();
+	auto* pFactory = new (std::nothrow) modian::tsf::class_factory();
 	if (!pFactory) return E_OUTOFMEMORY;
 
 	HRESULT hr = pFactory->QueryInterface(riid, ppv);

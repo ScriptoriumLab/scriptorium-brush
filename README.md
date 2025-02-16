@@ -31,19 +31,18 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ## Tech debt
 
-### C++ Practice
+### C++ Code
 - [x] Use `#pragma once` instead of `#ifndef` in header file
 - [ ] Move `class_factory` into `namespace modian::tsf`
 - [ ] Refactor code in tsf
-- [ ] Add abstract of `Logger` in core
-
-### Feature
 - [x] Introduce logger framework -- introduced `spdlog`
   - [x] Shutdown spdlog when Modian is unregistered from the system
   - [x] spdlog cannot log to `modian.log`
+- [ ] Remove redundant code in `util.h` and `registry_info.h`
 
 ### Architecture
 - [ ] Introduce `application` layer to control status of input_engine and dictionary
+- [ ] Add abstract of `Logger` in core
 
 ### Thread Safety
 - [ ] Implement Thread Safety Mechanisms: Introduce appropriate synchronization techniques to manage concurrent access to shared resources, preventing race conditions and ensuring data integrity.
@@ -51,3 +50,6 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [ ] Integrate SQLite for Dictionary Management: Transition to using SQLite for handling the dictionary, facilitating efficient storage, retrieval, and updates in a thread-safe manner.
 - [ ] Develop a Strategy for Dynamic Dictionary Updates: Create a robust plan to handle real-time dictionary updates without disrupting ongoing input processing, ensuring that new entries are seamlessly incorporated.
 - [ ] Conduct Comprehensive Testing: Perform thorough testing under various scenarios to identify and resolve potential threading issues, ensuring the stability and reliability of the input method.
+
+## Bug
+- [ ] Cannot rebuild modian and remove modian directory after unregistering modian IME (Because of spdlog did not shutdown correctly)

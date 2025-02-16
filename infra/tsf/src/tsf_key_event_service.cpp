@@ -4,7 +4,6 @@
 #include <modian/tsf/util/logger/log_util.h>
 #include <spdlog/spdlog.h>
 
-#include "modian/info/modian_info.h"
 #include "modian/core/pinyin_engine.h"
 
 modian::tsf::tsf_key_event_service::tsf_key_event_service(const std::shared_ptr<core::input_engine>& input_engine) : ref_count_{1}, input_engine_{input_engine} {}

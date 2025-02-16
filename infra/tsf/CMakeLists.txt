@@ -52,7 +52,6 @@ if(WIN32)
     set(DICTIONARY_DIR "${USER_HOME}\\Modian\\Local")
     set(MODIAN_LOG_DIR "${USER_HOME}\\Modian\\Log")
     set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}\\modian.log")
-    target_compile_definitions(modian PRIVATE DICTIONARY_ROOT="${DICTIONARY_DIR}")
 
     add_custom_target(register_modian
         # 创建 Modian 根目录、Log 以及本地字典目录

@@ -2,7 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include "modian/info/modian_info.h"
 #include "modian/core/pinyin_engine.h"
 
 namespace modian::tsf {

@@ -5,8 +5,6 @@
 
 #include "util.h"
 
-inline HINSTANCE modian_instance{nullptr};
-
 constexpr size_t CLSID_KEY_SIZE{66};
 constexpr size_t LANGUAGE_PROFILE_KEY_SIZE{132};
 
@@ -20,6 +18,8 @@ inline auto concat_lang_profile_step1 = wcscat_s(LANGUAGE_PROFILE_KEY, CLSID_KEY
 inline auto concat_lang_profile_res = wcscat_s(LANGUAGE_PROFILE_KEY, L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}");
 
 namespace modian::tsf::dll {
+	inline HINSTANCE modian_instance{nullptr};
+
 	#define MODIAN_IME_MODEL L"Apartment"
 
 	static constexpr size_t CLSID_STRLEN{38};

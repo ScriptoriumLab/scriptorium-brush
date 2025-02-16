@@ -6,7 +6,17 @@
 #include "modian/core/pinyin_engine.h"
 
 namespace modian::tsf {
-	tsf_text_service::tsf_text_service() : input_engine_{std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(DICTIONARY_PATH))}, key_event_service_{input_engine_} {}
+	tsf_text_service::tsf_text_service() : key_event_service_{input_engine_} {
+        const char* userprofile = std::getenv("USERPROFILE");
+        if (!userprofile) {
+            spdlog::error("Failed to get USERPROFILE environment variable.");
+            return;
+        }
+
+        const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
+		input_engine_ = std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(dictionary_path));
+		key_event_service_ = tsf_key_event_service{input_engine_};
+	}
 
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		spdlog::info("Activating Modian IME...");

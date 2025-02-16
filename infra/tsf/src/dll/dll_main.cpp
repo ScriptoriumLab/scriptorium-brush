@@ -10,7 +10,7 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
 
 	switch (dw_reason) {
 	case DLL_PROCESS_ATTACH:
-		g_h_instance = h_instance;
+		modian_instance = h_instance;
 
 		/**
 		 * TODO: when introduce multi thread, need to add create critical logic:

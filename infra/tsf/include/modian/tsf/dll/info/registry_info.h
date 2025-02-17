@@ -5,7 +5,6 @@
 #include <vector>
 
 namespace modian::tsf::dll {
-	inline HINSTANCE modian_instance{nullptr};
 
 	static constexpr std::wstring_view MODIAN_IME_MODEL{L"Apartment"};
 

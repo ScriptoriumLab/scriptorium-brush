@@ -3,6 +3,8 @@
 #include <Windows.h>
 
 namespace modian::tsf::dll {
+	inline HINSTANCE modian_instance{nullptr};
+
 	struct auto_com {
 		auto_com();
 		~auto_com();

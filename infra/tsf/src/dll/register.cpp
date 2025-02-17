@@ -1,7 +1,6 @@
 #include "modian/tsf/dll/register.h"
 
 #include <msctf.h>
-#include <iostream>
 #include <strsafe.h>
 
 #include "modian/info/registry_info.h"

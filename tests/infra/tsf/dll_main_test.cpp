@@ -35,7 +35,7 @@ TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_mo
 
     EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::tsf::dll::MODIAN_IME_GUID_PROFILE)).c_str(), L"Description"), L"Modian Input Method");
 
-    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_CLASSES_ROOT, (modian::tsf::dll::MODIAN_IME_REGINFO_PREFIX_CLSID + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::tsf::dll::MODIAN_IME_MODEL);
+    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_CLASSES_ROOT, (modian::tsf::dll::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::tsf::dll::MODIAN_IME_MODEL);
 }
 
 TEST_F(modian_registry_test, should_get_categories_when_successfully_register_modian) {

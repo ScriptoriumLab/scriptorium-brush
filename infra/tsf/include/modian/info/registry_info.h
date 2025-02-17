@@ -12,7 +12,7 @@ namespace modian::tsf::dll {
 
 	static constexpr WCHAR MODIAN_IME_REGINFO_PREFIX_CLSID[]{L"CLSID\\"};
 	static constexpr std::wstring_view MODIAN_REGISTRY_CLSID_ROOT_PATH{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};
-	static constexpr WCHAR MODIAN_IME_REGINFO_KEY_INPROSVR32[]{L"InProcServer32"};
+	static constexpr std::wstring_view MODIAN_IME_REGINFO_KEY_INPROSVR32{L"InProcServer32"};
 	static constexpr WCHAR MODIAN_IME_REGINFO_KEY_THREADMODEL[]{L"ThreadingModel"};
 
 	static constexpr auto MODIAN_IME_LANG_ID{MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED)};

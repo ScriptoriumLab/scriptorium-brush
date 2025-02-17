@@ -115,7 +115,7 @@ bool modian::tsf::dll::com_registration::register_server() {
 			goto Exit;
 		}
 
-		if (RegCreateKeyEx(reg_key_handle, MODIAN_IME_REGINFO_KEY_INPROSVR32, 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_sub_key_handle, &copied_string_len) == ERROR_SUCCESS) {
+		if (RegCreateKeyEx(reg_key_handle, MODIAN_IME_REGINFO_KEY_INPROSVR32.data(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_sub_key_handle, &copied_string_len) == ERROR_SUCCESS) {
 			copied_string_len = GetModuleFileNameW(modian_instance, ach_file_name, ARRAYSIZE(ach_file_name));
 			copied_string_len = copied_string_len >= MAX_PATH - 1 ? MAX_PATH : ++copied_string_len;
 			if (RegSetValueEx(reg_sub_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(ach_file_name), copied_string_len * sizeof(WCHAR)) != ERROR_SUCCESS) {

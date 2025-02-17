@@ -6,7 +6,22 @@
 #include "modian/tsf/util/logger/log_util.h"
 #include "modian/core/pinyin_engine.h"
 
-modian::tsf::tsf_key_event_service::tsf_key_event_service(const std::shared_ptr<core::input_engine>& input_engine) : ref_count_{1}, input_engine_{input_engine} {}
+modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
+	char* userprofile{nullptr};
+	size_t size = 0;
+
+	if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
+		spdlog::error("Failed to retrieve USERPROFILE.");
+		return;
+	}
+
+	const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
+	input_engine_ = std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(dictionary_path));
+}
+
+void modian::tsf::tsf_key_event_service::load_engine(const std::shared_ptr<core::input_engine>& input_engine) {
+	input_engine_ = input_engine;
+}
 
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
 	spdlog::info("Handling on key down");

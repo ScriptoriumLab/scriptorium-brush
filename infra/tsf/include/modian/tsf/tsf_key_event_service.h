@@ -9,8 +9,10 @@
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		explicit tsf_key_event_service(const std::shared_ptr<core::input_engine>& input_engine);
+		tsf_key_event_service();
 		virtual ~tsf_key_event_service() = default;
+
+		void load_engine(const std::shared_ptr<core::input_engine>& input_engine);
 
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
 		STDMETHODIMP OnKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;

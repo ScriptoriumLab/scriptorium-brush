@@ -38,8 +38,8 @@ STDAPI DllUnregisterServer() {
 
 	const auto hr = RegDeleteTreeW(
 		HKEY_LOCAL_MACHINE,
-		(std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH)
-               + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()
+		(std::wstring(modian::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH)
+               + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::info::MODIAN_IME_CLSID)).c_str()
     );
 
 	spdlog::info("Successfully unregister Modian IME dll");

@@ -4,7 +4,7 @@
 #include <string_view>
 #include <vector>
 
-namespace modian::tsf::dll {
+namespace modian::tsf::dll::info {
 
 	static constexpr std::wstring_view MODIAN_IME_MODEL{L"Apartment"};
 

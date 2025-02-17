@@ -5,6 +5,9 @@
 #include "modian/tsf/class_factory.h"
 #include "modian/tsf/dll/register.h"
 
+#include <iostream>
+#include <modian/tsf/dll/dll_util.h>
+
 volatile long modian::tsf::g_server_lock{0};
 volatile long modian::tsf::g_active_objects{0};
 
@@ -35,7 +38,11 @@ STDAPI DllUnregisterServer() {
 	modian::tsf::dll::com_registration::unregister_categories();
 	modian::tsf::dll::com_registration::unregister_server();
 
-	const auto hr = RegDeleteTreeW(HKEY_LOCAL_MACHINE, CLSID_KEY);
+	const auto hr = RegDeleteTreeW(
+		HKEY_LOCAL_MACHINE,
+		(std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH)
+               + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()
+    );
 
 	spdlog::info("Successfully unregister Modian IME dll");
 

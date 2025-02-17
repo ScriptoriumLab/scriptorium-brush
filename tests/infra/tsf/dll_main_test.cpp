@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <modian/tsf/dll/dll_util.h>
 
 #include "spdlog/spdlog.h"
 #include "modian/tsf/tsf_text_service.h"
@@ -68,9 +69,9 @@ private:
 TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
-    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
+    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
 
-    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY, L"Description"), L"Modian Input Method");
+    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}").c_str(), L"Description"), L"Modian Input Method");
 }
 
 TEST_F(modian_registry_test, should_get_categories_when_successfully_register_modian) {
@@ -96,8 +97,8 @@ TEST_F(modian_registry_test, should_successfully_unregister_modian_after_registe
     ASSERT_EQ(DllRegisterServer(), S_OK);
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 
-    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, CLSID_KEY));
-    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, LANGUAGE_PROFILE_KEY));
+    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
+    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\{C00E97BF-4DD6-4C08-9D8D-BA67265F4997}").c_str()));
 }
 
 TEST_F(modian_registry_test, should_successfully_create_input_processor) {

@@ -4,9 +4,7 @@
 #include "modian/info/registry_info.h"
 #include "modian/tsf/class_factory.h"
 #include "modian/tsf/dll/register.h"
-
-#include <iostream>
-#include <modian/tsf/dll/dll_util.h>
+#include "modian/tsf/dll/dll_util.h"
 
 volatile long modian::tsf::g_server_lock{0};
 volatile long modian::tsf::g_active_objects{0};

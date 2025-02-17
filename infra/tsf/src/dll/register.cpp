@@ -122,7 +122,7 @@ bool modian::tsf::dll::com_registration::register_server() {
 				goto Exit;
 			}
 
-			if (RegSetValueEx(reg_sub_key_handle, MODIAN_IME_REGINFO_KEY_THREADMODEL, 0, REG_SZ, reinterpret_cast<const BYTE*>(MODIAN_IME_MODEL.c_str()), (MODIAN_IME_MODEL.size()) * sizeof(WCHAR)) != ERROR_SUCCESS) {
+			if (RegSetValueEx(reg_sub_key_handle, MODIAN_IME_REGINFO_KEY_THREADMODEL, 0, REG_SZ, reinterpret_cast<const BYTE*>(MODIAN_IME_MODEL.data()), (MODIAN_IME_MODEL.size()) * sizeof(WCHAR)) != ERROR_SUCCESS) {
 				goto Exit;
 			}
 

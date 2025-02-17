@@ -14,12 +14,13 @@ add_executable(modian_test
     infra/tsf/tsf_key_event_service_test.cpp
 )
 
-target_include_directories(modian_test PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/tests/include)
+target_include_directories(modian_test PRIVATE ${CMAKE_SOURCE_DIR}/tests/include)
 
 target_link_libraries(modian_test
     PRIVATE
-    modian_core
     modian
+    modian_infra
+    modian_core
     gtest_main
     gmock_main
     Advapi32
@@ -30,5 +31,5 @@ target_compile_definitions(modian_test PRIVATE PROJECT_SOURCE_DIR="${CMAKE_SOURC
 
 add_custom_command(TARGET modian_test POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_BINARY_DIR}/infra/tsf/Release/ModianTSF.dll" $<TARGET_FILE_DIR:modian_test>
+    "${CMAKE_BINARY_DIR}/ModianIME/${CMAKE_CFG_INTDIR}/ModianTSF.dll" $<TARGET_FILE_DIR:modian_test>
 )

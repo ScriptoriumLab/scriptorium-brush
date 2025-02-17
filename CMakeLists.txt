@@ -23,6 +23,7 @@ add_compile_definitions(SPDLOG_HEADER_ONLY)
 # add subdirectory
 add_subdirectory(core)
 add_subdirectory(infra/tsf)
+add_subdirectory(app)
 add_subdirectory(tests)
 
 

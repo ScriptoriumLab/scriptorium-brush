@@ -3,7 +3,7 @@
 #include <msctf.h>
 #include <strsafe.h>
 
-#include "modian/info/registry_info.h"
+#include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/dll/dll_util.h"
 
 modian::tsf::dll::auto_com::auto_com() : b_init{false} {

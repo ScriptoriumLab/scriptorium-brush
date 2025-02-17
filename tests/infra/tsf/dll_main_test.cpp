@@ -8,7 +8,7 @@
 #include "dll/registry_operator.h"
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/dll/register.h"
-#include "modian/info/registry_info.h"
+#include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/dll/dll_util.h"
 
 STDAPI DllRegisterServer();

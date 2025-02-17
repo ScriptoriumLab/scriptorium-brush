@@ -3,7 +3,7 @@
 #include "spdlog/spdlog.h"
 
 #include "modian/tsf/dll/register.h"
-#include "modian/info/registry_info.h"
+#include "modian/tsf/dll/info/registry_info.h"
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVOID pv_reserved) {
 	modian::tsf::dll::auto_com ac;

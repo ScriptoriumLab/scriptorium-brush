@@ -55,15 +55,15 @@ DWORD read_reg_dword(const HKEY& root, const wchar_t* path, const wchar_t* value
 class modian_registry_test : public ::testing::Test {
 protected:
     void SetUp() override {
-        DllUnregisterServer();
+        _ = DllUnregisterServer();
     }
 
     void TearDown() override {
-        DllUnregisterServer();
-        spdlog::shutdown();
+        _ = DllUnregisterServer();
     }
 private:
     modian::tsf::dll::auto_com ac{};
+    HRESULT _{S_OK};
 };
 
 TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {

@@ -6,9 +6,11 @@
 
 namespace modian::tsf {
 	tsf_text_service::tsf_text_service() : key_event_service_{input_engine_} {
-        const char* userprofile = std::getenv("USERPROFILE");
-        if (!userprofile) {
-            spdlog::error("Failed to get USERPROFILE environment variable.");
+        char* userprofile{nullptr};
+        size_t size = 0;
+
+        if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
+            spdlog::error("Failed to retrieve USERPROFILE.");
             return;
         }
 

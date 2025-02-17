@@ -14,7 +14,7 @@ add_executable(modian_test
     infra/tsf/tsf_key_event_service_test.cpp
 )
 
-target_include_directories(modian_test PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(modian_test PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/tests/include)
 
 target_link_libraries(modian_test
     PRIVATE

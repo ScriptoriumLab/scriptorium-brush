@@ -3,42 +3,16 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include <modian/tsf/dll/dll_util.h>
-
 #include "spdlog/spdlog.h"
+
+#include "dll/registry_operator.h"
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/dll/register.h"
 #include "modian/info/registry_info.h"
+#include "modian/tsf/dll/dll_util.h"
 
 STDAPI DllRegisterServer();
 STDAPI DllUnregisterServer();
-
-bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
-    HKEY hKey;
-    if (const LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey); result == ERROR_SUCCESS) {
-        RegCloseKey(hKey);
-        return true;
-    }
-    return false;
-}
-
-std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
-    HKEY hKey;
-    DWORD size{0};
-    std::wstring result;
-
-    if (RegOpenKeyExW(root, path, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-        // 获取数据大小
-        if (RegQueryValueExW(hKey, valueName, nullptr, nullptr, nullptr, &size) == ERROR_SUCCESS) {
-            std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 1);
-            if (RegQueryValueExW(hKey, valueName, nullptr, nullptr, reinterpret_cast<LPBYTE>(buffer.data()), &size) == ERROR_SUCCESS) {
-                result = buffer.data();
-            }
-        }
-        RegCloseKey(hKey);
-    }
-    return result;
-}
 
 class modian_registry_test : public ::testing::Test {
 protected:
@@ -57,11 +31,11 @@ private:
 TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
-    EXPECT_TRUE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
+    EXPECT_TRUE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
 
-    EXPECT_EQ(read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::tsf::dll::MODIAN_IME_GUID_PROFILE)).c_str(), L"Description"), L"Modian Input Method");
+    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::tsf::dll::MODIAN_IME_GUID_PROFILE)).c_str(), L"Description"), L"Modian Input Method");
 
-    EXPECT_EQ(read_reg_string(HKEY_CLASSES_ROOT, (modian::tsf::dll::MODIAN_IME_REGINFO_PREFIX_CLSID + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::tsf::dll::MODIAN_IME_MODEL);
+    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_CLASSES_ROOT, (modian::tsf::dll::MODIAN_IME_REGINFO_PREFIX_CLSID + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::tsf::dll::MODIAN_IME_MODEL);
 }
 
 TEST_F(modian_registry_test, should_get_categories_when_successfully_register_modian) {
@@ -87,8 +61,8 @@ TEST_F(modian_registry_test, should_successfully_unregister_modian_after_registe
     ASSERT_EQ(DllRegisterServer(), S_OK);
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 
-    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
-    EXPECT_FALSE(is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::tsf::dll::MODIAN_IME_GUID_PROFILE)).c_str()));
+    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID)).c_str()));
+    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::tsf::dll::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::tsf::dll::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::tsf::dll::MODIAN_IME_GUID_PROFILE)).c_str()));
 }
 
 TEST_F(modian_registry_test, should_successfully_create_input_processor) {

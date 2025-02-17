@@ -1,13 +1,14 @@
 #pragma once
 
 #include <msctf.h>
+#include <string>
 #include <string_view>
 #include <vector>
 
 namespace modian::tsf::dll {
 	inline HINSTANCE modian_instance{nullptr};
 
-	#define MODIAN_IME_MODEL L"Apartment"
+	static const std::wstring MODIAN_IME_MODEL{L"Apartment"};
 
 	static constexpr WCHAR MODIAN_IME_REGINFO_PREFIX_CLSID[]{L"CLSID\\"};
 	static constexpr std::wstring_view MODIAN_REGISTRY_CLSID_ROOT_PATH{L"SOFTWARE\\Microsoft\\CTF\\TIP\\"};

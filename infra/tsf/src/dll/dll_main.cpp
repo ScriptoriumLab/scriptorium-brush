@@ -5,7 +5,7 @@
 #include "modian/tsf/dll/register.h"
 #include "modian/info/registry_info.h"
 
-BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
+BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVOID pv_reserved) {
 	modian::tsf::dll::auto_com ac;
 
 	switch (dw_reason) {
@@ -37,6 +37,8 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, LPVOID pv_reserved) {
 	case DLL_THREAD_ATTACH:
 		break;
 	case DLL_THREAD_DETACH:
+		break;
+	default:
 		break;
 	}
 

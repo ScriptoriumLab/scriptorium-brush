@@ -40,18 +40,6 @@ std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_
     return result;
 }
 
-DWORD read_reg_dword(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
-    HKEY hKey;
-    DWORD value{0};
-    DWORD size = sizeof(DWORD);
-
-    if (RegOpenKeyExW(root, path, 0, KEY_READ, &hKey) == ERROR_SUCCESS) {
-        RegQueryValueExW(hKey, valueName, nullptr, nullptr, reinterpret_cast<LPBYTE>(&value), &size);
-        RegCloseKey(hKey);
-    }
-    return value;
-}
-
 class modian_registry_test : public ::testing::Test {
 protected:
     void SetUp() override {

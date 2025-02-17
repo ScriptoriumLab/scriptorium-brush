@@ -34,14 +34,14 @@ bool modian::tsf::dll::com_registration::register_profiles() {
 	ach_icon_file[cch_a] = '\0';
 
 	size_t len_of_desc{0};
-	hr = StringCchLength(MODIAN_IME_DESC, STRSAFE_MAX_CCH, &len_of_desc);
+	hr = StringCchLength(MODIAN_IME_DESC.data(), STRSAFE_MAX_CCH, &len_of_desc);
 	if (hr != S_OK) {
 		goto Exit;
 	}
 
 	// TODO: extract -12 to variable
 	// hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), ach_icon_file, cch_a, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
-	hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), nullptr, 0, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
+	hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC.data(), static_cast<ULONG>(len_of_desc), nullptr, 0, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
 
 	Exit:
 	if (input_processor_profile_mgr) {
@@ -111,7 +111,7 @@ bool modian::tsf::dll::com_registration::register_server() {
 	WCHAR ach_file_name[MAX_PATH]{'\0'};
 
 	if (RegCreateKeyEx(HKEY_CLASSES_ROOT, ach_ime_key.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_key_handle, &copied_string_len) == ERROR_SUCCESS) {
-		if (RegSetValueEx(reg_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(MODIAN_IME_DESC), (_countof(MODIAN_IME_DESC)) * sizeof(WCHAR)) != ERROR_SUCCESS) {
+		if (RegSetValueEx(reg_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(MODIAN_IME_DESC.data()), MODIAN_IME_DESC.size() * sizeof(WCHAR)) != ERROR_SUCCESS) {
 			goto Exit;
 		}
 

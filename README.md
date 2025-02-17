@@ -38,10 +38,11 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [x] Introduce logger framework -- introduced `spdlog`
   - [x] Shutdown spdlog when Modian is unregistered from the system
   - [x] spdlog cannot log to `modian.log`
-- [ ] Remove redundant code in `util.h` and `registry_info.h`
+- [x] Remove redundant code in `util.h` and `registry_info.h`
 
 ### Architecture
-- [ ] Introduce `application` layer to control status of input_engine and dictionary
+- [x] Introduce `app` layer to maintain `dll_main` and `server`
+- [ ] Introduce `manager` layer to manage different types of input engine
 - [ ] Add abstract of `Logger` in core
 
 ### Thread Safety

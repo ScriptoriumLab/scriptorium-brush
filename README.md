@@ -25,7 +25,7 @@ This repository is for the Windows version of Modian. Modian is a simple and eas
 
 According to clean architecture, the architecture of Modian is designed like below:
 
-![Modian Architecture V0.1.1](./docs/Modian%20Architecture%20V0.1.1.png)
+![Modian Architecture V0.1.2](./docs/Modian%20Architecture%20V0.1.2.png)
 
 ---
 

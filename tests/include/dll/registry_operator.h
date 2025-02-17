@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace modian::tests::registry_operator {
-    bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
+    inline bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
         HKEY hKey;
         if (const LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey); result == ERROR_SUCCESS) {
             RegCloseKey(hKey);
@@ -14,7 +14,7 @@ namespace modian::tests::registry_operator {
         return false;
     }
 
-    std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
+    inline std::wstring read_reg_string(const HKEY& root, const wchar_t* path, const wchar_t* valueName) {
         HKEY hKey;
         DWORD size{0};
         std::wstring result;

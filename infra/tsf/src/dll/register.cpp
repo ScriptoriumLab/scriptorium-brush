@@ -108,16 +108,10 @@ bool modian::tsf::dll::com_registration::register_server() {
 	HKEY reg_key_handle{nullptr};
 	HKEY reg_sub_key_handle{nullptr};
 	bool ret{false};
-	WCHAR ach_ime_key[ARRAYSIZE(MODIAN_IME_REGINFO_PREFIX_CLSID) + CLSID_STRLEN]{'\0'};
+	const std::wstring ach_ime_key{MODIAN_IME_REGINFO_PREFIX_CLSID + util::convert_clsid_to_string(MODIAN_IME_CLSID)};
 	WCHAR ach_file_name[MAX_PATH]{'\0'};
 
-	if (!util::clsid_to_string(MODIAN_IME_CLSID, ach_ime_key + ARRAYSIZE(MODIAN_IME_REGINFO_PREFIX_CLSID) - 1)) {
-		return false;
-	}
-
-	memcpy(ach_ime_key, MODIAN_IME_REGINFO_PREFIX_CLSID, sizeof(MODIAN_IME_REGINFO_PREFIX_CLSID) - sizeof(WCHAR));
-
-	if (RegCreateKeyEx(HKEY_CLASSES_ROOT, ach_ime_key, 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_key_handle, &copied_string_len) == ERROR_SUCCESS) {
+	if (RegCreateKeyEx(HKEY_CLASSES_ROOT, ach_ime_key.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_key_handle, &copied_string_len) == ERROR_SUCCESS) {
 		if (RegSetValueEx(reg_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(MODIAN_IME_DESC), (_countof(MODIAN_IME_DESC)) * sizeof(WCHAR)) != ERROR_SUCCESS) {
 			goto Exit;
 		}
@@ -152,15 +146,9 @@ bool modian::tsf::dll::com_registration::register_server() {
 }
 
 void modian::tsf::dll::com_registration::unregister_server() {
-	WCHAR ach_ime_key[ARRAYSIZE(MODIAN_IME_REGINFO_PREFIX_CLSID) + CLSID_STRLEN] = {'\0'};
+	const std::wstring ach_ime_key{MODIAN_IME_REGINFO_PREFIX_CLSID + util::convert_clsid_to_string(MODIAN_IME_CLSID)};
 
-	if (!util::clsid_to_string(MODIAN_IME_CLSID, ach_ime_key + ARRAYSIZE(MODIAN_IME_REGINFO_PREFIX_CLSID) - 1)) {
-		return;
-	}
-
-	memcpy(ach_ime_key, MODIAN_IME_REGINFO_PREFIX_CLSID, sizeof(MODIAN_IME_REGINFO_PREFIX_CLSID) - sizeof(WCHAR));
-
-	recurse_delete_key(HKEY_CLASSES_ROOT, ach_ime_key);
+	recurse_delete_key(HKEY_CLASSES_ROOT, ach_ime_key.c_str());
 }
 
 LONG modian::tsf::dll::com_registration::recurse_delete_key(HKEY h_parent_key, LPCTSTR lpsz_key) {

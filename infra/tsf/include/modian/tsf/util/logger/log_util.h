@@ -40,8 +40,7 @@ namespace modian::tsf::util::logger {
             return;
 
         // 检查是否已经存在同名日志器
-        auto existing_logger = spdlog::get("modian_logger");
-        if (existing_logger) {
+        if (const auto existing_logger = spdlog::get("modian_logger")) {
             spdlog::set_default_logger(existing_logger);
             spdlog::set_level(spdlog::level::debug);
             g_loggerInitialized = true;
@@ -50,14 +49,16 @@ namespace modian::tsf::util::logger {
         }
 
         // 正常的初始化流程…
-        const char* userprofile = std::getenv("USERPROFILE");
-        if (!userprofile) {
-            spdlog::error("Failed to get USERPROFILE environment variable.");
+        char* userprofile{nullptr};
+        size_t size = 0;
+
+        if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
+            spdlog::error("Failed to retrieve USERPROFILE.");
             return;
         }
 
-        std::string log_dir = std::string(userprofile) + "/Modian/Log";
-        std::string log_path = log_dir + "/modian.log";
+        const std::string log_dir = std::string(userprofile) + "/Modian/Log";
+        const std::string log_path = log_dir + "/modian.log";
 
         try {
             if (!fs::exists(log_dir)) {

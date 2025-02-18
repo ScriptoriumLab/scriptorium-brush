@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 
-#include "modian/core/input_engine.h"
+#include "modian/core/engine/input_engine.h"
 
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {

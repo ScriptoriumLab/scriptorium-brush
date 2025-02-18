@@ -1,6 +1,6 @@
 #pragma once
 
-#include "modian/core/input_engine.h"
+#include "modian/core/engine/input_engine.h"
 
 #include <unordered_map>
 #include <vector>

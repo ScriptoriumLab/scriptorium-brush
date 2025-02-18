@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "modian/core/pinyin_engine.h"
+#include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {

@@ -2,8 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include "modian/core/pinyin_engine.h"
-
 namespace modian::tsf {
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		spdlog::info("Activating Modian IME...");

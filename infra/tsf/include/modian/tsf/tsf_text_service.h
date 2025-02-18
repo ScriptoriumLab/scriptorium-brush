@@ -5,7 +5,7 @@
 #include <msctf.h>
 
 #include "tsf_key_event_service.h"
-#include "modian/core/pinyin_engine.h"
+#include "modian/core/engine/pinyin_engine.h"
 
 namespace modian::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {

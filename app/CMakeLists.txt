@@ -10,7 +10,7 @@ target_include_directories(modian PUBLIC
 
 target_link_libraries(modian
     PRIVATE
-    modian_infra
+    modian_tsf
     ole32
     delayimp
     runtimeobject.lib

@@ -9,20 +9,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(WIL)
 
-add_library(modian_infra STATIC
+add_library(modian_tsf STATIC
     src/tsf_text_service.cpp
     src/tsf_key_event_service.cpp
     src/class_factory.cpp
     src/dll/register.cpp
 )
 
-target_include_directories(modian_infra PUBLIC
+target_include_directories(modian_tsf PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     PRIVATE ${WIL_SOURCE_DIR}/include
 )
 
-target_link_libraries(modian_infra
+target_link_libraries(modian_tsf
     PRIVATE
     modian_core
     spdlog::spdlog

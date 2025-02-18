@@ -9,7 +9,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(modian_test
-    core/input_engine_test.cpp
+    core/engine/input_engine_test.cpp
     infra/tsf/dll_main_test.cpp
     infra/tsf/tsf_key_event_service_test.cpp
 )

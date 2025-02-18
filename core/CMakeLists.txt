@@ -1,5 +1,5 @@
 add_library(modian_core STATIC
-        src/engine/pinyin_engine.cpp
+    src/engine/pinyin_engine.cpp
 )
 
 target_include_directories(modian_core PUBLIC

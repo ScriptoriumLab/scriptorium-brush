@@ -4,6 +4,7 @@
 
 namespace modian::core {
 	class console_logger final : public base_logger {
+	public:
 		~console_logger() override = default;
 
         void info(const std::string& message) override;

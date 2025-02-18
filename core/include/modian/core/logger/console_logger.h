@@ -1,9 +1,9 @@
 #pragma once
 
-#include "modian/core/logger/logger.h"
+#include "modian/core/logger/base_logger.h"
 
 namespace modian::core {
-	class console_logger final : public i_logger {
+	class console_logger final : public base_logger {
 		~console_logger() override = default;
 
         void info(const std::string& message) override;

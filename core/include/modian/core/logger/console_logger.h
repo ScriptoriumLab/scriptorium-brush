@@ -3,7 +3,7 @@
 #include "modian/core/logger/logger.h"
 
 namespace modian::core {
-	class console_logger final : public logger {
+	class console_logger final : public i_logger {
 		~console_logger() override = default;
 
         void info(const std::string& message) override;

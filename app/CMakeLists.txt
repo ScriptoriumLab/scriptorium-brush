@@ -11,10 +11,11 @@ target_include_directories(modian PUBLIC
 target_link_libraries(modian
     PRIVATE
     modian_tsf
+    modian_logger
+    modian_core
     ole32
     delayimp
     runtimeobject.lib
-    spdlog::spdlog
 )
 
 target_compile_definitions(modian PRIVATE _WIN32_DCOM=1)
@@ -32,7 +33,7 @@ if(WIN32)
     # 利用环境变量获取当前用户的主目录
     set(USER_HOME "$ENV{USERPROFILE}")
     # 目标词库目录：例如放在 %USERPROFILE%\Modian\Local 下
-    set(MODIAN_ROOT_DIR "${USER_HOME}\\Modian\\")
+    set(MODIAN_ROOT_DIR "${USER_HOME}\\Modian")
     set(DICTIONARY_DIR "${USER_HOME}\\Modian\\Local")
     set(MODIAN_LOG_DIR "${USER_HOME}\\Modian\\Log")
     set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}\\modian.log")

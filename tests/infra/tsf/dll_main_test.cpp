@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <string>
 #include <vector>
-#include "spdlog/spdlog.h"
 
 #include "dll/registry_operator.h"
 #include "modian/tsf/tsf_text_service.h"

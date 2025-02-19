@@ -24,7 +24,6 @@ target_link_libraries(modian_test
     gtest_main
     gmock_main
     Advapi32
-    spdlog::spdlog
 )
 
 target_compile_definitions(modian_test PRIVATE PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}")

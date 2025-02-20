@@ -1,9 +1,8 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <sstream>
-#include <spdlog/spdlog.h>
 
-#include "modian/tsf/util/logger/log_util.h"
+#include "modian/core/logger/logger_service.h"
 #include "modian/core/engine/pinyin_engine.h"
 
 modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
@@ -11,7 +10,7 @@ modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
 	size_t size = 0;
 
 	if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
-		spdlog::error("Failed to retrieve USERPROFILE.");
+		core::logger_service::logger()->error("Failed to retrieve USERPROFILE.");
 		return;
 	}
 
@@ -24,7 +23,7 @@ void modian::tsf::tsf_key_event_service::load_engine(const std::shared_ptr<core:
 }
 
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
-	spdlog::info("Handling on key down");
+	core::logger_service::logger()->info("Handling on key down");
 	// TODO: 改一下处理键盘输入的逻辑
 	if (!pf_eaten) return E_POINTER;
 
@@ -32,16 +31,17 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 		input_pinyin_.push_back(towlower(character));
 
 		if (const auto candidates = input_engine_->convert(input_pinyin_); !candidates.empty()) {
-            spdlog::info("Get potential candidates");
+            core::logger_service::logger()->info("Get potential candidates");
             for (const auto& candidate : candidates) {
-                spdlog::info("Candidates: {}", util::logger::wstring_to_string(candidate));
+                // core::logger->info("Candidates: {}", util::logger::wstring_to_string(candidate));
+                core::logger_service::logger()->info("Candidates!!!!");
             }
 
 			input_pinyin_.clear();
 		}
 	}
 
-	spdlog::debug("Finished handling on key down");
+	core::logger_service::logger()->debug("Finished handling on key down");
 	return S_OK;
 }
 

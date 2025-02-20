@@ -1,6 +1,5 @@
 #include <windows.h>
-
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
 
 #include "modian/tsf/dll/register.h"
 #include "modian/tsf/dll/info/registry_info.h"
@@ -32,7 +31,7 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVO
 		 * TODO: when introduce multi thread, need to add delete critical section logic:
 		 * DeleteCriticalSection(cs);
 		 */
-        spdlog::shutdown();
+		spdlog::shutdown();
 		break;
 	case DLL_THREAD_ATTACH:
 		break;

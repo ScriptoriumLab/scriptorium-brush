@@ -10,5 +10,6 @@ namespace modian::core {
         void info(const std::string& message) override;
         void debug(const std::string& message) override;
         void error(const std::string& message) override;
+		std::string type{"console_logger"};
 	};
 }

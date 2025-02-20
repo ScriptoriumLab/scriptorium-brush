@@ -1,12 +1,13 @@
 #include "modian/tsf/class_factory.h"
-#include "modian/tsf/tsf_text_service.h"
+
 #include <wil/com.h>
 
-#include "spdlog/spdlog.h"
+#include "modian/core/logger/logger_service.h"
+#include "modian/tsf/tsf_text_service.h"
 
 namespace modian::tsf {
 	STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
-		spdlog::info("Querying interface for class_factory...");
+		core::logger_service::logger()->info("Querying interface for class_factory...");
 		if (ppv == nullptr) {
 			return E_POINTER;
 		}
@@ -33,7 +34,7 @@ namespace modian::tsf {
 	}
 
 	STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {
-		spdlog::info("Creating class_factory instance...");
+		core::logger_service::logger()->info("Creating class_factory instance...");
 		if (p_unk_outer) return CLASS_E_NOAGGREGATION;
 
 		const wil::com_ptr_nothrow service = new (std::nothrow) tsf_text_service();

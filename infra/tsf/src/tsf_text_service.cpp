@@ -1,10 +1,10 @@
 #include "modian/tsf/tsf_text_service.h"
 
-#include <spdlog/spdlog.h>
+#include "modian/core/logger/logger_service.h"
 
 namespace modian::tsf {
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
-		spdlog::info("Activating Modian IME...");
+		core::logger_service::logger()->info("Activating Modian IME...");
 
 		thread_mgr_ = p_thread_mgr;
 		client_id_ = tf_client_id;
@@ -12,7 +12,7 @@ namespace modian::tsf {
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
 		HRESULT hr = p_thread_mgr->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
 		if (SUCCEEDED(hr)) {
-			spdlog::info("Activating Modian IME key event handler...");
+			core::logger_service::logger()->info("Activating Modian IME key event handler...");
 			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
 			p_thread_mgr->Release();
 		}
@@ -21,7 +21,7 @@ namespace modian::tsf {
 	}
 
 	STDMETHODIMP tsf_text_service::Deactivate() {
-		spdlog::info("Deactivating Modian IME...");
+		core::logger_service::logger()->info("Deactivating Modian IME...");
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
 		HRESULT hr = thread_mgr_->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
 		if (SUCCEEDED(hr)) {

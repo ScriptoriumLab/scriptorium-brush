@@ -9,5 +9,6 @@ namespace modian::core {
         virtual void info(const std::string& message) = 0;
         virtual void debug(const std::string& message) = 0;
         virtual void error(const std::string& message) = 0;
+		std::string type{"base_logger"};
 	};
 }

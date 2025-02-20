@@ -8,7 +8,6 @@
 
 volatile long modian::tsf::g_server_lock{0};
 volatile long modian::tsf::g_active_objects{0};
-volatile long init_times{0};
 
 STDAPI DllCanUnloadNow() {
 	modian::core::logger_service::logger()->info("Start unloading...");
@@ -16,11 +15,8 @@ STDAPI DllCanUnloadNow() {
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
-	// TODO: move init_times to spdlog_logger
-	if (init_times == 0) {
-		modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
-		InterlockedIncrement(&init_times);
-	}
+	modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
+
 	modian::core::logger_service::logger()->info("Getting class object...");
 	if (!ppv) return E_POINTER;
 
@@ -51,10 +47,8 @@ STDAPI DllUnregisterServer() {
 }
 
 STDAPI DllRegisterServer() {
-	if (init_times == 0) {
-		modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
-		InterlockedIncrement(&init_times);
-	}
+	modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
+
     modian::core::logger_service::logger()->info(modian::core::ascii_modian_ime);
 	modian::core::logger_service::logger()->info("Registering Modian IME dll...");
 

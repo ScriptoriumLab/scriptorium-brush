@@ -1,6 +1,7 @@
 #include "modian/logger/spdlog_logger.h"
 
 #include <iostream>
+#include <WeakReference.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include "spdlog/sinks/basic_file_sink.h"
 
@@ -50,5 +51,19 @@ namespace modian::logger {
 
     void spdlog_logger::info_impl(const std::string& message, const std::string& arg) {
 		logger_->info(fmt::runtime(message), arg);
+    }
+
+    void spdlog_logger::info_impl(const std::string& message, const std::wstring& arg) {
+		logger_->info(fmt::runtime(message), wstring_to_string(arg));
+    }
+
+    std::string spdlog_logger::wstring_to_string(const std::wstring& wstr) {
+         if (wstr.empty()) {
+             return {};
+         }
+         const auto size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+         std::string str(size_needed, 0);
+         WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &str[0], size_needed, nullptr, nullptr);
+         return str;
     }
 }

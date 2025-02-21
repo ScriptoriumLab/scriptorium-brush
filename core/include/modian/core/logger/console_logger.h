@@ -15,5 +15,6 @@ namespace modian::core {
 	protected:
 		void info_impl(const std::string& message) override;
 		void info_impl(const std::string& message, const std::string& arg) override;
+		void info_impl(const std::string& message, const std::wstring& arg) override;
 	};
 }

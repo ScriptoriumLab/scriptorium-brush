@@ -4,7 +4,6 @@
 
 #include "modian/core/logger/logger_service.h"
 #include "modian/core/engine/pinyin_engine.h"
-#include "modian/tsf/util/logger/log_util.h"
 
 modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
 	char* userprofile{nullptr};
@@ -34,7 +33,7 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 		if (const auto candidates = input_engine_->convert(input_pinyin_); !candidates.empty()) {
             core::logger_service::logger()->info("Get potential candidates");
             for (const auto& candidate : candidates) {
-                core::logger_service::logger()->info("Candidates: {}", modian::tsf::util::logger::wstring_to_string(candidate));
+                core::logger_service::logger()->info("Candidates: {}", candidate);
             }
 
 			input_pinyin_.clear();

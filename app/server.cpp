@@ -15,6 +15,7 @@ STDAPI DllCanUnloadNow() {
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
+	// TODO: isolate log to modian.log
 	modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
 
 	modian::core::logger_service::logger()->info("Getting class object...");
@@ -47,6 +48,7 @@ STDAPI DllUnregisterServer() {
 }
 
 STDAPI DllRegisterServer() {
+	// TODO: isolate log to modian.log
 	modian::core::logger_service::update_logger(std::make_shared<modian::logger::spdlog_logger>());
 
     modian::core::logger_service::logger()->info(modian::core::ascii_modian_ime);

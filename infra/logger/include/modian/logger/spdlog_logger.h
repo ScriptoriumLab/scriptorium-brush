@@ -10,10 +10,13 @@ namespace modian::logger {
 	public:
 		spdlog_logger();
 		~spdlog_logger() override = default;
-		void info(const std::string& message) override;
 		void debug(const std::string& message) override;
 		void error(const std::string& message) override;
+
 		std::string type{"spdlog_logger"};
+
+	protected:
+		void info_impl(const std::string& message) override;
 
 	private:
         std::shared_ptr<spdlog::logger> logger_;

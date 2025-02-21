@@ -36,15 +36,15 @@ namespace modian::logger {
 		}
 	}
 
-    void spdlog_logger::info(const std::string& message) {
-	    logger_->info(message);
-    }
-
     void spdlog_logger::debug(const std::string& message) {
 	    logger_->debug(message);
     }
 
     void spdlog_logger::error(const std::string& message) {
 	    logger_->error(message);
+    }
+
+    void spdlog_logger::info_impl(const std::string& message) {
+	    logger_->info(message);
     }
 }

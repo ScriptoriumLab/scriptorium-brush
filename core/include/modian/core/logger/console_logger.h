@@ -7,9 +7,13 @@ namespace modian::core {
 	public:
 		~console_logger() override = default;
 
-        void info(const std::string& message) override;
         void debug(const std::string& message) override;
         void error(const std::string& message) override;
+
 		std::string type{"console_logger"};
+
+	protected:
+		void info_impl(const std::string& message) override;
+
 	};
 }

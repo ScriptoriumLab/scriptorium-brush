@@ -6,9 +6,17 @@ namespace modian::core {
 	class base_logger {
 	public:
 		virtual ~base_logger() = default;
-        virtual void info(const std::string& message) = 0;
         virtual void debug(const std::string& message) = 0;
         virtual void error(const std::string& message) = 0;
+
+		template<typename... Args>
+        void info(const std::string& message, Args... args) {
+			info_impl(message, args...);
+		}
+
 		std::string type{"base_logger"};
+
+	protected:
+		virtual void info_impl(const std::string& message) = 0;
 	};
 }

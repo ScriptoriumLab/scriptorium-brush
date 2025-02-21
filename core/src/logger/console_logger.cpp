@@ -13,3 +13,7 @@ void modian::core::console_logger::error(const std::string& message) {
 void modian::core::console_logger::info_impl(const std::string& message) {
 	std::cout << "[info] " << message << '\n';
 }
+
+void modian::core::console_logger::info_impl(const std::string& message, const std::string& arg) {
+	std::cout << "[info] " << message << ", " << arg << '\n';
+}

@@ -47,4 +47,8 @@ namespace modian::logger {
     void spdlog_logger::info_impl(const std::string& message) {
 	    logger_->info(message);
     }
+
+    void spdlog_logger::info_impl(const std::string& message, const std::string& arg) {
+		logger_->info(fmt::runtime(message), arg);
+    }
 }

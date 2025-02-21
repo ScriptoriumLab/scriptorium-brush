@@ -17,6 +17,7 @@ namespace modian::logger {
 
 	protected:
 		void info_impl(const std::string& message) override;
+		void info_impl(const std::string& message, const std::string& arg) override;
 
 	private:
         std::shared_ptr<spdlog::logger> logger_;

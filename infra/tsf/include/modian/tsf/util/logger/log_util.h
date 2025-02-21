@@ -85,13 +85,13 @@ namespace modian::tsf::util::logger {
 //         }
 //     }
 
-    // inline std::string wstring_to_string(const std::wstring& wstr) {
-    //     if (wstr.empty()) {
-    //         return {};
-    //     }
-    //     const auto size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-    //     std::string str(size_needed, 0);
-    //     WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &str[0], size_needed, nullptr, nullptr);
-    //     return str;
-    // }
+     inline std::string wstring_to_string(const std::wstring& wstr) {
+         if (wstr.empty()) {
+             return {};
+         }
+         const auto size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
+         std::string str(size_needed, 0);
+         WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &str[0], size_needed, nullptr, nullptr);
+         return str;
+     }
 }

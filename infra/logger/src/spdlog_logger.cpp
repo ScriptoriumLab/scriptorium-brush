@@ -3,7 +3,7 @@
 #include <iostream>
 #include <WeakReference.h>
 #include <spdlog/sinks/rotating_file_sink.h>
-#include "spdlog/sinks/basic_file_sink.h"
+#include <spdlog/sinks/basic_file_sink.h>
 
 namespace modian::logger {
 	spdlog_logger::spdlog_logger() {

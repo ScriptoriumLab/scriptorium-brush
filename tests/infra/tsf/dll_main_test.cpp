@@ -9,6 +9,7 @@
 #include "modian/tsf/dll/register.h"
 #include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/dll/dll_util.h"
+#include "modian/core/logger/logger_service.h"
 
 STDAPI DllRegisterServer();
 STDAPI DllUnregisterServer();
@@ -17,6 +18,7 @@ class modian_registry_test : public ::testing::Test {
 protected:
     void SetUp() override {
         _ = DllUnregisterServer();
+        modian::core::update_logger_times = 1;
     }
 
     void TearDown() override {

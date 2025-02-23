@@ -2,8 +2,15 @@
 
 #include <memory>
 #include <mutex>
+#include <WeakReference.h>
 
 #include "modian/core/logger/base_logger.h"
+
+#ifdef MODIAN_LOGGER_EXPORTS
+#define MODIAN_LOGGER_API __declspec(dllexport)
+#else
+#define MODIAN_LOGGER_API __declspec(dllimport)
+#endif
 
 namespace modian::core {
     static constexpr auto ascii_modian_ime = R"(
@@ -23,9 +30,21 @@ namespace modian::core {
         =======================================================================================================================
     )";
 
+	extern MODIAN_LOGGER_API volatile long update_logger_times;
+
 	class logger_service {
 	public:
-		static void update_logger(std::shared_ptr<base_logger> new_logger);
+		template<typename LoggerFactory>
+		static void update_logger(LoggerFactory&& factory) {
+			if (update_logger_times == 0) {
+				std::lock_guard lock(mutex_);
+				if (instance->type == "console_logger" || instance->type == "base_logger") {
+					instance = std::move(factory());
+				}
+				InterlockedIncrement(&update_logger_times);
+			}
+		}
+
 		static std::shared_ptr<base_logger> logger();
 	private:
 		logger_service() = default;

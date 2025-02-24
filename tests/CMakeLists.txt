@@ -18,9 +18,10 @@ target_include_directories(modian_test PRIVATE ${CMAKE_SOURCE_DIR}/tests/include
 
 target_link_libraries(modian_test
     PRIVATE
-    modian
-    modian_tsf
     modian_core
+    modian_manager
+    modian_tsf
+    modian
     gtest_main
     gmock_main
     Advapi32

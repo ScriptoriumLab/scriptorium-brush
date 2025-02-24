@@ -57,5 +57,4 @@ namespace modian::tsf {
 		if (count == 0) delete this;
 		return count;
 	}
-
 }

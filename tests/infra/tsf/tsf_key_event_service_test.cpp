@@ -4,8 +4,12 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
-	modian::tsf::tsf_key_event_service event_service{};
-	event_service.load_engine(std::make_shared<modian::core::pinyin_engine>(modian::core::pinyin_engine::get_instance(std::string{PROJECT_SOURCE_DIR}.append("/data/pinyin_dictionary.txt"))));
+	modian::manager::engine_manager engine_manager;
+	engine_manager.add_new_engine("test pinyin engine", []() {
+		return std::make_shared<modian::core::pinyin_engine>(modian::core::pinyin_engine::get_instance(std::string{PROJECT_SOURCE_DIR}.append("/data/pinyin_dictionary.txt")));
+	});
+	modian::tsf::tsf_key_event_service event_service{engine_manager};
+	event_service.use_engine("test pinyin engine");
 
 	ITfContext* context = nullptr;
 	WPARAM character = 'n';

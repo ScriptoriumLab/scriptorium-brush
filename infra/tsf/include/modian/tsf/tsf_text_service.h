@@ -5,7 +5,6 @@
 #include <msctf.h>
 
 #include "tsf_key_event_service.h"
-#include "modian/core/engine/pinyin_engine.h"
 
 namespace modian::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
@@ -22,6 +21,6 @@ namespace modian::tsf {
         ULONG ref_count_{0};
         TfClientId client_id_ = TF_CLIENTID_NULL;
         ITfThreadMgr* thread_mgr_ = nullptr;
-		tsf_key_event_service key_event_service_;
+		tsf_key_event_service key_event_service_{manager::engine_manager{}};
 	};
 }

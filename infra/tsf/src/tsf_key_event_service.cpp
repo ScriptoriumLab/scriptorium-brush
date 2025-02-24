@@ -1,25 +1,15 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <sstream>
+#include <utility>
 
 #include "modian/core/logger/logger_service.h"
 #include "modian/core/engine/pinyin_engine.h"
 
-modian::tsf::tsf_key_event_service::tsf_key_event_service() : ref_count_{1} {
-	char* userprofile{nullptr};
-	size_t size = 0;
+modian::tsf::tsf_key_event_service::tsf_key_event_service(manager::engine_manager engine_manager) : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
 
-	if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
-		core::logger_service::logger()->error("Failed to retrieve USERPROFILE.");
-		return;
-	}
-
-	const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
-	input_engine_ = std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(dictionary_path));
-}
-
-void modian::tsf::tsf_key_event_service::load_engine(const std::shared_ptr<core::input_engine>& input_engine) {
-	input_engine_ = input_engine;
+void modian::tsf::tsf_key_event_service::use_engine(const std::string& engine_name) {
+	engine_manager_.select_engine(engine_name);
 }
 
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
@@ -30,7 +20,7 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 	if (const auto character{static_cast<wchar_t>(w_param)}; (character >= L'a' && character <= L'z') || (character >= L'A' && character <= L'Z')) {
 		input_pinyin_.push_back(towlower(character));
 
-		if (const auto candidates = input_engine_->convert(input_pinyin_); !candidates.empty()) {
+		if (const auto candidates = engine_manager_.get_engine()->convert(input_pinyin_); !candidates.empty()) {
             core::logger_service::logger()->info("Get potential candidates");
             for (const auto& candidate : candidates) {
                 core::logger_service::logger()->info("Candidates: {}", candidate);

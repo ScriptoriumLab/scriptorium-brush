@@ -4,15 +4,16 @@
 #include <string>
 #include <memory>
 
+#include "../../../../../manager/include/modian/manager/engine_manager.h"
 #include "modian/core/engine/input_engine.h"
 
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		tsf_key_event_service();
+		explicit tsf_key_event_service(manager::engine_manager  engine_manager);
 		virtual ~tsf_key_event_service() = default;
 
-		void load_engine(const std::shared_ptr<core::input_engine>& input_engine);
+		void use_engine(const std::string& engine_name);
 
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
 		STDMETHODIMP OnKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
@@ -30,6 +31,6 @@ namespace modian::tsf {
 
 		std::wstring input_pinyin_;
 
-		std::shared_ptr<core::input_engine> input_engine_;
+		manager::engine_manager engine_manager_;
 	};
 }

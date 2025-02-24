@@ -25,5 +25,6 @@ target_include_directories(modian_tsf PUBLIC
 target_link_libraries(modian_tsf
     PRIVATE
     modian_core
+    modian_manager
     modian_logger
 )

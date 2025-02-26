@@ -37,7 +37,11 @@ namespace modian::logger {
 		}
 	}
 
-    void spdlog_logger::debug(const std::string& message) {
+	spdlog_logger::~spdlog_logger() {
+		spdlog::shutdown();
+	}
+
+	void spdlog_logger::debug(const std::string& message) {
 	    logger_->debug(message);
     }
 

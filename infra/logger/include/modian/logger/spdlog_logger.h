@@ -9,7 +9,7 @@ namespace modian::logger {
 	class spdlog_logger final : public core::base_logger {
 	public:
 		spdlog_logger();
-		~spdlog_logger() override = default;
+		~spdlog_logger() override;
 		void debug(const std::string& message) override;
 		void error(const std::string& message) override;
 

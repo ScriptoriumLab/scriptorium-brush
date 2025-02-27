@@ -6,7 +6,7 @@
 #include "modian/core/logger/logger_service.h"
 #include "modian/core/engine/pinyin_engine.h"
 
-modian::tsf::tsf_key_event_service::tsf_key_event_service(manager::engine_manager engine_manager) : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
+modian::tsf::tsf_key_event_service::tsf_key_event_service(const manager::engine_manager& engine_manager) : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
 
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
 	core::logger_service::logger()->info("Handling on key down");

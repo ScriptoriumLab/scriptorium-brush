@@ -5,12 +5,14 @@
 #include <memory>
 #include <functional>
 
+#include "candidate_manager.h"
 #include "modian/core/engine/input_engine.h"
 
 namespace modian::manager {
 	class engine_manager {
 	public:
-		engine_manager();
+		explicit engine_manager(candidate_manager can_manager);
+
 		void add_new_engine(const std::string& engine_name, const std::function<std::shared_ptr<core::input_engine>()>& lazy_load_engine);
 		void select_engine(const std::string& engine_name);
 
@@ -20,5 +22,7 @@ namespace modian::manager {
 		std::shared_ptr<core::input_engine> current_engine_{nullptr};
 
 		std::wstring input_pinyin_;
+
+		candidate_manager candidate_manager_;
 	};
 }

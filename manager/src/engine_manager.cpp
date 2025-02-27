@@ -1,9 +1,11 @@
+#include <utility>
+
 #include "modian/manager/engine_manager.h"
 
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/core/logger/logger_service.h"
 
-modian::manager::engine_manager::engine_manager() {
+modian::manager::engine_manager::engine_manager(candidate_manager can_manager) : candidate_manager_{std::move(can_manager)} {
 	engine_list_.emplace("pinyin engine", []() -> std::shared_ptr<core::input_engine> {
 		char* userprofile{nullptr};
 		size_t size = 0;
@@ -34,12 +36,7 @@ void modian::manager::engine_manager::update_input_state(const wchar_t& characte
 		current_engine_ = engine_list_.begin()->second();
 	}
 
-	if (const auto candidates = current_engine_->convert(input_pinyin_); !candidates.empty()) {
-		core::logger_service::logger()->info("Get potential candidates");
-		for (const auto& candidate : candidates) {
-			core::logger_service::logger()->info("Candidates: {}", candidate);
-		}
-
+	if (candidate_manager_.update_candidates(current_engine_->convert(input_pinyin_))) {
 		input_pinyin_.clear();
 	}
 }

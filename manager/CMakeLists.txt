@@ -1,5 +1,6 @@
 add_library(modian_manager STATIC
     src/engine_manager.cpp
+    src/candidate_manager.cpp
 )
 
 target_link_libraries(

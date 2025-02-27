@@ -9,7 +9,7 @@
 namespace modian::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		explicit tsf_key_event_service(const manager::engine_manager& engine_manager);
+		explicit tsf_key_event_service(manager::engine_manager engine_manager);
 		virtual ~tsf_key_event_service() = default;
 
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;

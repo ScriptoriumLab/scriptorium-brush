@@ -8,10 +8,6 @@
 
 modian::tsf::tsf_key_event_service::tsf_key_event_service(manager::engine_manager engine_manager) : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
 
-void modian::tsf::tsf_key_event_service::use_engine(const std::string& engine_name) {
-	engine_manager_.select_engine(engine_name);
-}
-
 STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
 	core::logger_service::logger()->info("Handling on key down");
 	// TODO: 改一下处理键盘输入的逻辑

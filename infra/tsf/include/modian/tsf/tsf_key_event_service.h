@@ -13,8 +13,6 @@ namespace modian::tsf {
 		explicit tsf_key_event_service(manager::engine_manager  engine_manager);
 		virtual ~tsf_key_event_service() = default;
 
-		void use_engine(const std::string& engine_name);
-
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
 		STDMETHODIMP OnKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
 		STDMETHODIMP OnTestKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;

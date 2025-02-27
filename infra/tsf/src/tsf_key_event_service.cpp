@@ -14,16 +14,7 @@ STDMETHODIMP modian::tsf::tsf_key_event_service::OnKeyDown(ITfContext* pic, WPAR
 	if (!pf_eaten) return E_POINTER;
 
 	if (const auto character{static_cast<wchar_t>(w_param)}; (character >= L'a' && character <= L'z') || (character >= L'A' && character <= L'Z')) {
-		input_pinyin_.push_back(towlower(character));
-
-		if (const auto candidates = engine_manager_.get_engine()->convert(input_pinyin_); !candidates.empty()) {
-            core::logger_service::logger()->info("Get potential candidates");
-            for (const auto& candidate : candidates) {
-                core::logger_service::logger()->info("Candidates: {}", candidate);
-            }
-
-			input_pinyin_.clear();
-		}
+		engine_manager_.update_input_state(character);
 	}
 
 	core::logger_service::logger()->debug("Finished handling on key down");

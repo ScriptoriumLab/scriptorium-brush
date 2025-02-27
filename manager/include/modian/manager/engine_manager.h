@@ -13,9 +13,12 @@ namespace modian::manager {
 		engine_manager();
 		void add_new_engine(const std::string& engine_name, const std::function<std::shared_ptr<core::input_engine>()>& lazy_load_engine);
 		void select_engine(const std::string& engine_name);
-		std::shared_ptr<core::input_engine> get_engine();
+
+		void update_input_state(const wchar_t& character);
 	private:
 		std::unordered_map<std::string, std::function<std::shared_ptr<core::input_engine>()>> engine_list_;
 		std::shared_ptr<core::input_engine> current_engine_{nullptr};
+
+		std::wstring input_pinyin_;
 	};
 }

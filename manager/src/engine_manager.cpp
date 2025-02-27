@@ -27,10 +27,19 @@ void modian::manager::engine_manager::select_engine(const std::string& engine_na
 	current_engine_ = engine_list_[engine_name]();
 }
 
-std::shared_ptr<modian::core::input_engine> modian::manager::engine_manager::get_engine() {
+void modian::manager::engine_manager::update_input_state(const wchar_t& character) {
+	input_pinyin_.push_back(towlower(character));
+
 	if (current_engine_ == nullptr) {
 		current_engine_ = engine_list_.begin()->second();
 	}
 
-	return current_engine_;
+	if (const auto candidates = current_engine_->convert(input_pinyin_); !candidates.empty()) {
+		core::logger_service::logger()->info("Get potential candidates");
+		for (const auto& candidate : candidates) {
+			core::logger_service::logger()->info("Candidates: {}", candidate);
+		}
+
+		input_pinyin_.clear();
+	}
 }

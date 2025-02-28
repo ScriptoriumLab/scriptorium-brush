@@ -20,7 +20,9 @@ bool modian::manager::candidate_manager::update_candidates(const std::vector<std
 }
 
 void modian::manager::candidate_manager::add_observer(const std::shared_ptr<core::candidate_observer>& observer) {
-	observers_.emplace_back(observer);
+	if (std::ranges::find(observers_, observer) != observers_.end()) {
+		observers_.emplace_back(observer);
+	}
 }
 
 void modian::manager::candidate_manager::remove_observer(const std::shared_ptr<core::candidate_observer>& observer) {

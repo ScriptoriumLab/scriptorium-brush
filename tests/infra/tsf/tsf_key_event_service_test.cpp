@@ -35,31 +35,31 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	HRESULT hr = typing(event_service, L"ni");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"你"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"尼"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"泥"});
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "你");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "尼");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "泥");
 
 	hr = typing(event_service, L"hao");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"好"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"号"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"豪"});
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "好");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "号");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "豪");
 
 
 	hr = typing(event_service, L"mo");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"墨"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"莫"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"末"});
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]),"墨");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "莫");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
 
 	hr = typing(event_service, L"dian");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"点"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"店"});
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"电"});
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "点");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "店");
+	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "电");
 }
 
 HRESULT typing(modian::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {

@@ -14,6 +14,8 @@ public:
 	std::vector<std::wstring> candidates_;
 };
 
+HRESULT typing(modian::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
+
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
@@ -30,27 +32,14 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 
 	auto event_service = modian::tsf::tsf_key_event_service{engine_manager};
 
-	ITfContext* context = nullptr;
-	LPARAM l_param = 0;
-	BOOL pf_eaten = FALSE;
-	HRESULT hr;
-
-	WPARAM character = 'n';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'i';
-	hr = event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+	HRESULT hr = typing(event_service, L"ni");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"你"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"尼"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"泥"});
 
-	character = 'h';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'a';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'o';
-	hr = event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+	hr = typing(event_service, L"hao");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"好"});
@@ -58,27 +47,35 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"豪"});
 
 
-	character = 'm';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'o';
-	hr = event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+	hr = typing(event_service, L"mo");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"墨"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"莫"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"末"});
 
-	character = 'd';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'i';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'a';
-	event_service.OnKeyDown(context, character, l_param, &pf_eaten);
-	character = 'n';
-	hr = event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+	hr = typing(event_service, L"dian");
 	ASSERT_EQ(hr, S_OK);
 	ASSERT_EQ(observer->candidates_.size(), 3);
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), std::string{"点"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), std::string{"店"});
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), std::string{"电"});
 }
+
+HRESULT typing(modian::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {
+	BOOL pf_eaten = FALSE;
+	HRESULT hr = S_OK;
+
+	for (const auto& character : input) {
+		ITfContext* context = nullptr;
+		constexpr LPARAM l_param = 0;
+		hr = key_event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+
+		if (hr != S_OK) {
+			return hr;
+		}
+	}
+
+	return hr;
+}
+

@@ -1,5 +1,7 @@
 # Modian Windows Version
 
+[![Modian IME Windows platform CI](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml/badge.svg)](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml)
+
 ```
 =======================================================================================================================
 

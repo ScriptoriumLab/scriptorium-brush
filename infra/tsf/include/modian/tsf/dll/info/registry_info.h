@@ -2,9 +2,9 @@
 
 #include <msctf.h>
 #include <vector>
+#include <string>
 
-namespace modian::tsf::dll::info {
-
+namespace modian::infra::tsf::dll::info {
 	static constexpr std::wstring_view MODIAN_IME_MODEL{L"Apartment"};
 
 	static constexpr std::wstring_view MODIAN_IME_REGINFO_PREFIX_CLSID{L"CLSID\\"};

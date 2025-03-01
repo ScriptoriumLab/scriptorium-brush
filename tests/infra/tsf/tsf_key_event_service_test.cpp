@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 
+#include <codecvt>
+
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
-
-#include <codecvt>
 
 class key_event_observer final : public modian::core::candidate_observer {
 public:

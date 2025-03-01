@@ -1,5 +1,6 @@
+#include "gtest/gtest.h"
+
 #include <msctf.h>
-#include <gtest/gtest.h>
 #include <windows.h>
 #include <string>
 #include <vector>

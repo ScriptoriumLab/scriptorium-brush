@@ -2,7 +2,7 @@
 
 #include "modian/core/logger/logger_service.h"
 
-namespace modian::tsf {
+namespace modian::infra::tsf {
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
 		core::logger_service::logger()->info("Activating Modian IME...");
 
@@ -53,7 +53,7 @@ namespace modian::tsf {
 	}
 
 	STDMETHODIMP_(ULONG) tsf_text_service::Release() {
-		ULONG count = InterlockedDecrement(&ref_count_);
+		const ULONG count = InterlockedDecrement(&ref_count_);
 		if (count == 0) delete this;
 		return count;
 	}

@@ -69,7 +69,7 @@ TEST_F(modian_registry_test, should_successfully_unregister_modian_after_registe
 TEST_F(modian_registry_test, should_successfully_create_input_processor) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
-    modian::tsf::tsf_text_service* tsf_text_service = nullptr;
+    modian::infra::tsf::tsf_text_service* tsf_text_service = nullptr;
     const auto hr = CoCreateInstance(modian::infra::tsf::dll::info::MODIAN_IME_CLSID, nullptr, CLSCTX_INPROC_SERVER, IID_ITfTextInputProcessor, reinterpret_cast<void**>(&tsf_text_service));
 
     ASSERT_EQ(hr, S_OK);

@@ -37,7 +37,7 @@ namespace modian::infra::tsf {
 		core::logger_service::logger()->info("Creating class_factory instance...");
 		if (p_unk_outer) return CLASS_E_NOAGGREGATION;
 
-		const wil::com_ptr_nothrow service = new (std::nothrow) modian::tsf::tsf_text_service();
+		const wil::com_ptr_nothrow service = new (std::nothrow) tsf_text_service();
 		if (!service) return E_OUTOFMEMORY;
 
 		InterlockedIncrement(&g_active_objects);

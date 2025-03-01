@@ -5,7 +5,7 @@
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/tsf_text_service.h"
 
-namespace modian::tsf {
+namespace modian::infra::tsf {
 	STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
 		core::logger_service::logger()->info("Querying interface for class_factory...");
 		if (ppv == nullptr) {
@@ -37,7 +37,7 @@ namespace modian::tsf {
 		core::logger_service::logger()->info("Creating class_factory instance...");
 		if (p_unk_outer) return CLASS_E_NOAGGREGATION;
 
-		const wil::com_ptr_nothrow service = new (std::nothrow) tsf_text_service();
+		const wil::com_ptr_nothrow service = new (std::nothrow) modian::tsf::tsf_text_service();
 		if (!service) return E_OUTOFMEMORY;
 
 		InterlockedIncrement(&g_active_objects);

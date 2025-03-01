@@ -2,7 +2,7 @@
 
 #include <Unknwn.h>
 
-namespace modian::tsf {
+namespace modian::infra::tsf {
 	extern volatile long g_server_lock;
 	extern volatile long g_active_objects;
 

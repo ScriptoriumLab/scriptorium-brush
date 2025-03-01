@@ -4,11 +4,11 @@
 #include "modian/tsf/dll/info/registry_info.h"
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVOID pv_reserved) {
-	modian::tsf::dll::auto_com ac;
+	modian::infra::tsf::dll::auto_com ac;
 
 	switch (dw_reason) {
 	case DLL_PROCESS_ATTACH:
-		modian::tsf::dll::modian_instance = h_instance;
+		modian::infra::tsf::dll::modian_instance = h_instance;
 
 		/**
 		 * TODO: when introduce multi thread, need to add create critical logic:

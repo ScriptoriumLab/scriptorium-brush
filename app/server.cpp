@@ -30,9 +30,9 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 STDAPI DllUnregisterServer() {
 	modian::core::logger_service::logger()->info("Unregistering Modian IME dll...");
 
-	modian::tsf::dll::com_registration::unregister_profiles();
-	modian::tsf::dll::com_registration::unregister_categories();
-	modian::tsf::dll::com_registration::unregister_server();
+	modian::infra::tsf::dll::com_registration::unregister_profiles();
+	modian::infra::tsf::dll::com_registration::unregister_categories();
+	modian::infra::tsf::dll::com_registration::unregister_server();
 
 	const auto hr = RegDeleteTreeW(
 		HKEY_LOCAL_MACHINE,
@@ -51,9 +51,9 @@ STDAPI DllRegisterServer() {
     modian::core::logger_service::logger()->info(modian::core::ascii_modian_ime);
 	modian::core::logger_service::logger()->info("Registering Modian IME dll...");
 
-	if (!modian::tsf::dll::com_registration::register_server()
-	 || !modian::tsf::dll::com_registration::register_profiles()
-	 || !modian::tsf::dll::com_registration::register_categories()) {
+	if (!modian::infra::tsf::dll::com_registration::register_server()
+	 || !modian::infra::tsf::dll::com_registration::register_profiles()
+	 || !modian::infra::tsf::dll::com_registration::register_categories()) {
 		modian::core::logger_service::logger()->error("Failed to register Modian IME dll!");
 
 		DllUnregisterServer();

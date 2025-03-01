@@ -25,7 +25,7 @@ protected:
         _ = DllUnregisterServer();
     }
 private:
-    modian::tsf::dll::auto_com ac{};
+    modian::infra::tsf::dll::auto_com ac{};
     HRESULT _{S_OK};
 };
 

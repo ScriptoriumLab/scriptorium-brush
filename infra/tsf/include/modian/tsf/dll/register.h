@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-namespace modian::tsf::dll {
+namespace modian::infra::tsf::dll {
 	inline HINSTANCE modian_instance{nullptr};
 
 	struct auto_com {
@@ -24,6 +24,6 @@ namespace modian::tsf::dll {
 		static bool register_server();
 		static void unregister_server();
 	private:
-		static LONG recurse_delete_key(_In_ HKEY h_parent_key, _In_ LPCTSTR lpsz_key);
+		static LONG recurse_delete_key(_In_ const HKEY& h_parent_key, _In_ const LPCTSTR& lpsz_key);
 	};
 }

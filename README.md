@@ -44,7 +44,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ### Architecture
 - [x] Introduce `app` layer to maintain `dll_main` and `server`
-- [ ] Introduce `manager` layer to manage different types of input engine
+- [x] Introduce `manager` layer to manage different types of input engine
 - [x] Add abstract of `Logger` in core
 
 ### Thread Safety

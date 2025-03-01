@@ -55,4 +55,4 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [ ] Conduct Comprehensive Testing: Perform thorough testing under various scenarios to identify and resolve potential threading issues, ensuring the stability and reliability of the input method.
 
 ## Bug
-- [ ] Cannot rebuild modian and remove modian directory after unregistering modian IME (Because of spdlog did not shutdown correctly)
+- [x] Cannot rebuild modian and remove modian directory after unregistering modian IME

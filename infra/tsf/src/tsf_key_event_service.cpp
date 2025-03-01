@@ -4,7 +4,6 @@
 #include <utility>
 
 #include "modian/core/logger/logger_service.h"
-#include "modian/core/engine/pinyin_engine.h"
 
 namespace modian::infra::tsf {
 	tsf_key_event_service::tsf_key_event_service(manager::engine_manager  engine_manager) : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}

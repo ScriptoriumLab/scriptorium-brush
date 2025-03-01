@@ -1,5 +1,4 @@
-#include <modian/logger/spdlog_logger.h>
-
+#include "modian/logger/spdlog_logger.h"
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/class_factory.h"
@@ -15,7 +14,7 @@ STDAPI DllCanUnloadNow() {
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
-	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::logger::spdlog_logger>(); });
+	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::infra::logger::spdlog_logger>(); });
 
 	modian::core::logger_service::logger()->info("Getting class object...");
 	if (!ppv) return E_POINTER;
@@ -47,7 +46,7 @@ STDAPI DllUnregisterServer() {
 }
 
 STDAPI DllRegisterServer() {
-	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::logger::spdlog_logger>(); });
+	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::infra::logger::spdlog_logger>(); });
 
     modian::core::logger_service::logger()->info(modian::core::ascii_modian_ime);
 	modian::core::logger_service::logger()->info("Registering Modian IME dll...");

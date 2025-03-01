@@ -5,7 +5,7 @@
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-namespace modian::logger {
+namespace modian::infra::logger {
 	spdlog_logger::spdlog_logger() {
         // 检查是否已经存在同名日志器
         if (const auto existing_logger = spdlog::get("modian_logger")) {

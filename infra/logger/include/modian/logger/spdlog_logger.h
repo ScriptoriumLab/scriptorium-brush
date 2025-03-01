@@ -5,7 +5,7 @@
 
 #include "modian/core/logger/base_logger.h"
 
-namespace modian::logger {
+namespace modian::infra::logger {
 	class spdlog_logger final : public core::base_logger {
 	public:
 		spdlog_logger();

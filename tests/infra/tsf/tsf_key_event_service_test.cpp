@@ -14,7 +14,7 @@ public:
 	std::vector<std::wstring> candidates_;
 };
 
-HRESULT typing(modian::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
+HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
@@ -30,7 +30,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	});
 	engine_manager.select_engine("test pinyin engine");
 
-	auto event_service = modian::tsf::tsf_key_event_service{engine_manager};
+	auto event_service = modian::infra::tsf::tsf_key_event_service{engine_manager};
 
 	HRESULT hr = typing(event_service, L"ni");
 	ASSERT_EQ(hr, S_OK);
@@ -62,7 +62,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "电");
 }
 
-HRESULT typing(modian::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {
+HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {
 	BOOL pf_eaten = FALSE;
 	HRESULT hr = S_OK;
 

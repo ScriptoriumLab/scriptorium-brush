@@ -21,6 +21,6 @@ namespace modian::tsf {
         ULONG ref_count_{0};
         TfClientId client_id_ = TF_CLIENTID_NULL;
         ITfThreadMgr* thread_mgr_ = nullptr;
-		tsf_key_event_service key_event_service_{manager::engine_manager{manager::candidate_manager{}}};
+		infra::tsf::tsf_key_event_service key_event_service_{manager::engine_manager{manager::candidate_manager{}}};
 	};
 }

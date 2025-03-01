@@ -4,7 +4,7 @@
 #include <string>
 #include <Windows.h>
 
-namespace modian::tsf::dll::util {
+namespace modian::infra::tsf::dll::util {
 	constexpr int GUID_MAX_LEN{39};
 
 	inline std::wstring convert_guid_to_string(const GUID& guid) {

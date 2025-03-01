@@ -107,7 +107,7 @@ bool modian::tsf::dll::com_registration::register_server() {
 	HKEY reg_key_handle{nullptr};
 	HKEY reg_sub_key_handle{nullptr};
 	bool ret{false};
-	const std::wstring ach_ime_key{infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + util::convert_clsid_to_string(infra::tsf::dll::info::MODIAN_IME_CLSID)};
+	const std::wstring ach_ime_key{infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + infra::tsf::dll::util::convert_clsid_to_string(infra::tsf::dll::info::MODIAN_IME_CLSID)};
 	WCHAR ach_file_name[MAX_PATH]{'\0'};
 
 	if (RegCreateKeyEx(HKEY_CLASSES_ROOT, ach_ime_key.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_key_handle, &copied_string_len) == ERROR_SUCCESS) {
@@ -145,7 +145,7 @@ bool modian::tsf::dll::com_registration::register_server() {
 }
 
 void modian::tsf::dll::com_registration::unregister_server() {
-	const std::wstring ach_ime_key{infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + util::convert_clsid_to_string(infra::tsf::dll::info::MODIAN_IME_CLSID)};
+	const std::wstring ach_ime_key{infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + infra::tsf::dll::util::convert_clsid_to_string(infra::tsf::dll::info::MODIAN_IME_CLSID)};
 
 	recurse_delete_key(HKEY_CLASSES_ROOT, ach_ime_key.c_str());
 }

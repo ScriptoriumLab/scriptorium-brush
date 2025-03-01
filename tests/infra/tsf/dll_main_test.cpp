@@ -32,11 +32,11 @@ private:
 TEST_F(modian_registry_test, should_get_basic_info_when_successfully_register_modian) {
     ASSERT_EQ(DllRegisterServer(), S_OK);
 
-    EXPECT_TRUE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID)).c_str()));
+    EXPECT_TRUE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID)).c_str()));
 
-    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_GUID_PROFILE)).c_str(), L"Description"), L"Modian Input Method");
+    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::infra::tsf::dll::util::convert_guid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_GUID_PROFILE)).c_str(), L"Description"), L"Modian Input Method");
 
-    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_CLASSES_ROOT, (modian::infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + modian::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::infra::tsf::dll::info::MODIAN_IME_MODEL);
+    EXPECT_EQ(modian::tests::registry_operator::read_reg_string(HKEY_CLASSES_ROOT, (modian::infra::tsf::dll::info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\InProcServer32").c_str(), L"ThreadingModel"), modian::infra::tsf::dll::info::MODIAN_IME_MODEL);
 }
 
 TEST_F(modian_registry_test, should_get_categories_when_successfully_register_modian) {
@@ -62,8 +62,8 @@ TEST_F(modian_registry_test, should_successfully_unregister_modian_after_registe
     ASSERT_EQ(DllRegisterServer(), S_OK);
     ASSERT_EQ(DllUnregisterServer(), S_OK);
 
-    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID)).c_str()));
-    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::tsf::dll::util::convert_guid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_GUID_PROFILE)).c_str()));
+    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID)).c_str()));
+    EXPECT_FALSE(modian::tests::registry_operator::is_reg_key_exists(HKEY_LOCAL_MACHINE, (std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH) + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID) + L"\\LanguageProfile\\0x00000804\\" + modian::infra::tsf::dll::util::convert_guid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_GUID_PROFILE)).c_str()));
 }
 
 TEST_F(modian_registry_test, should_successfully_create_input_processor) {

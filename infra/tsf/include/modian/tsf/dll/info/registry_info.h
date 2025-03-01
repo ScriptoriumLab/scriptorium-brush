@@ -1,7 +1,6 @@
 #pragma once
 
 #include <msctf.h>
-#include <string_view>
 #include <vector>
 
 namespace modian::tsf::dll::info {

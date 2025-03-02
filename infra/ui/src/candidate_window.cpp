@@ -1,21 +1,6 @@
 #include "modian/ui/candidate_window.h"
 
 namespace modian::infra::ui {
-    namespace renderer {
-        // 实现默认的绘制器
-        void win32_candidate_renderer::render(HWND hwnd, const std::vector<std::wstring>& candidates) {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
-            // 简单绘制，每行显示一个候选词
-            int y = 10;
-            for (const auto& candidate : candidates) {
-                TextOutW(hdc, 10, y, candidate.c_str(), static_cast<int>(candidate.size()));
-                y += 20;
-            }
-            EndPaint(hwnd, &ps);
-        }
-    }
-
     // 窗口类名
     static auto kCandidateWindowClassName = L"CandidateWindowClass";
 

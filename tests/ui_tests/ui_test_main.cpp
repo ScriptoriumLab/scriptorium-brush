@@ -1,4 +1,5 @@
-#include <modian/ui/candidate_window.h>
+#include "modian/ui/candidate_window.h"
+#include "modian/ui/renderer/win32_candidate_renderer.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     modian::infra::ui::candidate_window wnd{hInstance, std::make_shared<modian::infra::ui::renderer::win32_candidate_renderer>()};

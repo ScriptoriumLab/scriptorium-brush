@@ -76,18 +76,18 @@ namespace modian::infra::ui {
             InvalidateRect(hwnd_, nullptr, TRUE);
             UpdateWindow(hwnd_);
         }
-         SendMessage(listbox_, LB_RESETCONTENT, 0, 0);
-         for (const auto& str : candidates_) {
-             SendMessage(listbox_, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(str.c_str()));
-         }
-         // 自动调整窗口大小
-         int itemHeight = SendMessage(listbox_, LB_GETITEMHEIGHT, 0, 0);
-         RECT rc = {0, 0, 400, min(10, static_cast<int>(candidates_.size())) * itemHeight + 4};
-         AdjustWindowRectEx(&rc,
-                     static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_STYLE)),
-                     FALSE,
-                     static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_EXSTYLE)));
-         SetWindowPos(hwnd_, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top,
+        SendMessage(listbox_, LB_RESETCONTENT, 0, 0);
+        for (const auto& str : candidates_) {
+            SendMessage(listbox_, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(str.c_str()));
+        }
+        // 自动调整窗口大小
+        int itemHeight = SendMessage(listbox_, LB_GETITEMHEIGHT, 0, 0);
+        RECT rc = {0, 0, 400, min(10, static_cast<int>(candidates_.size())) * itemHeight + 4};
+        AdjustWindowRectEx(&rc,
+                           static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_STYLE)),
+                           FALSE,
+                           static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_EXSTYLE)));
+        SetWindowPos(hwnd_, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top,
                      SWP_NOZORDER | SWP_NOMOVE);
     }
 

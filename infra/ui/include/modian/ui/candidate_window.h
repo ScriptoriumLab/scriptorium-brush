@@ -24,7 +24,7 @@ namespace modian::infra::ui {
 		HINSTANCE h_instance_;
 		HWND hwnd_;
 		HWND listbox_;
-		HFONT hFont;
+		HFONT candidate_font_;
 		std::vector<std::wstring> candidates_;
 		std::shared_ptr<renderer::candidate_renderer> renderer_;
 	};

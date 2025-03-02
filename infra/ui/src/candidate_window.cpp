@@ -40,7 +40,7 @@ namespace modian::infra::ui {
             GetModuleHandle(nullptr), nullptr
         );
 
-        hFont = CreateFontW(
+        candidate_font_ = CreateFontW(
             20, 0, 0, 0, FW_NORMAL,
             FALSE, FALSE, FALSE,
             DEFAULT_CHARSET,
@@ -50,7 +50,7 @@ namespace modian::infra::ui {
             DEFAULT_PITCH | FF_DONTCARE,
             L"微软雅黑"  // 使用中文字体
         );
-        SendMessageW(listbox_, WM_SETFONT, reinterpret_cast<WPARAM>(hFont), TRUE);
+        SendMessageW(listbox_, WM_SETFONT, reinterpret_cast<WPARAM>(candidate_font_), TRUE);
 
         return hwnd_ != nullptr;
     }

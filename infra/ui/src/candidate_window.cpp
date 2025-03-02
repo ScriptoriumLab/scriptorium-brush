@@ -5,12 +5,14 @@ namespace modian::infra::ui {
     static constexpr auto CANDIDATE_WINDOW_CLASS_NAME = L"CandidateWindowClass";
 
     candidate_window::candidate_window(HINSTANCE h_instance, const std::shared_ptr<renderer::candidate_renderer>& renderer)
-        : h_instance_(h_instance), hwnd_(nullptr), listbox_(nullptr), renderer_(renderer) {
+        : h_instance_(h_instance), hwnd_(nullptr), listbox_(nullptr), candidate_font_(nullptr), renderer_(renderer) {
     }
 
     candidate_window::~candidate_window() {
         if (hwnd_) {
             DestroyWindow(hwnd_);
+            DeleteObject(candidate_font_);
+            UnregisterClass(CANDIDATE_WINDOW_CLASS_NAME, h_instance_);
         }
     }
 

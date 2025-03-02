@@ -40,7 +40,7 @@ namespace modian::infra::ui {
             GetModuleHandle(nullptr), nullptr
         );
 
-        HFONT hFont = CreateFontW(
+        hFont = CreateFontW(
             20, 0, 0, 0, FW_NORMAL,
             FALSE, FALSE, FALSE,
             DEFAULT_CHARSET,

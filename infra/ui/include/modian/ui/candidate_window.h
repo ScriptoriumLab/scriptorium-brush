@@ -1,40 +1,37 @@
 #pragma once
 
-#include <Windows.h>
-#include <vector>
-#include <string>
 #include <memory>
 
-class candidate_renderer {
-public:
-	virtual ~candidate_renderer() = default;
-	virtual void render(HWND hwnd, const std::vector<std::wstring>& candidates) = 0;
-};
+#include "modian/ui/renderer/candidate_renderer.h"
 
-class win32_candidate_renderer final : public candidate_renderer {
-public:
-	void render(HWND hwnd, const std::vector<std::wstring>& candidates) override;
-};
+namespace modian::infra::ui {
+	namespace renderer {
+		class win32_candidate_renderer final : public candidate_renderer {
+		public:
+			void render(HWND hwnd, const std::vector<std::wstring>& candidates) override;
+		};
+	}
 
-class candidate_window {
-public:
-	candidate_window(HINSTANCE h_instance, const std::shared_ptr<candidate_renderer>& renderer);
-	~candidate_window();
+	class candidate_window {
+	public:
+		candidate_window(HINSTANCE h_instance, const std::shared_ptr<renderer::candidate_renderer>& renderer);
+		~candidate_window();
 
-	// 创建并显示窗口
-	bool create();
-	void show() const;
-	void hide() const;
+		// 创建并显示窗口
+		bool create();
+		void show() const;
+		void hide() const;
 
-	// 更新候选词并重绘
-	void update_candidates(const std::vector<std::wstring>& candidates);
-private:
-	static LRESULT CALLBACK wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-	LRESULT handle_message(UINT message, WPARAM wParam, LPARAM lParam) const;
+		// 更新候选词并重绘
+		void update_candidates(const std::vector<std::wstring>& candidates);
+	private:
+		static LRESULT CALLBACK wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+		LRESULT handle_message(UINT message, WPARAM wParam, LPARAM lParam) const;
 
-	HINSTANCE h_instance_;
-	HWND hwnd_;
-	HWND listbox_;
-	std::vector<std::wstring> candidates_;
-	std::shared_ptr<candidate_renderer> renderer_;
-};
+		HINSTANCE h_instance_;
+		HWND hwnd_;
+		HWND listbox_;
+		std::vector<std::wstring> candidates_;
+		std::shared_ptr<renderer::candidate_renderer> renderer_;
+	};
+}

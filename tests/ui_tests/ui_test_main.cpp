@@ -1,10 +1,7 @@
-#include <windows.h>
-#include <string>
-#include <vector>
 #include <modian/ui/candidate_window.h>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    candidate_window wnd{hInstance, std::make_shared<win32_candidate_renderer>()};
+    modian::infra::ui::candidate_window wnd{hInstance, std::make_shared<modian::infra::ui::renderer::win32_candidate_renderer>()};
 
     // 测试候选词
     std::vector<std::wstring> candidates = {

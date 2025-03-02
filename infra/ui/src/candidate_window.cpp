@@ -2,7 +2,7 @@
 
 namespace modian::infra::ui {
     // 窗口类名
-    static auto kCandidateWindowClassName = L"CandidateWindowClass";
+    static constexpr auto CANDIDATE_WINDOW_CLASS_NAME = L"CandidateWindowClass";
 
     candidate_window::candidate_window(HINSTANCE h_instance, const std::shared_ptr<renderer::candidate_renderer>& renderer)
         : h_instance_(h_instance), hwnd_(nullptr), listbox_(nullptr), renderer_(renderer) {
@@ -21,12 +21,12 @@ namespace modian::infra::ui {
         wc.lpfnWndProc = wnd_proc;
         wc.hInstance = h_instance_;
         wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        wc.lpszClassName = kCandidateWindowClassName;
+        wc.lpszClassName = CANDIDATE_WINDOW_CLASS_NAME;
         RegisterClassEx(&wc);
 
         // 创建窗口（无边框、简单样式）
         hwnd_ = CreateWindowExW(WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
-                                  kCandidateWindowClassName,
+                                  CANDIDATE_WINDOW_CLASS_NAME,
                                   L"Candidate Window",
                                   WS_POPUP,
                                   100, 100, 300, 200,

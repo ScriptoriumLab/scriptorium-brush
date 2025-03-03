@@ -14,7 +14,7 @@ modian::core::pinyin_engine::pinyin_engine() {
 		logger_service::logger()->error("Failed to retrieve USERPROFILE.");
 	}
 
-	std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
+	const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
 	load_dictionary(dictionary_path);
 }
 

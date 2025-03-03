@@ -6,14 +6,15 @@
 #include <vector>
 
 namespace modian::core {
-	class pinyin_engine final : public input_engine {
+	class pinyin_engine : public input_engine {
 	public:
-		static pinyin_engine& get_instance(const std::string& path);
+		static constexpr std::string_view id{"pinyin engine"};
+
+		pinyin_engine();
 		std::vector<std::wstring> convert(const std::wstring& input) override;
 
-	private:
 		void load_dictionary(const std::string& path);
-		explicit pinyin_engine(const std::string& path);
+	private:
 		std::unordered_map<std::wstring, std::vector<std::wstring>> dictionary_;
 	};
 }

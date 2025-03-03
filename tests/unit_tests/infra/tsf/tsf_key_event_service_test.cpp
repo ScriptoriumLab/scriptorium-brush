@@ -5,6 +5,14 @@
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
 
+class test_pinyin_engine : public modian::core::pinyin_engine {
+public:
+	static constexpr std::string_view id{"test pinyin engine"};
+	test_pinyin_engine() {
+		load_dictionary(std::string{PROJECT_SOURCE_DIR}.append("/data/pinyin_dictionary.txt"));
+	}
+};
+
 class key_event_observer final : public modian::core::candidate_observer {
 public:
 	void on_candidate_update(const std::vector<std::wstring>& candidates) override {
@@ -25,9 +33,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	candidate_manager.add_observer(observer);
 
 	modian::manager::engine_manager engine_manager{candidate_manager};
-	engine_manager.add_new_engine("test pinyin engine", []() {
-		return std::make_shared<modian::core::pinyin_engine>(modian::core::pinyin_engine::get_instance(std::string{PROJECT_SOURCE_DIR}.append("/data/pinyin_dictionary.txt")));
-	});
+	engine_manager.add_new_engine(modian::core::lazy_load_dictionary<test_pinyin_engine>());
 	engine_manager.select_engine("test pinyin engine");
 
 	auto event_service = modian::infra::tsf::tsf_key_event_service{engine_manager};

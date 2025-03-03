@@ -6,23 +6,11 @@
 #include "modian/core/logger/logger_service.h"
 
 modian::manager::engine_manager::engine_manager(candidate_manager can_manager) : candidate_manager_{std::move(can_manager)} {
-	engine_list_.emplace("pinyin engine", []() -> std::shared_ptr<core::input_engine> {
-		char* userprofile{nullptr};
-		size_t size = 0;
-
-		if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
-			core::logger_service::logger()->error("Failed to retrieve USERPROFILE.");
-			return std::shared_ptr<core::input_engine>{};
-		}
-
-		const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
-
-		return std::make_shared<core::pinyin_engine>(core::pinyin_engine::get_instance(dictionary_path));
-	});
+	engine_list_.emplace(core::lazy_load_dictionary<core::pinyin_engine>());
 }
 
-void modian::manager::engine_manager::add_new_engine(const std::string& engine_name, const std::function<std::shared_ptr<core::input_engine>()>& lazy_load_engine) {
-	engine_list_.emplace(engine_name, lazy_load_engine);
+void modian::manager::engine_manager::add_new_engine(const std::pair<std::string, std::function<std::shared_ptr<core::input_engine>()>>& engine_detail) {
+	engine_list_.emplace(engine_detail);
 }
 
 void modian::manager::engine_manager::select_engine(const std::string& engine_name) {

@@ -4,10 +4,18 @@
 #include <fstream>
 #include <sstream>
 
-// TODO: change to get no param
-modian::core::pinyin_engine& modian::core::pinyin_engine::get_instance(const std::string& path) {
-	static pinyin_engine instance{path};
-	return instance;
+#include "modian/core/logger/logger_service.h"
+
+modian::core::pinyin_engine::pinyin_engine() {
+	char* userprofile{nullptr};
+	size_t size = 0;
+
+	if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
+		logger_service::logger()->error("Failed to retrieve USERPROFILE.");
+	}
+
+	std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
+	load_dictionary(dictionary_path);
 }
 
 std::vector<std::wstring> modian::core::pinyin_engine::convert(const std::wstring& input) {
@@ -32,9 +40,4 @@ void modian::core::pinyin_engine::load_dictionary(const std::string& path) {
 			}
 		}
 	}
-}
-
-modian::core::pinyin_engine::pinyin_engine(const std::string& path) {
-	// TODO: 考虑未来异步加载词库
-	this->pinyin_engine::load_dictionary(path);
 }

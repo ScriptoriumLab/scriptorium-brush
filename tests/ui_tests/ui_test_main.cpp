@@ -12,7 +12,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     };
     wnd.create();
     wnd.update_candidates(candidates);
-    // wnd.SetPosition(100, 100);
     wnd.show();
 
     MSG msg;

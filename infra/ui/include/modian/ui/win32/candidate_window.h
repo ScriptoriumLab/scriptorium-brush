@@ -4,10 +4,10 @@
 
 #include "modian/ui/core/renderer/candidate_renderer.h"
 
-namespace modian::infra::ui {
+namespace modian::infra::ui::win32 {
 	class candidate_window {
 	public:
-		candidate_window(HINSTANCE h_instance, const std::shared_ptr<renderer::candidate_renderer>& renderer);
+		candidate_window(HINSTANCE h_instance, const std::shared_ptr<core::renderer::candidate_renderer>& renderer);
 		~candidate_window();
 
 		// 创建并显示窗口
@@ -26,6 +26,6 @@ namespace modian::infra::ui {
 		HWND listbox_;
 		HFONT candidate_font_;
 		std::vector<std::wstring> candidates_;
-		std::shared_ptr<renderer::candidate_renderer> renderer_;
+		std::shared_ptr<core::renderer::candidate_renderer> renderer_{};
 	};
 }

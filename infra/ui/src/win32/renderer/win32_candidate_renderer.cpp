@@ -1,6 +1,6 @@
 #include "modian/ui/win32/renderer/win32_candidate_renderer.h"
 
-namespace modian::infra::ui::renderer {
+namespace modian::infra::ui::win32::renderer {
 	void win32_candidate_renderer::render(HWND hwnd, const std::vector<std::wstring>& candidates) {
 		PAINTSTRUCT ps;
 		const HDC hdc = BeginPaint(hwnd, &ps);

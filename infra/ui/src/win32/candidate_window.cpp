@@ -1,10 +1,10 @@
 #include "modian/ui/win32/candidate_window.h"
 
-namespace modian::infra::ui {
+namespace modian::infra::ui::win32 {
     // 窗口类名
     static constexpr auto CANDIDATE_WINDOW_CLASS_NAME = L"CandidateWindowClass";
 
-    candidate_window::candidate_window(HINSTANCE h_instance, const std::shared_ptr<renderer::candidate_renderer>& renderer)
+    candidate_window::candidate_window(HINSTANCE h_instance, const std::shared_ptr<core::renderer::candidate_renderer>& renderer)
         : h_instance_(h_instance), hwnd_(nullptr), listbox_(nullptr), candidate_font_(nullptr), renderer_(renderer) {
     }
 

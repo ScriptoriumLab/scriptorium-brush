@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 
-namespace modian::infra::ui::renderer {
+namespace modian::infra::ui::core::renderer {
 	class candidate_renderer {
 	public:
 		virtual ~candidate_renderer() = default;

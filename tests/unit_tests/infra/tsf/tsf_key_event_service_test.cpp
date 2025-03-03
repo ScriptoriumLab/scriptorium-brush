@@ -5,7 +5,7 @@
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
 
-class test_pinyin_engine : public modian::core::pinyin_engine {
+class test_pinyin_engine final : public modian::core::pinyin_engine {
 public:
 	static constexpr std::string_view id{"test pinyin engine"};
 	test_pinyin_engine() {

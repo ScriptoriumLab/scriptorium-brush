@@ -89,6 +89,17 @@ namespace modian::infra::ui {
                            static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_EXSTYLE)));
         SetWindowPos(hwnd_, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top,
                      SWP_NOZORDER | SWP_NOMOVE);
+
+        // get window's size
+        RECT clientRect;
+        GetClientRect(hwnd_, &clientRect);
+
+        // according to window's position, change the size of candidate list box
+        SetWindowPos(listbox_, nullptr,
+                     0, 0,
+                     clientRect.right - clientRect.left,
+                     clientRect.bottom - clientRect.top,
+                     SWP_NOZORDER | SWP_NOMOVE);
     }
 
     LRESULT CALLBACK candidate_window::wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {

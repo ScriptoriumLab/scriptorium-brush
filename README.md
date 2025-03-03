@@ -50,7 +50,7 @@ According to clean architecture, the architecture of Modian is designed like bel
   - [x] Shutdown spdlog when Modian is unregistered from the system
   - [x] spdlog cannot log to `modian.log`
 - [x] Remove redundant code in `util.h` and `registry_info.h`
-- [ ] Move load engine function to engine instead of in engine manager constructor
+- [x] Move load engine function to engine instead of in engine manager constructor
 - [ ] Refactor to use unique_ptr of `tsf_key_event_service` in text service
 
 ### Architecture

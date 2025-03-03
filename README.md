@@ -57,6 +57,8 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [x] Introduce `app` layer to maintain `dll_main` and `server`
 - [x] Introduce `manager` layer to manage different types of input engine
 - [x] Add abstract of `Logger` in core
+- [ ] Refactor `candidate` from `std::vector<std::wstring>` to `virtual_candidate` and `candidate : public virtual candidate`
+- [ ] Refactor observer pattern to event channel pattern
 
 ### Thread Safety
 - [ ] Implement Thread Safety Mechanisms: Introduce appropriate synchronization techniques to manage concurrent access to shared resources, preventing race conditions and ensuring data integrity.

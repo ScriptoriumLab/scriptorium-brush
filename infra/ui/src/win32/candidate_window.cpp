@@ -1,4 +1,4 @@
-#include "modian/ui/candidate_window.h"
+#include "modian/ui/win32/candidate_window.h"
 
 namespace modian::infra::ui {
     // 窗口类名

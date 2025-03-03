@@ -1,4 +1,4 @@
-#include "modian/ui/renderer/win32_candidate_renderer.h"
+#include "modian/ui/win32/renderer/win32_candidate_renderer.h"
 
 namespace modian::infra::ui::renderer {
 	void win32_candidate_renderer::render(HWND hwnd, const std::vector<std::wstring>& candidates) {

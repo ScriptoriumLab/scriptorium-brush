@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "modian/ui/win32/renderer/candidate_renderer.h"
+#include "modian/ui/core/renderer/candidate_renderer.h"
 
 namespace modian::infra::ui {
 	class candidate_window {

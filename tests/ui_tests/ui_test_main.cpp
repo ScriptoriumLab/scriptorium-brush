@@ -2,7 +2,7 @@
 #include "modian/ui/win32/renderer/candidate_renderer.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-    modian::infra::ui::win32::candidate_window wnd{hInstance, std::make_shared<modian::infra::ui::win32::renderer::win32_candidate_renderer>()};
+    modian::infra::ui::win32::candidate_window wnd{hInstance, std::make_shared<modian::infra::ui::win32::renderer::candidate_renderer>()};
 
     // 测试候选词
     std::vector<std::wstring> candidates = {

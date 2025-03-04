@@ -19,12 +19,11 @@ namespace modian::infra::ui::win32 {
 		void update_candidates(const std::vector<std::wstring>& candidates);
 	private:
 		static LRESULT CALLBACK wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-		LRESULT handle_message(UINT message, WPARAM wParam, LPARAM lParam) const;
+		LRESULT handle_message(UINT message, WPARAM wParam, LPARAM lParam);
 
 		HINSTANCE h_instance_;
 		HWND hwnd_;
-		HWND listbox_;
-		HFONT candidate_font_;
+		HDC hdc_;
 		std::vector<std::wstring> candidates_;
 		std::shared_ptr<core::renderer::candidate_renderer> renderer_{};
 	};

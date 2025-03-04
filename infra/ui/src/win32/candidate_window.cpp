@@ -5,13 +5,12 @@ namespace modian::infra::ui::win32 {
     static constexpr auto CANDIDATE_WINDOW_CLASS_NAME = L"CandidateWindowClass";
 
     candidate_window::candidate_window(HINSTANCE h_instance, const std::shared_ptr<core::renderer::candidate_renderer>& renderer)
-        : h_instance_(h_instance), hwnd_(nullptr), listbox_(nullptr), candidate_font_(nullptr), renderer_(renderer) {
+        : h_instance_(h_instance), hwnd_(nullptr), hdc_(nullptr), renderer_(renderer) {
     }
 
     candidate_window::~candidate_window() {
         if (hwnd_) {
             DestroyWindow(hwnd_);
-            DeleteObject(candidate_font_);
             UnregisterClass(CANDIDATE_WINDOW_CLASS_NAME, h_instance_);
         }
     }
@@ -33,26 +32,6 @@ namespace modian::infra::ui::win32 {
                                   WS_POPUP,
                                   100, 100, 300, 200,
                                   nullptr, nullptr, h_instance_, this);
-
-        listbox_ = CreateWindowW(
-            L"LISTBOX", L"",
-            WS_CHILD | WS_VISIBLE | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_VSCROLL,
-            0, 0, 400, 150,
-            hwnd_, nullptr,
-            GetModuleHandle(nullptr), nullptr
-        );
-
-        candidate_font_ = CreateFontW(
-            20, 0, 0, 0, FW_NORMAL,
-            FALSE, FALSE, FALSE,
-            DEFAULT_CHARSET,
-            OUT_DEFAULT_PRECIS,
-            CLIP_DEFAULT_PRECIS,
-            DEFAULT_QUALITY,
-            DEFAULT_PITCH | FF_DONTCARE,
-            L"微软雅黑"  // 使用中文字体
-        );
-        SendMessageW(listbox_, WM_SETFONT, reinterpret_cast<WPARAM>(candidate_font_), TRUE);
 
         return hwnd_ != nullptr;
     }
@@ -76,30 +55,6 @@ namespace modian::infra::ui::win32 {
             InvalidateRect(hwnd_, nullptr, TRUE);
             UpdateWindow(hwnd_);
         }
-        SendMessage(listbox_, LB_RESETCONTENT, 0, 0);
-        for (const auto& str : candidates_) {
-            SendMessage(listbox_, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(str.c_str()));
-        }
-        // 自动调整窗口大小
-        int itemHeight = SendMessage(listbox_, LB_GETITEMHEIGHT, 0, 0);
-        RECT rc = {0, 0, 400, min(10, static_cast<int>(candidates_.size())) * itemHeight + 4};
-        AdjustWindowRectEx(&rc,
-                           static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_STYLE)),
-                           FALSE,
-                           static_cast<DWORD>(GetWindowLongW(hwnd_, GWL_EXSTYLE)));
-        SetWindowPos(hwnd_, nullptr, 0, 0, rc.right - rc.left, rc.bottom - rc.top,
-                     SWP_NOZORDER | SWP_NOMOVE);
-
-        // get window's size
-        RECT clientRect;
-        GetClientRect(hwnd_, &clientRect);
-
-        // according to window's position, change the size of candidate list box
-        SetWindowPos(listbox_, nullptr,
-                     0, 0,
-                     clientRect.right - clientRect.left,
-                     clientRect.bottom - clientRect.top,
-                     SWP_NOZORDER | SWP_NOMOVE);
     }
 
     LRESULT CALLBACK candidate_window::wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -121,11 +76,16 @@ namespace modian::infra::ui::win32 {
         }
     }
 
-    LRESULT candidate_window::handle_message(UINT message, WPARAM wParam, LPARAM lParam) const {
+    LRESULT candidate_window::handle_message(UINT message, WPARAM wParam, LPARAM lParam) {
         switch (message) {
             case WM_PAINT:
                 if (renderer_) {
-                    renderer_->render(hwnd_, candidates_);
+                    PAINTSTRUCT ps;
+                    hdc_ = BeginPaint(hwnd_, &ps);
+                    renderer_->begin_frame(hdc_);
+                    renderer_->draw_list(candidates_);
+                    renderer_->end_frame();
+                    EndPaint(hwnd_, &ps);
                 }
                 return 0;
             default:

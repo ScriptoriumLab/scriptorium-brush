@@ -1,6 +1,7 @@
 add_library(modian_ui STATIC
     src/win32/renderer/candidate_renderer.cpp
     src/win32/candidate_window.cpp
+    src/win32/graphic_context.cpp
 )
 
 target_include_directories(modian_ui PUBLIC

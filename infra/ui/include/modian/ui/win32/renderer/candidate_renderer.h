@@ -1,15 +1,19 @@
 #pragma once
 
+#include <Windows.h>
+
 #include "modian/ui/core/renderer/candidate_renderer.h"
 
 namespace modian::infra::ui::win32::renderer {
 	class candidate_renderer final : public core::renderer::candidate_renderer {
 	public:
-		void begin_frame(const HDC& hdc) override;
+		void set_context(const std::shared_ptr<graphic_context>& context);
+		void begin_frame() override;
 		void draw_list(const std::vector<std::wstring>& items) override;
 		void end_frame() override;
 	private:
-		HWND hwnd_{};
+		HWND hwnd_;
+		HWND listbox_{nullptr};
 		HDC hdc_{};
 		HFONT font_{};
 	};

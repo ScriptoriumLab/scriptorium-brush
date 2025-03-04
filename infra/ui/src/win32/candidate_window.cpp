@@ -1,5 +1,7 @@
 #include "modian/ui/win32/candidate_window.h"
 
+#include <modian/ui/win32/graphic_context.h>
+
 namespace modian::infra::ui::win32 {
     // 窗口类名
     static constexpr auto CANDIDATE_WINDOW_CLASS_NAME = L"CandidateWindowClass";
@@ -32,6 +34,8 @@ namespace modian::infra::ui::win32 {
                                   WS_POPUP,
                                   100, 100, 300, 200,
                                   nullptr, nullptr, h_instance_, this);
+
+        renderer_->set_context(std::make_shared<win32_graphic_context>(hwnd_));
 
         return hwnd_ != nullptr;
     }
@@ -82,7 +86,7 @@ namespace modian::infra::ui::win32 {
                 if (renderer_ && !candidates_.empty()) {
                     PAINTSTRUCT ps;
                     hdc_ = BeginPaint(hwnd_, &ps);
-                    renderer_->begin_frame(hdc_);
+                    renderer_->begin_frame();
                     renderer_->draw_list(candidates_);
                     renderer_->end_frame();
                     EndPaint(hwnd_, &ps);

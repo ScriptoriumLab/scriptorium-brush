@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <Windows.h>
 
 #include "modian/ui/core/renderer/candidate_renderer.h"
 

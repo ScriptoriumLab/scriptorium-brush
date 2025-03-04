@@ -6,7 +6,8 @@
 
 class mock_candidate_renderer final : public modian::infra::ui::core::renderer::candidate_renderer {
 public:
-	MOCK_METHOD(void, begin_frame, (const HDC& hdc), (override));
+	MOCK_METHOD(void, set_context, (const std::shared_ptr<modian::infra::ui::graphic_context>& context), (override));
+	MOCK_METHOD(void, begin_frame, (), (override));
 	MOCK_METHOD(void, draw_list, (const std::vector<std::wstring>& items), (override));
 	MOCK_METHOD(void, end_frame, (), (override));
 };
@@ -16,7 +17,8 @@ TEST(candidate_window_test, should_successfully_call_renderer_when_update_candid
 
 	modian::infra::ui::win32::candidate_window window(GetModuleHandle(nullptr), mock_renderer);
 
-	EXPECT_CALL(*mock_renderer, begin_frame(testing::_)).Times(2);
+	EXPECT_CALL(*mock_renderer, set_context(testing::_)).Times(1);
+	EXPECT_CALL(*mock_renderer, begin_frame()).Times(2);
 	EXPECT_CALL(*mock_renderer, draw_list(testing::_)).Times(2);
 	EXPECT_CALL(*mock_renderer, end_frame()).Times(2);
 

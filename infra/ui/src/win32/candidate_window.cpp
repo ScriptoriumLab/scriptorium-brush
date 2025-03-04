@@ -79,7 +79,7 @@ namespace modian::infra::ui::win32 {
     LRESULT candidate_window::handle_message(UINT message, WPARAM wParam, LPARAM lParam) {
         switch (message) {
             case WM_PAINT:
-                if (renderer_) {
+                if (renderer_ && !candidates_.empty()) {
                     PAINTSTRUCT ps;
                     hdc_ = BeginPaint(hwnd_, &ps);
                     renderer_->begin_frame(hdc_);

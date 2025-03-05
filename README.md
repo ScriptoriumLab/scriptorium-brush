@@ -33,6 +33,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ## TODO
 - [ ] implement UI layer to show candidate window when user is typing
+- [ ] introduce new modern UI framework
 - [ ] design automation test strategies for Modian IME
 - [ ] introduce e2e test
 - [ ] introduce UI e2e test

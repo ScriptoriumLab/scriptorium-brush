@@ -4,12 +4,13 @@
 #include <Windows.h>
 
 #include "modian/ui/core/renderer/candidate_renderer.h"
+#include "modian/core/observer/candidate_observer.h"
 
 namespace modian::infra::ui::win32 {
-	class candidate_window {
+	class candidate_window final : public modian::core::candidate_observer {
 	public:
 		candidate_window(HINSTANCE h_instance, const std::shared_ptr<core::renderer::candidate_renderer>& renderer);
-		~candidate_window();
+		~candidate_window() override;
 
 		// 创建并显示窗口
 		bool create();
@@ -18,6 +19,8 @@ namespace modian::infra::ui::win32 {
 
 		// 更新候选词并重绘
 		void update_candidates(const std::vector<std::wstring>& candidates);
+
+		void on_candidate_update(const std::vector<std::wstring>& candidates) override;
 	private:
 		static LRESULT CALLBACK wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 		LRESULT handle_message(UINT message, WPARAM wParam, LPARAM lParam);

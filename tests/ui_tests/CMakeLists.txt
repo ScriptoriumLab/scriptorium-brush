@@ -4,5 +4,6 @@ add_executable(modian_ui_test WIN32
 
 target_link_libraries(modian_ui_test PRIVATE
     modian_ui
+    modian_core
 )
 

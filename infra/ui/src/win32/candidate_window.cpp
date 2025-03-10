@@ -61,6 +61,8 @@ namespace modian::infra::ui::win32 {
         }
     }
 
+    void candidate_window::on_candidate_update(const std::vector<std::wstring>& candidates) {}
+
     LRESULT CALLBACK candidate_window::wnd_proc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) {
         candidate_window* pThis = nullptr;
         if (message == WM_NCCREATE) {

@@ -6,6 +6,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG 3.4
+)
+FetchContent_MakeAvailable(glfw)
+
 add_library(modian_ui STATIC
     ${imgui_SOURCE_DIR}/imgui.cpp
     ${imgui_SOURCE_DIR}/imgui_draw.cpp
@@ -29,4 +36,5 @@ target_include_directories(modian_ui PUBLIC
 
 target_link_libraries(modian_ui PRIVATE
     modian_core
+    glfw
 )

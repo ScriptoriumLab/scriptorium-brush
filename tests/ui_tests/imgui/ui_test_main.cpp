@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);      // 禁止调整大小
 
     GLFWwindow* window = glfwCreateWindow(
-        800, 600,
+        2000, 2000,
         "Input Method Candidate Window",
         nullptr, nullptr
     );

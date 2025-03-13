@@ -18,14 +18,30 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
     // 设置窗口位置和样式
     ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiCond_FirstUseEver);
 
-    // 1. 设置固定窗口大小（宽度=候选词总宽度+边距，高度=字体高度+边距）
-    const float window_width = candidates.size() * 100 + 20; // 假设每个候选词宽度100px
-    const float window_height = 80;
+    // 动态计算窗口尺寸
+    const float vertical_padding = 20.0f; // 垂直边距
+    float total_buttons_width = 0.0f;
+    float max_button_height = 0.0f;
+
+    ImGui::PushFont(font);
+    for (const auto& cand : candidates) {
+        const ImVec2 text_size = ImGui::CalcTextSize(cand.c_str());
+        if (candidates.size() > 4) {
+            total_buttons_width = text_size.x * 4 + 32.0f; // 文本宽度 + 按钮内边距
+        } else {
+            total_buttons_width = text_size.x * candidates.size() + 32.0f; // 文本宽度 + 按钮内边距
+        }
+        max_button_height = max(max_button_height, text_size.y);
+    }
+    total_buttons_width -= 32.0f; // 最后一个按钮不需要右边距
+    ImGui::PopFont();
+
+    const float window_width = total_buttons_width + 40.0f; // 增加窗口边距
+    const float window_height = max_button_height + vertical_padding * 2;
     ImGui::SetNextWindowSize(ImVec2(window_width, window_height), ImGuiCond_Always);
 
-    // 3. 设置窗口背景色为白色
+    // 设置窗口样式
     ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(255, 255, 255, 255));
-
     ImGui::Begin("候选词", nullptr,
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
@@ -33,32 +49,30 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
         ImGuiWindowFlags_NoDecoration);
 
     ImGui::PushFont(font);
-
-    // 4. 设置字体颜色为黑色
     ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 0, 0, 255));
 
-    // 2. 强制所有按钮在同一行
-    ImGui::BeginGroup();
+    // 计算居中起始位置
+    const float horizontal_start = (window_width - total_buttons_width) / 2;
+    ImGui::SetCursorPosX(horizontal_start);
+    ImGui::SetCursorPosY(vertical_padding);
+
+    // 绘制按钮组
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
-    const ImU32 separator_color = ImGui::GetColorU32(ImGuiCol_Separator); // 浅灰色
-    for (size_t i = 0; i < candidates.size(); i++) {
+    const ImU32 separator_color = IM_COL32(200, 200, 200, 255);
+
+    ImGui::BeginGroup();
+    for (size_t i = 0; i < candidates.size(); ++i) {
         if (i > 0) {
-            // 在上一个候选词右侧绘制分隔线
-            ImVec2 line_start = ImGui::GetItemRectMax();
-            line_start.x -= ImGui::GetStyle().ItemSpacing.x / 2.0f - 16;
-            ImVec2 line_end(line_start.x, line_start.y - ImGui::GetItemRectSize().y);
+            // 绘制分隔线
+            const ImVec2 line_start = ImGui::GetItemRectMax();
+            const ImVec2 line_end(line_start.x, line_start.y - ImGui::GetItemRectSize().y);
+            draw_list->AddLine(line_start, line_end, separator_color, 1.0f);
 
-            draw_list->AddLine(
-                line_start,
-                line_end,
-                separator_color,
-                1.0f // 线宽
-            );
-
-            ImGui::SameLine(0, 32); // 分隔线后添加间距
+            // 调整间距
+            ImGui::SameLine(0, 24);
         }
 
-        // 设置透明按钮背景（保留hover效果）
+        // 透明按钮样式
         ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(200, 200, 200, 80));
 
@@ -71,10 +85,10 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
     ImGui::EndGroup();
 
     // 恢复样式
-    ImGui::PopStyleColor(); // 弹出字体颜色
+    ImGui::PopStyleColor(); // 文本颜色
     ImGui::PopFont();
     ImGui::End();
-    ImGui::PopStyleColor(); // 弹出窗口背景色
+    ImGui::PopStyleColor(); // 窗口背景色
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {

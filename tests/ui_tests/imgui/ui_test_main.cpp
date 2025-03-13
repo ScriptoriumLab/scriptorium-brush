@@ -39,33 +39,31 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
 
     // 2. 强制所有按钮在同一行
     ImGui::BeginGroup();
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    const ImU32 separator_color = ImGui::GetColorU32(ImGuiCol_Separator); // 浅灰色
     for (size_t i = 0; i < candidates.size(); i++) {
-        if (i > 0) ImGui::SameLine(0, 20); // 水平间距20像素
+        if (i > 0) {
+            // 在上一个候选词右侧绘制分隔线
+            ImVec2 line_start = ImGui::GetItemRectMax();
+            line_start.x -= ImGui::GetStyle().ItemSpacing.x / 2.0f - 16;
+            ImVec2 line_end(line_start.x, line_start.y - ImGui::GetItemRectSize().y);
+
+            draw_list->AddLine(
+                line_start,
+                line_end,
+                separator_color,
+                1.0f // 线宽
+            );
+
+            ImGui::SameLine(0, 32); // 分隔线后添加间距
+        }
 
         // 设置透明按钮背景（保留hover效果）
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0,0,0,0));
-        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.8f,0.8f,0.8f,0.5f));
+        ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(200, 200, 200, 80));
 
         if (ImGui::Button(candidates[i].c_str())) {
             OnCandidateSelected(candidates[i]);
-        }
-
-        // 如果不是最后一个候选词，则绘制竖线分隔符
-        if (i != candidates.size() - 1) {
-            // 获取当前按钮的矩形范围
-            ImVec2 btn_min = ImGui::GetItemRectMin();
-            ImVec2 btn_max = ImGui::GetItemRectMax();
-            // 计算分隔线的位置，X 坐标位于按钮右侧偏右 4 像素
-            float separator_x = btn_max.x + 4.0f;
-            ImVec2 line_start = ImVec2(separator_x, btn_min.y);
-            ImVec2 line_end   = ImVec2(separator_x, btn_max.y);
-            // 设置浅灰色（例如RGB=200,200,200，Alpha=255）
-            ImU32 line_color = IM_COL32(200, 200, 200, 255);
-            float thickness = 1.0f;
-            // 通过窗口的 DrawList 绘制分隔线
-            ImGui::GetWindowDrawList()->AddLine(line_start, line_end, line_color, thickness);
-            // 使用 SameLine() 将下一个按钮绘制在同一行
-            ImGui::SameLine();
         }
 
         ImGui::PopStyleColor(2);

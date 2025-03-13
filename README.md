@@ -70,3 +70,4 @@ According to clean architecture, the architecture of Modian is designed like bel
 
 ## Bug
 - [x] Cannot rebuild modian and remove modian directory after unregistering modian IME
+- [ ] Cannot show Chinese character candidates in ImGui framework

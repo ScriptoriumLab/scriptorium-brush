@@ -17,15 +17,21 @@ void OnCandidateSelected(const std::string& candidate) {
 void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* font) {
     // 设置窗口位置和样式
     ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(400, 80), ImGuiCond_FirstUseEver);
+
+    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1, 1, 1, 1));
+
     ImGui::Begin("候选词", nullptr,
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_NoScrollbar |
         ImGuiWindowFlags_NoDecoration);
 
-    // 样式调整
-    ImGui::PushFont(font);
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8, 4));
+
+    ImGui::PushFont(font);
+
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 0, 0, 1));
 
     // 获取当前样式
     ImGuiStyle& style = ImGui::GetStyle();
@@ -48,9 +54,12 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
     // 恢复原始颜色
     style.Colors[ImGuiCol_Button] = original_button_color;
 
-    ImGui::PopStyleVar();
+    ImGui::PopStyleColor();
     ImGui::PopFont();
+    ImGui::PopStyleVar();
     ImGui::End();
+
+    ImGui::PopStyleColor();
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {

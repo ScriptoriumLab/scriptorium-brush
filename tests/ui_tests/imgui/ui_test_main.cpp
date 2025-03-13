@@ -31,7 +31,7 @@ void OnCandidateSelected(const std::string& candidate) {
 }
 
 // 候选词窗口渲染函数
-void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* font) {
+void RenderCandidateWindow(const std::vector<std::wstring>& candidates, ImFont* font) {
     // 设置窗口位置和样式
     ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiCond_FirstUseEver);
 
@@ -42,7 +42,7 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
 
     ImGui::PushFont(font);
     for (const auto& cand : candidates) {
-        const ImVec2 text_size = ImGui::CalcTextSize(cand.c_str());
+        const ImVec2 text_size = ImGui::CalcTextSize(WStringToUTF8(cand).c_str());
         if (candidates.size() > 8) {
             total_buttons_width = text_size.x * 4 + 32.0f; // 文本宽度 + 按钮内边距
         } else {
@@ -94,8 +94,10 @@ void RenderCandidateWindow(const std::vector<std::string>& candidates, ImFont* f
         ImGui::PushStyleColor(ImGuiCol_Button, IM_COL32(0, 0, 0, 0));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, IM_COL32(200, 200, 200, 80));
 
-        if (ImGui::Button(candidates[i].c_str())) {
-            OnCandidateSelected(candidates[i]);
+        auto candidate = WStringToUTF8(candidates[i]);
+
+        if (ImGui::Button(candidate.c_str())) {
+            OnCandidateSelected(candidate);
         }
 
         ImGui::PopStyleColor(2);
@@ -187,14 +189,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
             L"候选词 9", L"候选词 10", L"候选词 11", L"候选词 12"
         };
 
-        // 转换为UTF-8
-        std::vector<std::string> candidates;
-        for (const auto& wstr : chinese_candidates) {
-            candidates.push_back(WStringToUTF8(wstr));
-        }
-
         // 渲染候选窗口（使用中文字体）
-        RenderCandidateWindow(candidates, chinese_font);
+        RenderCandidateWindow(chinese_candidates, chinese_font);
 
         // 渲染绘制
         ImGui::Render();

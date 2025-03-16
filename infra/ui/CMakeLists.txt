@@ -21,10 +21,6 @@ add_library(modian_ui STATIC
     # imgui backend file
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-
-    src/win32/renderer/candidate_renderer.cpp
-    src/win32/candidate_window.cpp
-    src/win32/graphic_context.cpp
 )
 
 target_include_directories(modian_ui PUBLIC

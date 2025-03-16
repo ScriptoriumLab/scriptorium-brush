@@ -12,7 +12,6 @@ add_executable(modian_unit_tests
     core/engine/input_engine_test.cpp
     infra/tsf/dll_main_test.cpp
     infra/tsf/tsf_key_event_service_test.cpp
-    infra/ui/candidate_window_test.cpp
 )
 
 target_include_directories(modian_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)

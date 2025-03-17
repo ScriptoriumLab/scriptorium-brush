@@ -1,3 +1,5 @@
+#include <modian/ui/core/platform/ui_platform.h>
+
 #include "modian/logger/spdlog_logger.h"
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/dll/info/registry_info.h"

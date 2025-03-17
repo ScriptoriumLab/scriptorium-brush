@@ -1,5 +1,6 @@
 #include "modian/tsf/tsf_text_service.h"
 
+#include "modian/ui/core/platform/ui_platform.h"
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::infra::tsf {
@@ -16,6 +17,8 @@ namespace modian::infra::tsf {
 			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
 			p_thread_mgr->Release();
 		}
+
+		candidate_manager_.add_observer(ui::core::platform::ui_platform::instance());
 
 		return hr;
 	}

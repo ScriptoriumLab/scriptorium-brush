@@ -27,4 +27,5 @@ target_link_libraries(modian_tsf
     modian_core
     modian_manager
     modian_logger
+    modian_ui
 )

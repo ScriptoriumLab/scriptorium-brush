@@ -21,6 +21,8 @@ add_library(modian_ui STATIC
     # imgui backend file
     ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
     ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+
+    src/core/platform/ui_platform.cpp
 )
 
 target_include_directories(modian_ui PUBLIC

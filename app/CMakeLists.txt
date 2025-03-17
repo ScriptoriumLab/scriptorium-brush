@@ -13,6 +13,7 @@ target_link_libraries(modian
     modian_tsf
     modian_logger
     modian_core
+    modian_ui
     ole32
     delayimp
     runtimeobject.lib

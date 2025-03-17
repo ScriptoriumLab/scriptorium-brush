@@ -1,5 +1,8 @@
 #include "modian/manager/candidate_manager.h"
 
+#include <iostream>
+#include <ostream>
+
 #include "modian/core/logger/logger_service.h"
 
 bool modian::manager::candidate_manager::update_candidates(const std::vector<std::wstring>& candidates) {

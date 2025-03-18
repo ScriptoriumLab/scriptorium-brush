@@ -43,9 +43,14 @@ namespace modian::infra::ui::core::platform {
 	}
 
 	void ui_platform::on_candidate_update(const std::vector<std::wstring>& candidates) {
+		modian::core::logger_service::logger()->info("Updating candidates to candidate ui");
 		{
 			std::lock_guard lock(candidate_queue_mutex_);
 			candidates_queue_.push(candidates);
+
+			for (const auto& candidate : candidates_queue_.front()) {
+				modian::core::logger_service::logger()->info("Updating candidate: {}", candidate);
+			}
 		}
 		thread_condition_.notify_all();
 	}
@@ -90,12 +95,15 @@ namespace modian::infra::ui::core::platform {
 		float total_buttons_width = 0.0f;
 		float max_button_height = 0.0f;
 
-		// std::vector<std::wstring> candidates = candidates_queue_.front();
-		std::vector<std::wstring> candidates {
-			L"候选词 1", L"候选词 2", L"候选词 3", L"候选词 4",
-			L"候选词 5", L"候选词 6", L"候选词 7", L"候选词 8",
-			L"候选词 9", L"候选词 10", L"候选词 11", L"候选词 12"
-		};
+		if (candidates_queue_.empty() || candidates_queue_.front().empty() || prev_candidates_ == candidates_queue_.front()) {
+			return;
+		}
+		const auto candidates = candidates_queue_.front();
+		prev_candidates_ = candidates;
+
+		for (const auto& candidate : candidates) {
+			modian::core::logger_service::logger()->info("window should show: {}", candidate);
+		}
 
 		ImGui::PushFont(font);
 		for (const auto& cand : candidates) {

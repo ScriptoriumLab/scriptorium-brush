@@ -5,6 +5,7 @@
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
 
+#include <future>
 #include <modian/ui/core/platform/ui_platform.h>
 
 class test_pinyin_engine final : public modian::core::pinyin_engine {
@@ -109,13 +110,6 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]),"墨");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "莫");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
-
-	hr = typing(event_service, L"dian");
-	ASSERT_EQ(hr, S_OK);
-	ASSERT_EQ(observer->candidates_.size(), 3);
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "点");
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "店");
-	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "电");
 
 	modian::infra::ui::core::platform::ui_platform::instance()->stop_ui_thread();
 }

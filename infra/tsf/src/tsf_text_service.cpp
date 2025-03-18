@@ -1,13 +1,29 @@
 #include "modian/tsf/tsf_text_service.h"
 
+#include <future>
+
 #include "modian/ui/core/platform/ui_platform.h"
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::infra::tsf {
+	tsf_text_service::~tsf_text_service() {
+		if (thread_mgr_) {
+			thread_mgr_->Release();
+			thread_mgr_ = nullptr;
+		}
+	}
+
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
+		if (is_active_.exchange(true)) {
+			return S_OK;
+		}
+
 		core::logger_service::logger()->info("Activating Modian IME...");
 
+		if (thread_mgr_) thread_mgr_->Release();
 		thread_mgr_ = p_thread_mgr;
+		thread_mgr_->AddRef();
+
 		client_id_ = tf_client_id;
 
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
@@ -15,10 +31,13 @@ namespace modian::infra::tsf {
 		if (SUCCEEDED(hr)) {
 			core::logger_service::logger()->info("Activating Modian IME key event handler...");
 			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
-			p_thread_mgr->Release();
+			keystroke_mgr->Release();
 		}
 
+		core::logger_service::logger()->info("Starting ui thread...");
+		ui::core::platform::ui_platform::instance()->start_ui_thread();
 		candidate_manager_.add_observer(ui::core::platform::ui_platform::instance());
+		core::logger_service::logger()->info("Finish starting ui thread...");
 
 		return hr;
 	}
@@ -34,6 +53,7 @@ namespace modian::infra::tsf {
 
 		thread_mgr_ = nullptr;
 		client_id_ = TF_CLIENTID_NULL;
+		is_active_.store(false);
 
 		return hr;
 	}

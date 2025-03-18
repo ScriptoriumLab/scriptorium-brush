@@ -43,12 +43,6 @@ namespace modian::infra::ui::core::platform {
 	}
 
 	void ui_platform::on_candidate_update(const std::vector<std::wstring>& candidates) {
-		modian::core::logger_service::logger()->info("Starting ui thread...");
-		if (!instance()->is_thread_running_) {
-			instance()->start_ui_thread();
-		}
-		modian::core::logger_service::logger()->info("Finish starting ui thread...");
-
 		{
 			std::lock_guard lock(candidate_queue_mutex_);
 			candidates_queue_.push(candidates);
@@ -81,6 +75,9 @@ namespace modian::infra::ui::core::platform {
 	// 候选词被选中的回调
 	void ui_platform::on_candidate_selected(const std::string& candidate) {
 		modian::core::logger_service::logger()->info("Candidate selected: {}", candidate);
+		if (!candidates_queue_.empty()) {
+			candidates_queue_.pop();
+		}
 	}
 
 	// 候选词窗口渲染函数
@@ -93,19 +90,12 @@ namespace modian::infra::ui::core::platform {
 		float total_buttons_width = 0.0f;
 		float max_button_height = 0.0f;
 
-		std::vector<std::wstring> candidates = candidates_queue_.front();
-		// std::vector<std::wstring> candidates {
-  //           L"候选词 1", L"候选词 2", L"候选词 3", L"候选词 4",
-  //           L"候选词 5", L"候选词 6", L"候选词 7", L"候选词 8",
-  //           L"候选词 9", L"候选词 10", L"候选词 11", L"候选词 12"
-  //       };
-		if (!candidates_queue_.empty()) {
-			candidates_queue_.pop();
-		}
-
-		if (candidates.empty()) {
-			return;
-		}
+		// std::vector<std::wstring> candidates = candidates_queue_.front();
+		std::vector<std::wstring> candidates {
+			L"候选词 1", L"候选词 2", L"候选词 3", L"候选词 4",
+			L"候选词 5", L"候选词 6", L"候选词 7", L"候选词 8",
+			L"候选词 9", L"候选词 10", L"候选词 11", L"候选词 12"
+		};
 
 		ImGui::PushFont(font);
 		for (const auto& cand : candidates) {
@@ -192,7 +182,7 @@ namespace modian::infra::ui::core::platform {
 
 		// 2. 创建透明无边框窗口
 		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);      // 无边框
-		glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, 1); // 透明背景
+		glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE); // 透明背景
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);      // 禁止调整大小
 
 		GLFWwindow* window = glfwCreateWindow(

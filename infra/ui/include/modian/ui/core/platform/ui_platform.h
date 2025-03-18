@@ -27,7 +27,7 @@ namespace modian::infra::ui::core::platform {
 	private:
         void ui_thread_func();
         inline void render_candidates();
-		static void on_candidate_selected(const std::string& candidate);
+		void on_candidate_selected(const std::string& candidate);
 		static std::string wstring_to_utf8(const std::wstring& wstr);
 
         std::thread ui_thread_;

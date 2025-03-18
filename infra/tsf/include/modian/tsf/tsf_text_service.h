@@ -10,7 +10,7 @@ namespace modian::infra::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
 	public:
 		tsf_text_service() = default;
-		virtual ~tsf_text_service() = default;
+		virtual ~tsf_text_service();
 		STDMETHODIMP Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) override;
 		STDMETHODIMP Deactivate() override;
 
@@ -18,6 +18,7 @@ namespace modian::infra::tsf {
 		STDMETHODIMP_(ULONG) AddRef() override;
 		STDMETHODIMP_(ULONG) Release() override;
 	private:
+		std::atomic<bool> is_active_{false};
         ULONG ref_count_{0};
         TfClientId client_id_ = TF_CLIENTID_NULL;
         ITfThreadMgr* thread_mgr_ = nullptr;

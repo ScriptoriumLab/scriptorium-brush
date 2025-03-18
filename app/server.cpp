@@ -12,6 +12,7 @@ volatile long modian::infra::tsf::g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
 	modian::core::logger_service::logger()->info("Start unloading...");
+	modian::infra::ui::core::platform::ui_platform::instance()->stop_ui_thread();
 	return (modian::infra::tsf::g_server_lock == 0 && modian::infra::tsf::g_active_objects == 0) ? S_OK : S_FALSE;
 }
 

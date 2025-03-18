@@ -1,6 +1,5 @@
 #include "modian/tsf/tsf_text_service.h"
 
-#include "modian/ui/core/platform/ui_platform.h"
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::infra::tsf {

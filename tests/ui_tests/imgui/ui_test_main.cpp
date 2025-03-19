@@ -26,7 +26,6 @@ public:
 HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
 
 void input_method() {
-	std::cout << "!!!!!!!!!!! in input method" << std::endl;
 	auto ui_observer = modian::infra::ui::core::platform::ui_platform::instance();
 
 	modian::manager::candidate_manager candidate_manager;

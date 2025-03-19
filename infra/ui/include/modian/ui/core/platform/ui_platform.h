@@ -37,7 +37,6 @@ namespace modian::infra::ui::core::platform {
         std::condition_variable thread_condition_;
 		std::mutex candidate_queue_mutex_;
         std::queue<std::vector<std::wstring>> candidates_queue_{};
-		std::vector<std::wstring> prev_candidates_;
 
 		ImFont* font{};
 	};

@@ -95,15 +95,11 @@ namespace modian::infra::ui::core::platform {
 		float total_buttons_width = 0.0f;
 		float max_button_height = 0.0f;
 
-		if (candidates_queue_.empty() || candidates_queue_.front().empty() || prev_candidates_ == candidates_queue_.front()) {
+		if (candidates_queue_.empty() || candidates_queue_.front().empty()) {
 			return;
 		}
-		const auto candidates = candidates_queue_.front();
-		prev_candidates_ = candidates;
 
-		for (const auto& candidate : candidates) {
-			modian::core::logger_service::logger()->info("window should show: {}", candidate);
-		}
+		const auto candidates = candidates_queue_.front();
 
 		ImGui::PushFont(font);
 		for (const auto& cand : candidates) {

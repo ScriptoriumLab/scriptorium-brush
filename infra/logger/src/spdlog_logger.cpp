@@ -61,6 +61,10 @@ namespace modian::infra::logger {
 		logger_->info(fmt::runtime(message), wstring_to_string(arg));
     }
 
+    void spdlog_logger::info_impl(const std::string& message, const int& arg) {
+		logger_->info(fmt::runtime(message), arg);
+    }
+
     std::string spdlog_logger::wstring_to_string(const std::wstring& wstr) {
          if (wstr.empty()) {
              return {};

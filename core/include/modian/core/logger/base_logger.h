@@ -20,5 +20,6 @@ namespace modian::core {
 		virtual void info_impl(const std::string& message) = 0;
 		virtual void info_impl(const std::string& message, const std::string& arg) = 0;
 		virtual void info_impl(const std::string& message, const std::wstring& arg) = 0;
+		virtual void info_impl(const std::string& message, const int& arg) = 0;
 	};
 }

@@ -24,8 +24,8 @@ namespace modian::infra::ui::core::platform {
         ui_platform(ui_platform&&) = delete;
         ui_platform& operator=(const ui_platform&) = delete;
         ui_platform& operator=(ui_platform&&) = delete;
-	private:
         void ui_thread_func();
+	private:
         inline void render_candidates();
 		void on_candidate_selected(const std::string& candidate);
 		static std::string wstring_to_utf8(const std::wstring& wstr);

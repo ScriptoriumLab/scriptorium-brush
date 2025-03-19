@@ -19,6 +19,7 @@ namespace modian::infra::logger {
 		void info_impl(const std::string& message) override;
 		void info_impl(const std::string& message, const std::string& arg) override;
 		void info_impl(const std::string& message, const std::wstring& arg) override;
+		void info_impl(const std::string& message, const int& arg) override;
 
 	private:
 		static std::string wstring_to_string(const std::wstring& wstr);

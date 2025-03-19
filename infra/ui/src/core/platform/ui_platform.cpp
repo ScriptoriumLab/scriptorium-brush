@@ -33,6 +33,7 @@ namespace modian::infra::ui::core::platform {
 			std::lock_guard<std::mutex> lock(thread_mutex_);
 			if (is_thread_running_) {
 				exit_flag_ = true;
+				is_thread_running_ = false;
 				thread_condition_.notify_all();
 			}
 		}

@@ -13,7 +13,7 @@
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/core/engine/input_engine.h"
 
-std::mutex input_method_mutex;
+#define NOT_USED(__val__) ((void)(__val__))
 
 class test_pinyin_engine final : public modian::core::pinyin_engine {
 public:
@@ -38,10 +38,17 @@ void input_method() {
 
 	auto event_service = modian::infra::tsf::tsf_key_event_service{engine_manager};
 
-	typing(event_service, L"ni");
-	typing(event_service, L"hao");
-	typing(event_service, L"mo");
-	typing(event_service, L"dian");
+	auto hr = typing(event_service, L"ni");
+	NOT_USED(hr);
+
+	hr = typing(event_service, L"hao");
+	NOT_USED(hr);
+
+	hr = typing(event_service, L"mo");
+	NOT_USED(hr);
+
+	hr = typing(event_service, L"dian");
+	NOT_USED(hr);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {

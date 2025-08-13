@@ -20,7 +20,6 @@ target_link_libraries(modian_unit_tests PRIVATE
     modian_core
     modian_manager
     modian_tsf
-    modian_ui
     modian
     gtest_main
     gmock_main

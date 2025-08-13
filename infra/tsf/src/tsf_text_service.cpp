@@ -2,7 +2,6 @@
 
 #include <future>
 
-#include "modian/ui/core/platform/ui_platform.h"
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::infra::tsf {
@@ -33,11 +32,6 @@ namespace modian::infra::tsf {
 			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
 			keystroke_mgr->Release();
 		}
-
-		core::logger_service::logger()->info("Starting ui thread...");
-		ui::core::platform::ui_platform::instance()->start_ui_thread();
-		candidate_manager_.add_observer(ui::core::platform::ui_platform::instance());
-		core::logger_service::logger()->info("Finish starting ui thread...");
 
 		return hr;
 	}

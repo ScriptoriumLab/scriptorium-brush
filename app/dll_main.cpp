@@ -17,13 +17,6 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVO
 		 * }
 		 */
 
-		/**
-		 * TODO: when need to create a UI
-		 * if (!register_window_class()) {
-		 *     return FALSE;
-		 * }
-		 */
-
 		break;
 	case DLL_PROCESS_DETACH:
 		/**

@@ -1,5 +1,3 @@
-#include <modian/ui/core/platform/ui_platform.h>
-
 #include "modian/logger/spdlog_logger.h"
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/dll/info/registry_info.h"
@@ -12,7 +10,6 @@ volatile long modian::infra::tsf::g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
 	modian::core::logger_service::logger()->info("Start unloading...");
-	modian::infra::ui::core::platform::ui_platform::instance()->stop_ui_thread();
 	return (modian::infra::tsf::g_server_lock == 0 && modian::infra::tsf::g_active_objects == 0) ? S_OK : S_FALSE;
 }
 
@@ -32,7 +29,6 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
 
 STDAPI DllUnregisterServer() {
 	modian::core::logger_service::logger()->info("Unregistering Modian IME dll...");
-	modian::infra::ui::core::platform::ui_platform::instance()->stop_ui_thread();
 
 	modian::infra::tsf::dll::com_registration::unregister_profiles();
 	modian::infra::tsf::dll::com_registration::unregister_categories();

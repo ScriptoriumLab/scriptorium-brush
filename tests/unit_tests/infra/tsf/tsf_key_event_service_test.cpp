@@ -6,7 +6,6 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <future>
-#include <modian/ui/core/platform/ui_platform.h>
 
 class test_pinyin_engine final : public modian::core::pinyin_engine {
 public:
@@ -74,14 +73,10 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_ui) {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
-	modian::infra::ui::core::platform::ui_platform::instance()->start_ui_thread();
-	auto ui_observer = modian::infra::ui::core::platform::ui_platform::instance();
-
 	auto observer = std::make_shared<key_event_observer>();
 
 	modian::manager::candidate_manager candidate_manager;
 	candidate_manager.add_observer(observer);
-	candidate_manager.add_observer(ui_observer);
 
 	modian::manager::engine_manager engine_manager{candidate_manager};
 	engine_manager.add_new_engine(modian::core::lazy_load_dictionary<test_pinyin_engine>());
@@ -110,8 +105,6 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]),"墨");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "莫");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
-
-	modian::infra::ui::core::platform::ui_platform::instance()->stop_ui_thread();
 }
 
 HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {

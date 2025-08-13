@@ -7,14 +7,14 @@
 #include "modian/tsf/dll/dll_util.h"
 
 namespace modian::infra::tsf::dll {
-	auto_com::auto_com() : b_init{false} {
-		HRESULT hr = CoInitialize(nullptr);
-		if (FAILED(hr)) return;
-		b_init = true;
+	auto_com::auto_com() {
+		if (const auto hr = CoInitializeEx(nullptr, COINIT_APARTMENTTHREADED); SUCCEEDED(hr)) {
+			apartment_type_ = (hr == S_OK) ? apartment_type::APARTMENT_NEWLY_INIT : apartment_type::APARTMENT_EXISTING;
+		}
 	}
 
 	auto_com::~auto_com() {
-		if (b_init) {
+		if (apartment_type_ == apartment_type::APARTMENT_NEWLY_INIT) {
 			CoUninitialize();
 		}
 	}

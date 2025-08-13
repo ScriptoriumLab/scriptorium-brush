@@ -33,6 +33,7 @@ void modian::manager::candidate_manager::remove_observer(const std::shared_ptr<c
 }
 
 void modian::manager::candidate_manager::notify_observers() const {
+	core::logger_service::logger()->info("Updating candidates to observers: {}", observers_.size());
 	for (const auto& observer : observers_) {
 		observer->on_candidate_update(candidates_);
 	}

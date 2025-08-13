@@ -56,7 +56,12 @@ namespace modian::infra::ui::core::platform {
 		thread_condition_.notify_all();
 	}
 
-	ui_platform::ui_platform() : is_thread_running_{false}, exit_flag_{false}, font{nullptr} {}
+	ui_platform::ui_platform() : is_thread_running_{false}, exit_flag_{false} {
+		// candidates_queue_.push({L"你", L"尼", L"泥"});
+		// candidates_queue_.push({L"好", L"号", L"浩"});
+		// candidates_queue_.push({L"墨", L"莫", L"末"});
+		// candidates_queue_.push({L"点", L"电", L"店"});
+	}
 
 	ui_platform::~ui_platform() {
 		stop_ui_thread();
@@ -108,7 +113,7 @@ namespace modian::infra::ui::core::platform {
 			if (candidates.size() > 8) {
 				total_buttons_width = text_size.x * 4 + 32.0f; // 文本宽度 + 按钮内边距
 			} else {
-				total_buttons_width = text_size.x * candidates.size() + 32.0f; // 文本宽度 + 按钮内边距
+				total_buttons_width = text_size.x * (candidates.size() + 2) + 32.0f; // 文本宽度 + 按钮内边距
 			}
 			max_button_height = max(max_button_height, text_size.y);
 		}

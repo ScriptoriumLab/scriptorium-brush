@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imgui.h>
+#include <msctf.h>
 #include <vector>
 #include <string>
 #include <thread>
@@ -10,10 +11,11 @@
 #include "modian/core/observer/candidate_observer.h"
 
 namespace modian::infra::ui::core::platform {
-	class ui_platform final : public modian::core::candidate_observer {
+	class ui_platform final : public modian::core::candidate_observer, public ITfCandidateListUIElementBehavior {
 	public:
         ui_platform();
         ~ui_platform() override;
+
 
     	static std::shared_ptr<ui_platform> instance();
         void start_ui_thread();

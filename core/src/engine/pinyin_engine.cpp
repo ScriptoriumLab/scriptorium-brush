@@ -7,15 +7,12 @@
 #include "modian/core/logger/logger_service.h"
 
 modian::core::pinyin_engine::pinyin_engine() {
-	char* userprofile{nullptr};
-	size_t size = 0;
-
-	if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
-		logger_service::logger()->error("Failed to retrieve USERPROFILE.");
+	try {
+		const std::string dictionary_path = get_home_directory() + "/Modian/Local/pinyin_dictionary.txt";
+		load_dictionary(dictionary_path);
+	} catch (const std::exception& e) {
+		logger_service::logger()->error(e.what());
 	}
-
-	const std::string dictionary_path = std::string(userprofile) + "/Modian/Local/pinyin_dictionary.txt";
-	load_dictionary(dictionary_path);
 }
 
 std::vector<std::wstring> modian::core::pinyin_engine::convert(const std::wstring& input) {
@@ -40,4 +37,17 @@ void modian::core::pinyin_engine::load_dictionary(const std::string& path) {
 			}
 		}
 	}
+}
+
+std::string modian::core::pinyin_engine::get_home_directory() {
+#ifdef _WIN32
+	if (const std::string userprofile = std::getenv("USERPROFILE"); !userprofile.empty()) {
+		return userprofile;
+	}
+#else
+	if (const std::string home = std::getenv("HOME"); !home.empty()) {
+		return home;
+	}
+#endif
+	throw std::runtime_error("Failed to retrieve home directory.");
 }

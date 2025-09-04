@@ -15,6 +15,7 @@ namespace modian::core {
 
 		void load_dictionary(const std::string& path);
 	private:
+		static std::string get_home_directory();
 		std::unordered_map<std::wstring, std::vector<std::wstring>> dictionary_;
 	};
 }

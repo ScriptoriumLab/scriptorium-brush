@@ -69,6 +69,17 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [ ] Develop a Strategy for Dynamic Dictionary Updates: Create a robust plan to handle real-time dictionary updates without disrupting ongoing input processing, ensuring that new entries are seamlessly incorporated.
 - [ ] Conduct Comprehensive Testing: Perform thorough testing under various scenarios to identify and resolve potential threading issues, ensuring the stability and reliability of the input method.
 
+### Input Event Handling
+- [ ] Refactor TSF key event handling
+  - Normalize `WPARAM`/`LPARAM` into a platform-independent **KeyEvent abstraction**.
+  - Stop treating `WPARAM` as `wchar_t` (it's VK, not character).
+  - Extract **VK**, **ScanCode**, **modifiers**, and **repeat** info from parameters.
+  - Use `ToUnicodeEx` (or `WM_CHAR`) to translate into **UTF-8 text events**.
+  - Route **control keys** (Backspace, Enter, arrows, etc.) via dedicated `handle_raw_keydown`.
+  - Forward **text input** (UTF-8) via `handle_text_input`.
+  - Ensure `OnTestKeyDown` mirrors `OnKeyDown` decision logic (no side effects).
+  - Keep `OnKeyUp` and `OnTestKeyUp` consistent with the same abstraction.
+
 ## Bug
 - [x] Cannot rebuild modian and remove modian directory after unregistering modian IME
 - [x] Cannot show Chinese character candidates in ImGui framework

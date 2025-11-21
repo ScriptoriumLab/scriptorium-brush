@@ -1,145 +1,174 @@
 #include "modian/tsf/dll/register.h"
 
 #include <msctf.h>
-#include <strsafe.h>
+#include <wrl/client.h>
+#include <string>
+#include <vector>
 
 #include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/dll/dll_util.h"
 
+using Microsoft::WRL::ComPtr;
+
 namespace modian::infra::tsf::dll {
-	bool com_registration::register_profiles() {
-		HRESULT hr{S_FALSE};
+    constexpr UINT DEFAULT_ICON_INDEX = static_cast<UINT>(-12);
 
-		ITfInputProcessorProfileMgr* input_processor_profile_mgr{nullptr};
-		hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles, nullptr, CLSCTX_INPROC_SERVER, IID_ITfInputProcessorProfileMgr, reinterpret_cast<void**>(&input_processor_profile_mgr));
-		if (FAILED(hr)) {
-			return false;
-		}
+    bool com_registration::register_profiles() {
+        ComPtr<ITfInputProcessorProfileMgr> profile_mgr;
 
-		WCHAR ach_icon_file[MAX_PATH] = {'\0'};
-		DWORD cch_a{0};
-		cch_a = GetModuleFileName(modian_instance, ach_icon_file, MAX_PATH);
-		cch_a = cch_a >= MAX_PATH ? (MAX_PATH - 1) : cch_a;
-		ach_icon_file[cch_a] = '\0';
+        HRESULT hr = CoCreateInstance(
+            CLSID_TF_InputProcessorProfiles,
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&profile_mgr)
+        );
 
-		size_t len_of_desc{0};
-		hr = StringCchLength(info::MODIAN_IME_DESC.data(), STRSAFE_MAX_CCH, &len_of_desc);
-		if (hr != S_OK) {
-			goto Exit;
-		}
+        if (FAILED(hr)) {
+            return false;
+        }
 
-		// TODO: extract -12 to variable
-		// hr = input_processor_profile_mgr->RegisterProfile(MODIAN_IME_CLSID, MODIAN_IME_LANG_ID, MODIAN_IME_GUID_PROFILE, MODIAN_IME_DESC, static_cast<ULONG>(len_of_desc), ach_icon_file, cch_a, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
-		hr = input_processor_profile_mgr->RegisterProfile(info::MODIAN_IME_CLSID, info::MODIAN_IME_LANG_ID, info::MODIAN_IME_GUID_PROFILE, info::MODIAN_IME_DESC.data(), static_cast<ULONG>(len_of_desc), nullptr, 0, static_cast<UINT>(-12), nullptr, 0, TRUE, 0);
+        std::vector<WCHAR> file_name_buf(MAX_PATH);
+        const DWORD copied_len = GetModuleFileNameW(modian_instance, file_name_buf.data(), static_cast<DWORD>(file_name_buf.size()));
 
-		Exit:
-		if (input_processor_profile_mgr) {
-			input_processor_profile_mgr->Release();
-		}
+        if (copied_len == 0) {
+            return false;
+        }
 
-		return (hr == S_OK);
-	}
+        hr = profile_mgr->RegisterProfile(
+            info::MODIAN_IME_CLSID,
+            info::MODIAN_IME_LANG_ID,
+            info::MODIAN_IME_GUID_PROFILE,
+            info::MODIAN_IME_DESC.data(),
+            static_cast<ULONG>(info::MODIAN_IME_DESC.size()),
+            file_name_buf.data(), // 图标文件路径 (DLL 本身)
+            static_cast<ULONG>(copied_len),
+            DEFAULT_ICON_INDEX,   // 图标索引
+            nullptr,
+            0,
+            TRUE,
+            0
+        );
 
-	void com_registration::unregister_profiles() {
-		HRESULT hr{S_OK};
+        return hr == S_OK;
+    }
 
-		ITfInputProcessorProfileMgr* input_processor_profile_mgr{nullptr};
-		hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles, nullptr, CLSCTX_INPROC_SERVER, IID_ITfInputProcessorProfileMgr, reinterpret_cast<void**>(&input_processor_profile_mgr));
-		if (FAILED(hr)) {
-			goto Exit;
-		}
+    void com_registration::unregister_profiles() {
+        ComPtr<ITfInputProcessorProfileMgr> profile_mgr;
+        const HRESULT hr = CoCreateInstance(
+            CLSID_TF_InputProcessorProfiles,
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&profile_mgr)
+        );
 
-		input_processor_profile_mgr->UnregisterProfile(info::MODIAN_IME_CLSID, info::MODIAN_IME_LANG_ID, info::MODIAN_IME_GUID_PROFILE, 0);
+        if (FAILED(hr)) {
+            return;
+        }
 
-		Exit:
-		if (input_processor_profile_mgr) {
-			input_processor_profile_mgr->Release();
-		}
-	}
+        profile_mgr->UnregisterProfile(
+            info::MODIAN_IME_CLSID,
+            info::MODIAN_IME_LANG_ID,
+            info::MODIAN_IME_GUID_PROFILE,
+            0
+        );
+    }
 
-	bool com_registration::register_categories() {
-		ITfCategoryMgr* category_mgr{nullptr};
-		HRESULT hr{S_OK};
+    bool com_registration::register_categories() {
+        ComPtr<ITfCategoryMgr> category_mgr;
+        HRESULT hr = CoCreateInstance(
+            CLSID_TF_CategoryMgr,
+            nullptr,
+            CLSCTX_INPROC_SERVER,
+            IID_PPV_ARGS(&category_mgr)
+        );
 
-		hr = CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, reinterpret_cast<void**>(&category_mgr));
-		if (FAILED(hr)) {
-			return false;
-		}
+        if (FAILED(hr)) {
+            return false;
+        }
 
-		for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
-			hr = category_mgr->RegisterCategory(info::MODIAN_IME_CLSID, guid, info::MODIAN_IME_CLSID);
-		}
+        for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
+            hr = category_mgr->RegisterCategory(
+                info::MODIAN_IME_CLSID,
+                guid,
+                info::MODIAN_IME_CLSID
+            );
+        }
 
-		category_mgr->Release();
+        return (hr == S_OK);
+    }
 
-		return (hr == S_OK);
-	}
+    void com_registration::unregister_categories() {
+        ComPtr<ITfCategoryMgr> category_mgr;
+        if (FAILED(CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&category_mgr)))) {
+            return;
+        }
 
-	void com_registration::unregister_categories() {
-		ITfCategoryMgr* category_mgr{nullptr};
-		HRESULT hr{S_OK};
+        for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
+            category_mgr->UnregisterCategory(
+                info::MODIAN_IME_CLSID,
+                guid,
+                info::MODIAN_IME_CLSID
+            );
+        }
+    }
 
-		hr = CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_ITfCategoryMgr, reinterpret_cast<void**>(&category_mgr));
-		if (FAILED(hr)) {
-			return;
-		}
+    bool com_registration::register_server() {
+        const std::wstring key_path = info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() +
+                                      util::convert_clsid_to_string(info::MODIAN_IME_CLSID);
 
-		for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
-			category_mgr->UnregisterCategory(info::MODIAN_IME_CLSID, guid, info::MODIAN_IME_CLSID);
-		}
+        HKEY h_key = nullptr;
+        HKEY h_sub_key = nullptr;
+        bool success = false;
 
-		category_mgr->Release();
-	}
+        // 辅助 lambda，用于关闭 key，实现简单的 RAII
+        auto close_keys = [&](HKEY k1, HKEY k2) {
+            if (k1) RegCloseKey(k1);
+            if (k2) RegCloseKey(k2);
+        };
 
-	bool com_registration::register_server() {
-		DWORD copied_string_len{0};
-		HKEY reg_key_handle{nullptr};
-		HKEY reg_sub_key_handle{nullptr};
-		bool ret{false};
-		const std::wstring ach_ime_key{info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + util::convert_clsid_to_string(info::MODIAN_IME_CLSID)};
-		WCHAR ach_file_name[MAX_PATH]{'\0'};
+        if (RegCreateKeyEx(HKEY_CLASSES_ROOT, key_path.c_str(), 0, nullptr,
+            REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &h_key, nullptr) != ERROR_SUCCESS) {
+            return false;
+        }
 
-		if (RegCreateKeyEx(HKEY_CLASSES_ROOT, ach_ime_key.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_key_handle, &copied_string_len) == ERROR_SUCCESS) {
-			if (RegSetValueEx(reg_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(info::MODIAN_IME_DESC.data()), info::MODIAN_IME_DESC.size() * sizeof(WCHAR)) != ERROR_SUCCESS) {
-				goto Exit;
-			}
+        if (RegSetValueEx(h_key, nullptr, 0, REG_SZ,
+            reinterpret_cast<const BYTE*>(info::MODIAN_IME_DESC.data()),
+            static_cast<DWORD>(info::MODIAN_IME_DESC.size() * sizeof(WCHAR))) != ERROR_SUCCESS) {
+            close_keys(h_key, nullptr);
+            return false;
+        }
 
-			if (RegCreateKeyEx(reg_key_handle, info::MODIAN_IME_REGINFO_KEY_INPROSVR32.data(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &reg_sub_key_handle, &copied_string_len) == ERROR_SUCCESS) {
-				copied_string_len = GetModuleFileNameW(modian_instance, ach_file_name, ARRAYSIZE(ach_file_name));
-				copied_string_len = copied_string_len >= MAX_PATH - 1 ? MAX_PATH : ++copied_string_len;
-				if (RegSetValueEx(reg_sub_key_handle, nullptr, 0, REG_SZ, reinterpret_cast<const BYTE*>(ach_file_name), copied_string_len * sizeof(WCHAR)) != ERROR_SUCCESS) {
-					goto Exit;
-				}
+        if (RegCreateKeyEx(h_key, info::MODIAN_IME_REGINFO_KEY_INPROSVR32.data(), 0, nullptr,
+            REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &h_sub_key, nullptr) != ERROR_SUCCESS) {
+            close_keys(h_key, nullptr);
+            return false;
+        }
 
-				if (RegSetValueEx(reg_sub_key_handle, info::MODIAN_IME_REGINFO_KEY_THREADMODEL.data(), 0, REG_SZ, reinterpret_cast<const BYTE*>(info::MODIAN_IME_MODEL.data()), info::MODIAN_IME_MODEL.size() * sizeof(WCHAR)) != ERROR_SUCCESS) {
-					goto Exit;
-				}
+        std::vector<WCHAR> file_name(MAX_PATH);
+        DWORD len = GetModuleFileNameW(modian_instance, file_name.data(), static_cast<DWORD>(file_name.size()));
 
-				ret = TRUE;
-			}
-		}
+        if (RegSetValueEx(h_sub_key, nullptr, 0, REG_SZ,
+            reinterpret_cast<const BYTE*>(file_name.data()),
+            len * sizeof(WCHAR)) == ERROR_SUCCESS) {
 
-		Exit:
-		if (reg_sub_key_handle) {
-			RegCloseKey(reg_sub_key_handle);
-			reg_sub_key_handle = nullptr;
-		}
+            if (RegSetValueEx(h_sub_key, info::MODIAN_IME_REGINFO_KEY_THREADMODEL.data(), 0, REG_SZ,
+                reinterpret_cast<const BYTE*>(info::MODIAN_IME_MODEL.data()),
+                static_cast<DWORD>(info::MODIAN_IME_MODEL.size() * sizeof(WCHAR))) == ERROR_SUCCESS) {
+                success = true;
+            }
+        }
 
-		if (reg_key_handle) {
-			RegCloseKey(reg_key_handle);
-			reg_key_handle = nullptr;
-		}
+        close_keys(h_key, h_sub_key);
+        return success;
+    }
 
-		return ret;
-	}
+    void com_registration::unregister_server() {
+        const std::wstring key_path = info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() +
+                                      util::convert_clsid_to_string(info::MODIAN_IME_CLSID);
+        recurse_delete_key(HKEY_CLASSES_ROOT, key_path.c_str());
+    }
 
-	void com_registration::unregister_server() {
-		const std::wstring ach_ime_key{info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() + util::convert_clsid_to_string(info::MODIAN_IME_CLSID)};
-
-		recurse_delete_key(HKEY_CLASSES_ROOT, ach_ime_key.c_str());
-	}
-
-	LONG com_registration::recurse_delete_key(const HKEY& h_parent_key, const LPCTSTR& lpsz_key) {
+	LONG com_registration::recurse_delete_key(HKEY h_parent_key, LPCTSTR lpsz_key) {
 		HKEY reg_key_handle = nullptr;
 		LONG res = 0;
 		FILETIME time;
@@ -162,5 +191,5 @@ namespace modian::infra::tsf::dll {
 		RegCloseKey(reg_key_handle);
 
 		return res == ERROR_SUCCESS ? RegDeleteKey(h_parent_key, lpsz_key) : res;
-	}
+    }
 }

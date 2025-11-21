@@ -5,18 +5,6 @@
 namespace modian::infra::tsf::dll {
 	inline HINSTANCE modian_instance{nullptr};
 
-	struct auto_com {
-		auto_com();
-		~auto_com();
-	private:
-		enum class apartment_type {
-			APARTMENT_UNKNOWN,
-			APARTMENT_NEWLY_INIT,  // 本次调用实际初始化了COM
-			APARTMENT_EXISTING     // COM已被其他代码初始化
-		};
-		apartment_type apartment_type_;
-	};
-
 	struct com_registration {
 		com_registration() = delete;
 

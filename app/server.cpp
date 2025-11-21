@@ -1,3 +1,6 @@
+#include <atomic>
+#include <new>
+
 #include "modian/logger/spdlog_logger.h"
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/dll/info/registry_info.h"
@@ -5,8 +8,6 @@
 #include "modian/tsf/dll/register.h"
 #include "modian/tsf/dll/dll_util.h"
 
-volatile long modian::infra::tsf::g_server_lock{0};
-volatile long modian::infra::tsf::g_active_objects{0};
 
 STDAPI DllCanUnloadNow() {
 	modian::core::logger_service::logger()->info("Start unloading...");
@@ -14,53 +15,65 @@ STDAPI DllCanUnloadNow() {
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
-	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::infra::logger::spdlog_logger>(); });
+    modian::core::logger_service::update_logger([](){
+        return std::make_shared<modian::infra::logger::spdlog_logger>();
+    });
 
-	modian::core::logger_service::logger()->info("Getting class object...");
-	if (!ppv) return E_POINTER;
+    modian::core::logger_service::logger()->info("Getting class object...");
 
-	auto* pFactory = new (std::nothrow) modian::infra::tsf::class_factory();
-	if (!pFactory) return E_OUTOFMEMORY;
+    if (!ppv) return E_POINTER;
+    *ppv = nullptr;
 
-	const HRESULT hr = pFactory->QueryInterface(riid, ppv);
-	pFactory->Release(); // 避免内存泄漏
-	return hr;
+    if (!IsEqualGUID(rclsid, modian::infra::tsf::dll::info::MODIAN_IME_CLSID)) {
+        return CLASS_E_CLASSNOTAVAILABLE;
+    }
+
+    auto* p_factory = new (std::nothrow) modian::infra::tsf::class_factory();
+    if (!p_factory) return E_OUTOFMEMORY;
+
+    const HRESULT hr = p_factory->QueryInterface(riid, ppv);
+
+    p_factory->Release();
+
+    return hr;
 }
 
 STDAPI DllUnregisterServer() {
-	modian::core::logger_service::logger()->info("Unregistering Modian IME dll...");
+    modian::core::logger_service::logger()->info("Unregistering Modian IME dll...");
 
-	modian::infra::tsf::dll::com_registration::unregister_profiles();
-	modian::infra::tsf::dll::com_registration::unregister_categories();
-	modian::infra::tsf::dll::com_registration::unregister_server();
+    modian::infra::tsf::dll::com_registration::unregister_profiles();
+    modian::infra::tsf::dll::com_registration::unregister_categories();
+    modian::infra::tsf::dll::com_registration::unregister_server();
 
-	const auto hr = RegDeleteTreeW(
-		HKEY_LOCAL_MACHINE,
-		(std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH)
-               + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID)).c_str()
-    );
+    const std::wstring key_path = std::wstring(modian::infra::tsf::dll::info::MODIAN_REGISTRY_CLSID_ROOT_PATH)
+                                + modian::infra::tsf::dll::util::convert_clsid_to_string(modian::infra::tsf::dll::info::MODIAN_IME_CLSID);
 
-	modian::core::logger_service::logger()->info("Successfully unregister Modian IME dll");
+    const LSTATUS status = RegDeleteTreeW(HKEY_LOCAL_MACHINE, key_path.c_str());
 
-	return hr == ERROR_SUCCESS ? S_OK : S_FALSE;
+    modian::core::logger_service::logger()->info("Successfully unregister Modian IME dll");
+
+    return (status == ERROR_SUCCESS || status == ERROR_FILE_NOT_FOUND) ? S_OK : S_FALSE;
 }
 
 STDAPI DllRegisterServer() {
-	modian::core::logger_service::update_logger([](){ return std::make_shared<modian::infra::logger::spdlog_logger>(); });
+    modian::core::logger_service::update_logger([](){
+        return std::make_shared<modian::infra::logger::spdlog_logger>();
+    });
 
     modian::core::logger_service::logger()->info(modian::core::ascii_modian_ime);
 	modian::core::logger_service::logger()->info("Registering Modian IME dll...");
 
-	if (!modian::infra::tsf::dll::com_registration::register_server()
-	 || !modian::infra::tsf::dll::com_registration::register_profiles()
-	 || !modian::infra::tsf::dll::com_registration::register_categories()) {
-		modian::core::logger_service::logger()->error("Failed to register Modian IME dll!");
+    if (!modian::infra::tsf::dll::com_registration::register_server()
+     || !modian::infra::tsf::dll::com_registration::register_profiles()
+     || !modian::infra::tsf::dll::com_registration::register_categories()) {
 
-		DllUnregisterServer();
-		return E_FAIL;
-	}
+        modian::core::logger_service::logger()->error("Failed to register Modian IME dll!");
 
-	modian::core::logger_service::logger()->info("Successfully register Modian IME dll");
+        // 注册失败回滚
+        DllUnregisterServer();
+        return E_FAIL;
+    }
 
-	return S_OK;
+    modian::core::logger_service::logger()->info("Successfully register Modian IME dll");
+    return S_OK;
 }

@@ -1,59 +1,68 @@
 #include "modian/tsf/class_factory.h"
 
-#include <wil/com.h>
+#include <new>
+#include <wrl/client.h>
 
 #include "modian/core/logger/logger_service.h"
 #include "modian/tsf/tsf_text_service.h"
 
+using Microsoft::WRL::ComPtr;
+
 namespace modian::infra::tsf {
-	STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
-		core::logger_service::logger()->info("Querying interface for class_factory...");
-		if (ppv == nullptr) {
-			return E_POINTER;
-		}
+    std::atomic<long> g_server_lock{0};
+    std::atomic<long> g_active_objects{0};
 
-		if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_IClassFactory)) {
-			*ppv = static_cast<IClassFactory*>(this);
-			AddRef();
-			return S_OK;
-		}
-		*ppv = nullptr;
-		return E_NOINTERFACE;
-	}
+    STDMETHODIMP class_factory::QueryInterface(const IID& riid, void** ppv) {
+        if (ppv == nullptr) {
+            return E_POINTER;
+        }
 
-	STDMETHODIMP_(ULONG) class_factory::AddRef() {
-		return InterlockedIncrement(&m_ref_count);
-	}
+        if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_IClassFactory)) {
+            *ppv = static_cast<IClassFactory*>(this);
+            AddRef();
+            return S_OK;
+        }
+        *ppv = nullptr;
+        return E_NOINTERFACE;
+    }
 
-	STDMETHODIMP_(ULONG) class_factory::Release() {
-		ULONG count = InterlockedDecrement(&m_ref_count);
-		if (count == 0) {
-			delete this;
-		}
-		return count;
-	}
+    STDMETHODIMP_(ULONG) class_factory::AddRef() {
+        return ++m_ref_count;
+    }
 
-	STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {
-		core::logger_service::logger()->info("Creating class_factory instance...");
-		if (p_unk_outer) return CLASS_E_NOAGGREGATION;
+    STDMETHODIMP_(ULONG) class_factory::Release() {
+        const ULONG count = --m_ref_count;
+        if (count == 0) {
+            delete this;
+        }
+        return count;
+    }
 
-		const wil::com_ptr_nothrow service = new (std::nothrow) tsf_text_service();
-		if (!service) return E_OUTOFMEMORY;
+    STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {
+        core::logger_service::logger()->info("Creating class_factory instance...");
 
-		InterlockedIncrement(&g_active_objects);
-		const HRESULT hr = service->QueryInterface(riid, ppv);
-		if (FAILED(hr)) InterlockedDecrement(&g_active_objects);
+        if (p_unk_outer) return CLASS_E_NOAGGREGATION;
+        if (!ppv) return E_POINTER;
 
-		return hr;
-	}
+        *ppv = nullptr;
 
-	STDMETHODIMP class_factory::LockServer(BOOL f_lock) {
-		if (f_lock) {
-			InterlockedIncrement(&g_server_lock);
-		} else {
-			InterlockedDecrement(&g_server_lock);
-		}
+        auto* p_service = new (std::nothrow) tsf_text_service();
+        if (!p_service) return E_OUTOFMEMORY;
 
-		return S_OK;
-	}
+        const HRESULT hr = p_service->QueryInterface(riid, ppv);
+
+        p_service->Release();
+
+        return hr;
+    }
+
+    STDMETHODIMP class_factory::LockServer(BOOL f_lock) {
+        if (f_lock) {
+            ++g_server_lock;
+        } else {
+            --g_server_lock;
+        }
+
+        return S_OK;
+    }
 }

@@ -10,6 +10,8 @@ namespace modian::infra::tsf {
 			thread_mgr_->Release();
 			thread_mgr_ = nullptr;
 		}
+
+		--g_active_objects;
 	}
 
 	STDMETHODIMP tsf_text_service::Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) {
@@ -66,11 +68,11 @@ namespace modian::infra::tsf {
 	}
 
 	STDMETHODIMP_(ULONG) tsf_text_service::AddRef() {
-		return InterlockedIncrement(&ref_count_);
+		return ++ref_count_;
 	}
 
 	STDMETHODIMP_(ULONG) tsf_text_service::Release() {
-		const ULONG count = InterlockedDecrement(&ref_count_);
+		const ULONG count = --ref_count_;
 		if (count == 0) delete this;
 		return count;
 	}

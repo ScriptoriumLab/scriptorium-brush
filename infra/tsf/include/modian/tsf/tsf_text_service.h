@@ -4,12 +4,15 @@
 #include <windows.h>
 #include <msctf.h>
 
+#include "class_factory.h"
 #include "tsf_key_event_service.h"
 
 namespace modian::infra::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
 	public:
-		tsf_text_service() = default;
+		tsf_text_service() {
+			++g_active_objects;
+		}
 		virtual ~tsf_text_service();
 		STDMETHODIMP Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) override;
 		STDMETHODIMP Deactivate() override;
@@ -19,7 +22,7 @@ namespace modian::infra::tsf {
 		STDMETHODIMP_(ULONG) Release() override;
 	private:
 		std::atomic<bool> is_active_{false};
-        ULONG ref_count_{0};
+		std::atomic<ULONG> ref_count_{1};
         TfClientId client_id_ = TF_CLIENTID_NULL;
         ITfThreadMgr* thread_mgr_ = nullptr;
 		manager::candidate_manager candidate_manager_{};

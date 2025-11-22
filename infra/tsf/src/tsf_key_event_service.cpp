@@ -6,7 +6,7 @@
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
-    tsf_key_event_service::tsf_key_event_service(manager::engine_manager engine_manager)
+    tsf_key_event_service::tsf_key_event_service(std::shared_ptr<manager::engine_manager> engine_manager)
         : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
@@ -27,14 +27,20 @@ namespace modian::brush::infra::tsf {
     STDMETHODIMP tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
         if (!pf_eaten) return E_POINTER;
 
+        if (w_param == VK_BACK) {
+            engine_manager_->handle_backspace();
+            *pf_eaten = FALSE;
+            return S_OK;
+        }
+
         if (_is_key_supported(w_param)) {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const auto lower_char = std::towlower(static_cast<wchar_t>(w_param));
 
-            engine_manager_.update_input_state(lower_char);
+            engine_manager_->update_input_state(lower_char);
 
-            if (client_id_ != TF_CLIENTID_NULL) {
+            if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 std::wstring text_to_insert(1, lower_char);
 
                 auto* session = new tsf_edit_session(pic, text_to_insert);
@@ -43,8 +49,6 @@ namespace modian::brush::infra::tsf {
                 pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
 
                 session->Release();
-            } else {
-                core::logger_service::logger()->error("Client ID is missing in OnKeyDown!");
             }
 
             *pf_eaten = TRUE;

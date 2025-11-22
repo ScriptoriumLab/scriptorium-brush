@@ -33,12 +33,12 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	std::shared_ptr<modian::brush::manager::candidate_manager> candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
+	auto candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
 	candidate_manager->add_observer(observer);
 
-	modian::brush::manager::engine_manager engine_manager{candidate_manager};
-	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
-	engine_manager.select_engine("test pinyin engine");
+	auto engine_manager = std::make_shared<modian::brush::manager::engine_manager>(candidate_manager);
+	engine_manager->add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
+	engine_manager->select_engine("test pinyin engine");
 
 	auto event_service = modian::brush::infra::tsf::tsf_key_event_service{engine_manager};
 
@@ -48,6 +48,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "你");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "尼");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "泥");
+	engine_manager->reset();
 
 	hr = typing(event_service, L"hao");
 	ASSERT_EQ(hr, S_OK);
@@ -55,7 +56,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "好");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "号");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "豪");
-
+	engine_manager->reset();
 
 	hr = typing(event_service, L"mo");
 	ASSERT_EQ(hr, S_OK);
@@ -63,6 +64,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]),"墨");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "莫");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
+	engine_manager->reset();
 
 	hr = typing(event_service, L"dian");
 	ASSERT_EQ(hr, S_OK);
@@ -70,6 +72,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "点");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "店");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "电");
+	engine_manager->reset();
 }
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_ui) {
@@ -77,12 +80,12 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	std::shared_ptr<modian::brush::manager::candidate_manager> candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
+	auto candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
 	candidate_manager->add_observer(observer);
 
-	modian::brush::manager::engine_manager engine_manager{candidate_manager};
-	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
-	engine_manager.select_engine("test pinyin engine");
+	auto engine_manager = std::make_shared<modian::brush::manager::engine_manager>(candidate_manager);
+	engine_manager->add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
+	engine_manager->select_engine("test pinyin engine");
 
 	auto event_service = modian::brush::infra::tsf::tsf_key_event_service{engine_manager};
 
@@ -92,6 +95,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "你");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "尼");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "泥");
+	engine_manager->reset();
 
 	hr = typing(event_service, L"hao");
 	ASSERT_EQ(hr, S_OK);
@@ -99,7 +103,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]), "好");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "号");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "豪");
-
+	engine_manager->reset();
 
 	hr = typing(event_service, L"mo");
 	ASSERT_EQ(hr, S_OK);
@@ -107,6 +111,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[0]),"墨");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[1]), "莫");
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
+	engine_manager->reset();
 }
 
 HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {

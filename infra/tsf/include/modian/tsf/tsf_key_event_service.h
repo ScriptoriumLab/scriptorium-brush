@@ -10,7 +10,7 @@
 namespace modian::brush::infra::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		explicit tsf_key_event_service(manager::engine_manager engine_manager);
+		explicit tsf_key_event_service(std::shared_ptr<manager::engine_manager> engine_manager);
 		virtual ~tsf_key_event_service() = default;
 
 		void set_client_id(const TfClientId id) { client_id_ = id; }
@@ -35,7 +35,7 @@ namespace modian::brush::infra::tsf {
 		std::atomic<ULONG> ref_count_;
 
 		std::wstring input_pinyin_;
-		manager::engine_manager engine_manager_;
+		std::shared_ptr<manager::engine_manager> engine_manager_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 	};
 }

@@ -4,25 +4,34 @@
 #include <string>
 #include <memory>
 #include <functional>
+#include <utility>
 
-#include "candidate_manager.h"
+#include "modian/manager/candidate_manager.h"
 #include "modian/core/engine/input_engine.h"
 
 namespace modian::brush::manager {
+	using EngineFactory = std::function<std::shared_ptr<core::input_engine>()>;
+	using EngineDetail = std::pair<std::string, EngineFactory>;
+
 	class engine_manager {
 	public:
 		explicit engine_manager(std::shared_ptr<candidate_manager> can_manager);
 
-		void add_new_engine(const std::pair<std::string, std::function<std::shared_ptr<core::input_engine>()>>& engine_detail);
-		void select_engine(const std::string& engine_name);
+		void add_new_engine(const EngineDetail& engine_detail);
 
-		void update_input_state(const wchar_t& character);
+		bool select_engine(const std::string& engine_name);
+
+		void update_input_state(wchar_t character);
+
+		bool handle_backspace();
+		void reset();
 	private:
-		std::unordered_map<std::string, std::function<std::shared_ptr<core::input_engine>()>> engine_list_;
+		std::unordered_map<std::string, EngineFactory> engine_factories_;
 		std::shared_ptr<core::input_engine> current_engine_{nullptr};
 
 		std::wstring input_pinyin_;
-
 		std::shared_ptr<candidate_manager> candidate_manager_;
+
+		void _trigger_conversion();
 	};
 }

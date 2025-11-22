@@ -1,6 +1,6 @@
-# Modian Windows Version
+# Modian Brush
 
-[![Modian IME Windows platform CI](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml/badge.svg)](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml)
+[![Modian IME Brush platform CI](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml/badge.svg)](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml)
 
 ```
 =======================================================================================================================
@@ -21,7 +21,7 @@ Yb, `88'  `88'  `88                     8I                                      
 
 ## 1. Introduction
 
-This repository is for the Windows version of Modian. Modian is a simple and easy-to-use Input Method Editor. It is designed to be user-friendly and easy to use. It is also designed to be lightweight and fast. Windows version of Modian is currently in development and is not yet complete.
+This repository is now for the Windows version of Modian. Modian is a simple and easy-to-use Input Method Editor. It is designed to be user-friendly and easy to use. It is also designed to be lightweight and fast. Windows version of Modian is currently in development and is not yet complete.
 
 ## 2. Architecture
 
@@ -32,12 +32,9 @@ According to clean architecture, the architecture of Modian is designed like bel
 ---
 
 ## TODO
-- [ ] implement UI layer to show candidate window when user is typing
-- [ ] introduce new modern UI framework
 - [ ] design automation test strategies for Modian IME
 - [ ] introduce e2e test
 - [ ] introduce UI e2e test
-- [ ] enable user import engine dll instead of change the code inside of this codebase
 
 ---
 

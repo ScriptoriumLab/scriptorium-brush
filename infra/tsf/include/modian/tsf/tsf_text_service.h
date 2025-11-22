@@ -25,7 +25,7 @@ namespace modian::brush::infra::tsf {
 		std::atomic<ULONG> ref_count_{1};
         TfClientId client_id_ = TF_CLIENTID_NULL;
         ITfThreadMgr* thread_mgr_ = nullptr;
-		manager::candidate_manager candidate_manager_{};
+		std::shared_ptr<manager::candidate_manager> candidate_manager_ = std::make_shared<manager::candidate_manager>();
 		manager::engine_manager engine_manager_{candidate_manager_};
 		tsf_key_event_service key_event_service_{engine_manager_};
 	};

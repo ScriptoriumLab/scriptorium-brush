@@ -7,6 +7,7 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <future>
+#include <memory>
 
 class test_pinyin_engine final : public modian::brush::core::pinyin_engine {
 public:
@@ -32,8 +33,8 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	modian::brush::manager::candidate_manager candidate_manager;
-	candidate_manager.add_observer(observer);
+	std::shared_ptr<modian::brush::manager::candidate_manager> candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
+	candidate_manager->add_observer(observer);
 
 	modian::brush::manager::engine_manager engine_manager{candidate_manager};
 	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
@@ -76,8 +77,8 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	modian::brush::manager::candidate_manager candidate_manager;
-	candidate_manager.add_observer(observer);
+	std::shared_ptr<modian::brush::manager::candidate_manager> candidate_manager = std::make_shared<modian::brush::manager::candidate_manager>();
+	candidate_manager->add_observer(observer);
 
 	modian::brush::manager::engine_manager engine_manager{candidate_manager};
 	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());

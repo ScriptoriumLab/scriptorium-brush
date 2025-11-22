@@ -11,7 +11,7 @@
 namespace modian::brush::manager {
 	class engine_manager {
 	public:
-		explicit engine_manager(candidate_manager can_manager);
+		explicit engine_manager(std::shared_ptr<candidate_manager> can_manager);
 
 		void add_new_engine(const std::pair<std::string, std::function<std::shared_ptr<core::input_engine>()>>& engine_detail);
 		void select_engine(const std::string& engine_name);
@@ -23,6 +23,6 @@ namespace modian::brush::manager {
 
 		std::wstring input_pinyin_;
 
-		candidate_manager candidate_manager_;
+		std::shared_ptr<candidate_manager> candidate_manager_;
 	};
 }

@@ -24,7 +24,7 @@ target_link_options(modian_brush PRIVATE "/delayload:msctf.dll")
 
 set_target_properties(modian_brush PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/ModianIME"
-    OUTPUT_NAME "ModianBrush"
+    OUTPUT_NAME "modian-brush"
 )
 
 if(WIN32)

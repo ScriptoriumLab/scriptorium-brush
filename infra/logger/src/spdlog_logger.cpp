@@ -1,77 +1,91 @@
 #include "modian/logger/spdlog_logger.h"
+#include "modian/core/utils/utils.h"
 
 #include <iostream>
-#include <WeakReference.h>
-#include <spdlog/sinks/rotating_file_sink.h>
+#include <filesystem>
+
 #include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/rotating_file_sink.h>
+
+namespace fs = std::filesystem;
 
 namespace modian::brush::infra::logger {
-	spdlog_logger::spdlog_logger() {
-        // 检查是否已经存在同名日志器
+    spdlog_logger::spdlog_logger() {
         if (const auto existing_logger = spdlog::get("modian_logger")) {
-            spdlog::set_default_logger(existing_logger);
+            logger_ = existing_logger;
+
+            spdlog::set_default_logger(logger_);
             spdlog::set_level(spdlog::level::debug);
-            spdlog::debug("Using existing logger: modian_logger");
             return;
         }
-		try {
-			char* userprofile{nullptr};
-			size_t size = 0;
 
-			if (const errno_t err = _dupenv_s(&userprofile, &size, "USERPROFILE"); err != 0 || userprofile == nullptr) {
-			 spdlog::error("Failed to retrieve USERPROFILE.");
-			 return;
-			}
+        try {
+            char* userprofile_raw{nullptr};
+            size_t size = 0;
 
-			const std::string log_dir = std::string(userprofile) + "/Modian/Log";
-			const std::string log_path = log_dir + "/modian.log";
-			logger_ = spdlog::basic_logger_mt("modian_logger", log_path);;
+            if (_dupenv_s(&userprofile_raw, &size, "USERPROFILE") != 0 || userprofile_raw == nullptr) {
+                std::cerr << "[Fatal] Failed to retrieve USERPROFILE environment variable." << std::endl;
+                return;
+            }
 
-			// 设置为默认 logger，确保在其他地方可以通过 spdlog 调用
-			spdlog::set_default_logger(logger_);
+            const fs::path home_dir = userprofile_raw;
+            free(userprofile_raw); // 【关键修复】防止内存泄漏
+
+            const fs::path log_dir = home_dir / "Modian" / "Log";
+            const fs::path log_path = log_dir / "modian.log";
+
+            if (!fs::exists(log_dir)) {
+                std::error_code ec;
+                fs::create_directories(log_dir, ec);
+                if (ec) {
+                    std::cerr << "[Fatal] Failed to create log directory: " << ec.message() << std::endl;
+                    return;
+                }
+            }
+
+            logger_ = spdlog::basic_logger_mt("modian_logger", log_path.string());
+
+            spdlog::set_default_logger(logger_);
             spdlog::set_level(spdlog::level::debug);
+
+            // TODO: change to debug or error level after debugging
             spdlog::flush_on(spdlog::level::info);
-            logger_->debug("File logger initialized.");
-		} catch (const std::exception& e) {
-			std::cerr << "Logger initialization failed: " << e.what() << std::endl;
-		}
-	}
-
-	spdlog_logger::~spdlog_logger() {
-		spdlog::shutdown();
-	}
-
-	void spdlog_logger::debug(const std::string& message) {
-	    logger_->debug(message);
+            logger_->info("Logger initialized at: {}", log_path.string());
+        } catch (const spdlog::spdlog_ex& ex) {
+            std::cerr << "[Fatal] Log initialization failed: " << ex.what() << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "[Fatal] Unexpected error in logger init: " << e.what() << std::endl;
+        }
     }
 
-    void spdlog_logger::error(const std::string& message) {
-	    logger_->error(message);
+    spdlog_logger::~spdlog_logger() {
+        spdlog::shutdown();
     }
 
-    void spdlog_logger::info_impl(const std::string& message) {
-	    logger_->info(message);
+    void spdlog_logger::debug(std::string_view message) {
+        if (logger_) logger_->debug(message);
     }
 
-    void spdlog_logger::info_impl(const std::string& message, const std::string& arg) {
-		logger_->info(fmt::runtime(message), arg);
+    void spdlog_logger::error(std::string_view message) {
+        if (logger_) logger_->error(message);
     }
 
-    void spdlog_logger::info_impl(const std::string& message, const std::wstring& arg) {
-		logger_->info(fmt::runtime(message), wstring_to_string(arg));
+    void spdlog_logger::info_impl(std::string_view message) {
+        if (logger_) logger_->info(message);
     }
 
-    void spdlog_logger::info_impl(const std::string& message, const int& arg) {
-		logger_->info(fmt::runtime(message), arg);
+    void spdlog_logger::info_impl(std::string_view message, std::string_view arg) {
+        // fmt::runtime 是必要的，因为 message 不是编译期常量
+        if (logger_) logger_->info(fmt::runtime(message), arg);
     }
 
-    std::string spdlog_logger::wstring_to_string(const std::wstring& wstr) {
-         if (wstr.empty()) {
-             return {};
-         }
-         const auto size_needed = WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), nullptr, 0, nullptr, nullptr);
-         std::string str(size_needed, 0);
-         WideCharToMultiByte(CP_UTF8, 0, &wstr[0], static_cast<int>(wstr.size()), &str[0], size_needed, nullptr, nullptr);
-         return str;
+    void spdlog_logger::info_impl(std::string_view message, std::wstring_view arg) {
+        if (logger_) {
+            logger_->info(fmt::runtime(message), core::utils::to_utf8(arg));
+        }
+    }
+
+    void spdlog_logger::info_impl(std::string_view message, const int& arg) {
+        if (logger_) logger_->info(fmt::runtime(message), arg);
     }
 }

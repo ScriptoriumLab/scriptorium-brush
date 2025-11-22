@@ -52,6 +52,8 @@ STDAPI DllUnregisterServer() {
 
     modian::brush::core::logger_service::logger()->info("Successfully unregister Modian IME dll");
 
+    modian::brush::core::logger_service::shutdown();
+
     return (status == ERROR_SUCCESS || status == ERROR_FILE_NOT_FOUND) ? S_OK : S_FALSE;
 }
 
@@ -60,7 +62,7 @@ STDAPI DllRegisterServer() {
         return std::make_shared<modian::brush::infra::logger::spdlog_logger>();
     });
 
-    modian::brush::core::logger_service::logger()->info(modian::brush::core::ascii_modian_ime);
+    modian::brush::core::logger_service::print_logo();
 	modian::brush::core::logger_service::logger()->info("Registering Modian IME dll...");
 
     if (!modian::brush::infra::tsf::dll::com_registration::register_server()

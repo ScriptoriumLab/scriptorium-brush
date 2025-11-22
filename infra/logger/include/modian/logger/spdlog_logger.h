@@ -10,19 +10,18 @@ namespace modian::brush::infra::logger {
 	public:
 		spdlog_logger();
 		~spdlog_logger() override;
-		void debug(const std::string& message) override;
-		void error(const std::string& message) override;
+		void debug(std::string_view message) override;
+		void error(std::string_view message) override;
 
-		std::string type{"spdlog_logger"};
+		[[nodiscard]] std::string_view type() const override { return "spdlog_logger"; }
 
 	protected:
-		void info_impl(const std::string& message) override;
-		void info_impl(const std::string& message, const std::string& arg) override;
-		void info_impl(const std::string& message, const std::wstring& arg) override;
-		void info_impl(const std::string& message, const int& arg) override;
+		void info_impl(std::string_view message) override;
+		void info_impl(std::string_view message, std::string_view arg) override;
+		void info_impl(std::string_view message, std::wstring_view arg) override;
+		void info_impl(std::string_view message, const int& arg) override;
 
 	private:
-		static std::string wstring_to_string(const std::wstring& wstr);
         std::shared_ptr<spdlog::logger> logger_;
 	};
 }

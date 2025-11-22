@@ -7,15 +7,15 @@ namespace modian::brush::core {
 	public:
 		~console_logger() override = default;
 
-        void debug(const std::string& message) override;
-        void error(const std::string& message) override;
+        void debug(std::string_view message) override;
+        void error(std::string_view message) override;
 
-		std::string type{"console_logger"};
+		[[nodiscard]] std::string_view type() const override { return "console_logger"; }
 
 	protected:
-		void info_impl(const std::string& message) override;
-		void info_impl(const std::string& message, const std::string& arg) override;
-		void info_impl(const std::string& message, const std::wstring& arg) override;
-		void info_impl(const std::string& message, const int& arg) override;
+		void info_impl(std::string_view message) override;
+		void info_impl(std::string_view message, std::string_view arg) override;
+		void info_impl(std::string_view message, std::wstring_view arg) override;
+		void info_impl(std::string_view message, const int& arg) override;
 	};
 }

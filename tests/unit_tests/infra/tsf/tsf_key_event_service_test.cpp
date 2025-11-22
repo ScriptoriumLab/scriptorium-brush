@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <codecvt>
+#include <cwctype>
 
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/tsf/tsf_key_event_service.h"
@@ -114,7 +115,10 @@ HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_servi
 	for (const auto& character : input) {
 		ITfContext* context = nullptr;
 		constexpr LPARAM l_param = 0;
-		hr = key_event_service.OnKeyDown(context, character, l_param, &pf_eaten);
+
+		WPARAM vk_code = std::towupper(character);
+
+		hr = key_event_service.OnKeyDown(context, vk_code, l_param, &pf_eaten);
 
 		if (hr != S_OK) {
 			return hr;
@@ -123,4 +127,3 @@ HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_servi
 
 	return hr;
 }
-

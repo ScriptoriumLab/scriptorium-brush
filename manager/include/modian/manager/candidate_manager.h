@@ -6,7 +6,7 @@
 
 #include "modian/core/observer/candidate_observer.h"
 
-namespace modian::manager {
+namespace modian::brush::manager {
 	class candidate_manager {
 	public:
 		bool update_candidates(const std::vector<std::wstring>& candidates);

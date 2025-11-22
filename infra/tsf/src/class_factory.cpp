@@ -8,7 +8,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-namespace modian::infra::tsf {
+namespace modian::brush::infra::tsf {
     std::atomic<long> g_server_lock{0};
     std::atomic<long> g_active_objects{0};
 

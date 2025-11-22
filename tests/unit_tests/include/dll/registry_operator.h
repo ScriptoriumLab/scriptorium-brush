@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace modian::tests::registry_operator {
+namespace modian::brush::tests::registry_operator {
     inline bool is_reg_key_exists(const HKEY& root, const wchar_t* path) {
         HKEY hKey;
         if (const LONG result = RegOpenKeyExW(root, path, 0, KEY_READ, &hKey); result == ERROR_SUCCESS) {

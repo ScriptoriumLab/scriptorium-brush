@@ -12,7 +12,7 @@
 #define MODIAN_LOGGER_API __declspec(dllimport)
 #endif
 
-namespace modian::core {
+namespace modian::brush::core {
     static constexpr auto ascii_modian_ime = R"(
         =======================================================================================================================
 

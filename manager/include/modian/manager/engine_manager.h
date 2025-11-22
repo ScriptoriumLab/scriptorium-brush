@@ -8,7 +8,7 @@
 #include "candidate_manager.h"
 #include "modian/core/engine/input_engine.h"
 
-namespace modian::manager {
+namespace modian::brush::manager {
 	class engine_manager {
 	public:
 		explicit engine_manager(candidate_manager can_manager);

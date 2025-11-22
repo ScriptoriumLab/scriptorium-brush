@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-namespace modian::infra::tsf::dll {
+namespace modian::brush::infra::tsf::dll {
 	inline HINSTANCE modian_instance{nullptr};
 
 	struct com_registration {

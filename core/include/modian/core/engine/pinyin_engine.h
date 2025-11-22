@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace modian::core {
+namespace modian::brush::core {
 	class pinyin_engine : public input_engine {
 	public:
 		static constexpr std::string_view id{"pinyin engine"};

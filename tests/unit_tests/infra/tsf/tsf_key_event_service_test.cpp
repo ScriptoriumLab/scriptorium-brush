@@ -7,7 +7,7 @@
 
 #include <future>
 
-class test_pinyin_engine final : public modian::core::pinyin_engine {
+class test_pinyin_engine final : public modian::brush::core::pinyin_engine {
 public:
 	static constexpr std::string_view id{"test pinyin engine"};
 	test_pinyin_engine() {
@@ -15,7 +15,7 @@ public:
 	}
 };
 
-class key_event_observer final : public modian::core::candidate_observer {
+class key_event_observer final : public modian::brush::core::candidate_observer {
 public:
 	void on_candidate_update(const std::vector<std::wstring>& candidates) override {
 		candidates_ = candidates;
@@ -24,21 +24,21 @@ public:
 	std::vector<std::wstring> candidates_;
 };
 
-HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
+HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	modian::manager::candidate_manager candidate_manager;
+	modian::brush::manager::candidate_manager candidate_manager;
 	candidate_manager.add_observer(observer);
 
-	modian::manager::engine_manager engine_manager{candidate_manager};
-	engine_manager.add_new_engine(modian::core::lazy_load_dictionary<test_pinyin_engine>());
+	modian::brush::manager::engine_manager engine_manager{candidate_manager};
+	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
 	engine_manager.select_engine("test pinyin engine");
 
-	auto event_service = modian::infra::tsf::tsf_key_event_service{engine_manager};
+	auto event_service = modian::brush::infra::tsf::tsf_key_event_service{engine_manager};
 
 	HRESULT hr = typing(event_service, L"ni");
 	ASSERT_EQ(hr, S_OK);
@@ -75,14 +75,14 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 
 	auto observer = std::make_shared<key_event_observer>();
 
-	modian::manager::candidate_manager candidate_manager;
+	modian::brush::manager::candidate_manager candidate_manager;
 	candidate_manager.add_observer(observer);
 
-	modian::manager::engine_manager engine_manager{candidate_manager};
-	engine_manager.add_new_engine(modian::core::lazy_load_dictionary<test_pinyin_engine>());
+	modian::brush::manager::engine_manager engine_manager{candidate_manager};
+	engine_manager.add_new_engine(modian::brush::core::lazy_load_dictionary<test_pinyin_engine>());
 	engine_manager.select_engine("test pinyin engine");
 
-	auto event_service = modian::infra::tsf::tsf_key_event_service{engine_manager};
+	auto event_service = modian::brush::infra::tsf::tsf_key_event_service{engine_manager};
 
 	HRESULT hr = typing(event_service, L"ni");
 	ASSERT_EQ(hr, S_OK);
@@ -107,7 +107,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_
 	ASSERT_EQ(converter.to_bytes(observer->candidates_[2]), "末");
 }
 
-HRESULT typing(modian::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {
+HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input) {
 	BOOL pf_eaten = FALSE;
 	HRESULT hr = S_OK;
 

@@ -6,7 +6,7 @@
 #include <utility>
 #include <memory>
 
-namespace modian::core {
+namespace modian::brush::core {
 	class input_engine {
   	public:
 		virtual ~input_engine() = default;

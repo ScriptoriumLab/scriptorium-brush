@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace modian::core {
+namespace modian::brush::core {
 	class base_logger {
 	public:
 		virtual ~base_logger() = default;

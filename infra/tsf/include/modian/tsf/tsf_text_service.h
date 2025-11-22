@@ -7,7 +7,7 @@
 #include "class_factory.h"
 #include "tsf_key_event_service.h"
 
-namespace modian::infra::tsf {
+namespace modian::brush::infra::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
 	public:
 		tsf_text_service() {

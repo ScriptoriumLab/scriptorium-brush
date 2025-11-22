@@ -7,7 +7,7 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD dw_reason, [[maybe_unused]] LPVO
 	switch (dw_reason) {
 	case DLL_PROCESS_ATTACH:
 		DisableThreadLibraryCalls(h_instance);
-		modian::infra::tsf::dll::modian_instance = h_instance;
+		modian::brush::infra::tsf::dll::modian_instance = h_instance;
 
 		break;
 	case DLL_PROCESS_DETACH:

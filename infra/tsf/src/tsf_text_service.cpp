@@ -4,7 +4,7 @@
 
 #include "modian/core/logger/logger_service.h"
 
-namespace modian::infra::tsf {
+namespace modian::brush::infra::tsf {
 	tsf_text_service::~tsf_text_service() {
 		if (thread_mgr_) {
 			thread_mgr_->Release();

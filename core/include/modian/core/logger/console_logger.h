@@ -2,7 +2,7 @@
 
 #include "modian/core/logger/base_logger.h"
 
-namespace modian::core {
+namespace modian::brush::core {
 	class console_logger final : public base_logger {
 	public:
 		~console_logger() override = default;

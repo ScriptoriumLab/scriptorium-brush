@@ -4,7 +4,7 @@
 #include <string>
 #include <Windows.h>
 
-namespace modian::infra::tsf::dll::util {
+namespace modian::brush::infra::tsf::dll::util {
 	constexpr size_t GUID_STRING_BUFFER_SIZE{39};
 	inline std::wstring convert_guid_to_string(const GUID& guid) {
 		wchar_t guid_str[GUID_STRING_BUFFER_SIZE]{};

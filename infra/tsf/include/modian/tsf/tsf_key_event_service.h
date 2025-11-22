@@ -6,7 +6,7 @@
 
 #include "modian/manager/engine_manager.h"
 
-namespace modian::infra::tsf {
+namespace modian::brush::infra::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
 		explicit tsf_key_event_service(manager::engine_manager engine_manager);

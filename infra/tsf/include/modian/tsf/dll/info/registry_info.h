@@ -4,7 +4,7 @@
 #include <string>
 #include <array>
 
-namespace modian::infra::tsf::dll::info {
+namespace modian::brush::infra::tsf::dll::info {
 	constexpr std::wstring_view MODIAN_IME_MODEL{L"Apartment"};
 	constexpr std::wstring_view MODIAN_IME_DESC{L"Modian Input Method"};
 

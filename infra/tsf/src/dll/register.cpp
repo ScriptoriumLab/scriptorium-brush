@@ -10,7 +10,7 @@
 
 using Microsoft::WRL::ComPtr;
 
-namespace modian::infra::tsf::dll {
+namespace modian::brush::infra::tsf::dll {
     constexpr UINT DEFAULT_ICON_INDEX = static_cast<UINT>(-12);
 
     bool com_registration::register_profiles() {

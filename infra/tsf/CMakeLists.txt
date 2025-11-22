@@ -12,6 +12,7 @@ FetchContent_MakeAvailable(WIL)
 add_library(modian_tsf STATIC
     src/tsf_text_service.cpp
     src/tsf_key_event_service.cpp
+    src/tsf_edit_session.cpp
     src/class_factory.cpp
     src/dll/register.cpp
 )

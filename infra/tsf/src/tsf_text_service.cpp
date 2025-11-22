@@ -26,6 +26,7 @@ namespace modian::brush::infra::tsf {
 		thread_mgr_->AddRef();
 
 		client_id_ = tf_client_id;
+		key_event_service_.set_client_id(client_id_);
 
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
 		HRESULT hr = p_thread_mgr->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));

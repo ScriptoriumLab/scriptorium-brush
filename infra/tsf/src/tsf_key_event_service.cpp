@@ -1,6 +1,7 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <cwctype>
+#include <modian/tsf/tsf_edit_session.h>
 
 #include "modian/core/logger/logger_service.h"
 
@@ -32,6 +33,19 @@ namespace modian::brush::infra::tsf {
             const auto lower_char = std::towlower(static_cast<wchar_t>(w_param));
 
             engine_manager_.update_input_state(lower_char);
+
+            if (client_id_ != TF_CLIENTID_NULL) {
+                std::wstring text_to_insert(1, lower_char);
+
+                auto* session = new tsf_edit_session(pic, text_to_insert);
+
+                HRESULT hr = S_OK;
+                pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
+
+                session->Release();
+            } else {
+                core::logger_service::logger()->error("Client ID is missing in OnKeyDown!");
+            }
 
             *pf_eaten = TRUE;
         } else {

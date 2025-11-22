@@ -13,6 +13,8 @@ namespace modian::brush::infra::tsf {
 		explicit tsf_key_event_service(manager::engine_manager engine_manager);
 		virtual ~tsf_key_event_service() = default;
 
+		void set_client_id(const TfClientId id) { client_id_ = id; }
+
 		// ITfKeyEventSink interface
 		STDMETHODIMP OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
 		STDMETHODIMP OnKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) override;
@@ -34,5 +36,6 @@ namespace modian::brush::infra::tsf {
 
 		std::wstring input_pinyin_;
 		manager::engine_manager engine_manager_;
+		TfClientId client_id_ = TF_CLIENTID_NULL;
 	};
 }

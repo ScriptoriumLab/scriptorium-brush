@@ -28,33 +28,46 @@ set_target_properties(modian PROPERTIES
 )
 
 if(WIN32)
-    # 定义 DLL 路径
-    set(MODIAN_DLL "${CMAKE_BINARY_DIR}\\ModianIME\\${CMAKE_CFG_INTDIR}\\ModianTSF.dll")
-    # 利用环境变量获取当前用户的主目录
+    set(MODIAN_DLL $<TARGET_FILE:modian>)
+
     set(USER_HOME "$ENV{USERPROFILE}")
-    # 目标词库目录：例如放在 %USERPROFILE%\Modian\Local 下
-    set(MODIAN_ROOT_DIR "${USER_HOME}\\Modian")
-    set(DICTIONARY_DIR "${USER_HOME}\\Modian\\Local")
-    set(MODIAN_LOG_DIR "${USER_HOME}\\Modian\\Log")
-    set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}\\modian.log")
+    # 将路径分隔符统一为 CMake 友好的格式，或者使用 file(TO_NATIVE_PATH ...)
+    set(MODIAN_ROOT_DIR "${USER_HOME}/Modian")
+    set(DICTIONARY_DIR "${USER_HOME}/Modian/Local")
+    set(MODIAN_LOG_DIR "${USER_HOME}/Modian/Log")
+    # Log 文件让 spdlog 自己创建即可，这里定义变量备用
+    set(MODIAN_LOG_FILE "${MODIAN_LOG_DIR}/modian.log")
 
     add_custom_target(register_modian
-        # 创建 Modian 根目录、Log 以及本地字典目录
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${DICTIONARY_DIR}"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${MODIAN_LOG_DIR}"
-        COMMAND ${CMAKE_COMMAND} -E touch ${MODIAN_LOG_FILE}
-        # 拷贝词库文件到目标目录
-        COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}\\data\\pinyin_dictionary.txt" "${DICTIONARY_DIR}\\pinyin_dictionary.txt"
-        # 使用 regsvr32 注册 Modian
-        COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '\"${MODIAN_DLL}\"' -Verb RunAs"
-        COMMENT "Registering Modian DLL and installing dictionary"
+            # 1. 确保目录存在
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${DICTIONARY_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${MODIAN_LOG_DIR}"
+
+            # 2. 拷贝词库 (每次注册都会覆盖旧词库，保证开发时词库是最新的)
+            COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/data/pinyin_dictionary.txt" "${DICTIONARY_DIR}/pinyin_dictionary.txt"
+
+            # 3. 注册 DLL
+            # /s: Silent (不弹窗)
+            # -Wait: 等待进程结束
+            COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '/s', '\"${MODIAN_DLL}\"' -Verb RunAs -Wait"
+
+            COMMENT "Registering Modian Brush DLL and installing dictionary..."
     )
 
     add_custom_target(unregister_modian
-        # 取消注册 DLL
-        COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '/u','\"${MODIAN_DLL}\"' -Verb RunAs"
-        # 删除 Modian app 相关所有文件
-        COMMAND ${CMAKE_COMMAND} -E remove_directory "${MODIAN_ROOT_DIR}"
-        COMMENT "Unregistering Modian DLL and removing installed dictionary folder"
+            COMMAND powershell -Command "tasklist /m ModianTSF.dll"
+
+            COMMAND powershell -Command "Stop-Process -Name ctfmon -Force -ErrorAction SilentlyContinue; exit 0"
+            COMMAND powershell -Command "Stop-Process -Name regsvr32 -Force -ErrorAction SilentlyContinue; exit 0"
+            COMMAND powershell -Command "Stop-Process -Name TextInputHost -Force -ErrorAction SilentlyContinue; exit 0"
+
+            # 反注册 DLL
+            # /u: Unregister
+            # /s: Silent
+            COMMAND powershell -Command "Start-Process regsvr32 -ArgumentList '/u', '/s', '\"${MODIAN_DLL}\"' -Verb RunAs -Wait"
+
+            COMMAND ${CMAKE_COMMAND} -E remove_directory "${MODIAN_ROOT_DIR}"
+
+            COMMENT "Unregistering Modian Brush DLL (Logs and Dictionary are PRESERVED for debugging)"
     )
 endif()

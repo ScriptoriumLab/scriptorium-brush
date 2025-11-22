@@ -1,9 +1,7 @@
 #include "modian/manager/candidate_manager.h"
 
-#include <iostream>
-#include <ostream>
-
 #include "modian/core/logger/logger_service.h"
+#include "modian/core/utils/utils.h"
 
 namespace modian::brush::manager {
 	bool candidate_manager::update_candidates(const std::vector<std::wstring>& candidates) {
@@ -12,7 +10,7 @@ namespace modian::brush::manager {
 		if (!candidates.empty()) {
 			core::logger_service::logger()->info("Get potential candidates");
 			for (const auto& candidate : candidates) {
-				core::logger_service::logger()->info("Candidates: {}", candidate);
+				core::logger_service::logger()->info("Candidates: {}", core::utils::to_utf8(candidate));
 			}
 
 			notify_observers();

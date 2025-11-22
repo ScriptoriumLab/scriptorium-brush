@@ -62,30 +62,21 @@ namespace modian::brush::infra::logger {
         spdlog::shutdown();
     }
 
-    void spdlog_logger::debug(std::string_view message) {
-        if (logger_) logger_->debug(message);
-    }
+    void spdlog_logger::sink_it(core::log_level level, std::string_view msg) {
+        if (!logger_) return;
 
-    void spdlog_logger::error(std::string_view message) {
-        if (logger_) logger_->error(message);
-    }
-
-    void spdlog_logger::info_impl(std::string_view message) {
-        if (logger_) logger_->info(message);
-    }
-
-    void spdlog_logger::info_impl(std::string_view message, std::string_view arg) {
-        // fmt::runtime 是必要的，因为 message 不是编译期常量
-        if (logger_) logger_->info(fmt::runtime(message), arg);
-    }
-
-    void spdlog_logger::info_impl(std::string_view message, std::wstring_view arg) {
-        if (logger_) {
-            logger_->info(fmt::runtime(message), core::utils::to_utf8(arg));
+        switch (level) {
+        case core::log_level::debug:
+            logger_->debug(msg);
+            break;
+        case core::log_level::info:
+            logger_->info(msg);
+            break;
+        case core::log_level::error:
+            logger_->error(msg);
+            break;
         }
-    }
 
-    void spdlog_logger::info_impl(std::string_view message, const int& arg) {
-        if (logger_) logger_->info(fmt::runtime(message), arg);
+        if (level == core::log_level::error) logger_->flush();
     }
 }

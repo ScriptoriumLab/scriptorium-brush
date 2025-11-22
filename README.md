@@ -1,6 +1,6 @@
 # Modian Brush
 
-[![Modian IME Brush platform CI](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml/badge.svg)](https://github.com/ModianIME/Modian-win/actions/workflows/modian-ime-windows-platform-ci.yml)
+[![Modian IME Windows platform CI](https://github.com/ModianIME/modian-brush/actions/workflows/modian-ime-windows-platform-ci.yml/badge.svg)](https://github.com/ModianIME/modian-brush/actions/workflows/modian-ime-windows-platform-ci.yml)
 
 ```
 =======================================================================================================================

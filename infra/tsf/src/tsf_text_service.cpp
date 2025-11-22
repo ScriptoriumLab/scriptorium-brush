@@ -4,6 +4,7 @@
 
 #include "modian/core/engine/pinyin_engine.h"
 #include "modian/core/logger/logger_service.h"
+#include "modian/observer/ipc_candidate_observer.h"
 
 namespace modian::brush::infra::tsf {
 	tsf_text_service::tsf_text_service()
@@ -11,6 +12,9 @@ namespace modian::brush::infra::tsf {
 		  engine_manager_{std::make_shared<manager::engine_manager>(candidate_manager_)},
 		  key_event_service_(engine_manager_) {
 		engine_manager_->add_new_engine(core::lazy_load_dictionary<core::pinyin_engine>());
+
+		const auto ipc_observer = std::make_shared<observer::ipc_candidate_observer>();
+		candidate_manager_->add_observer(ipc_observer);
 
 		++g_active_objects;
 	}

@@ -20,7 +20,9 @@ add_library(modian_brush_tsf STATIC
 target_include_directories(modian_brush_tsf PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
-    PRIVATE ${WIL_SOURCE_DIR}/include
+    PRIVATE
+        ${WIL_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/infra/observer/include
 )
 
 target_link_libraries(modian_brush_tsf
@@ -28,4 +30,5 @@ target_link_libraries(modian_brush_tsf
     modian_brush_core
     modian_brush_manager
     modian_brush_logger
+    modian_brush_ipc
 )

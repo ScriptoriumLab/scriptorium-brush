@@ -32,7 +32,7 @@ namespace modian::brush::infra::logger {
             free(userprofile_raw); // 【关键修复】防止内存泄漏
 
             const fs::path log_dir = home_dir / "Modian" / "Log";
-            const fs::path log_path = log_dir / "modian.log";
+            const fs::path log_path = log_dir / "modian-brush.log";
 
             if (!fs::exists(log_dir)) {
                 std::error_code ec;

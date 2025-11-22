@@ -7,16 +7,16 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 add_compile_definitions(SPDLOG_HEADER_ONLY)
 
-add_library(modian_logger STATIC
+add_library(modian_brush_logger STATIC
     src/spdlog_logger.cpp
 )
 
-target_include_directories(modian_logger PUBLIC
+target_include_directories(modian_brush_logger PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(modian_logger
-    PRIVATE modian_core
+target_link_libraries(modian_brush_logger
+    PRIVATE modian_brush_core
     PUBLIC spdlog::spdlog
 )

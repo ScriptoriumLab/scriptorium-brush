@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(Modian-win LANGUAGES CXX)
+project(modian-brush LANGUAGES CXX)
 
 # global config
 set(CMAKE_CXX_STANDARD 23)

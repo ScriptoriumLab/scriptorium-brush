@@ -9,7 +9,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(WIL)
 
-add_library(modian_tsf STATIC
+add_library(modian_brush_tsf STATIC
     src/tsf_text_service.cpp
     src/tsf_key_event_service.cpp
     src/tsf_edit_session.cpp
@@ -17,15 +17,15 @@ add_library(modian_tsf STATIC
     src/dll/register.cpp
 )
 
-target_include_directories(modian_tsf PUBLIC
+target_include_directories(modian_brush_tsf PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     PRIVATE ${WIL_SOURCE_DIR}/include
 )
 
-target_link_libraries(modian_tsf
+target_link_libraries(modian_brush_tsf
     PRIVATE
-    modian_core
-    modian_manager
-    modian_logger
+    modian_brush_core
+    modian_brush_manager
+    modian_brush_logger
 )

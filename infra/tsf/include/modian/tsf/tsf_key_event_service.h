@@ -5,6 +5,7 @@
 #include <memory>
 #include <atomic>
 
+#include "modian/ipc/ipc_client.h"
 #include "modian/manager/engine_manager.h"
 
 namespace modian::brush::infra::tsf {
@@ -37,5 +38,7 @@ namespace modian::brush::infra::tsf {
 		std::wstring input_pinyin_;
 		std::shared_ptr<manager::engine_manager> engine_manager_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;
+
+		std::shared_ptr<ipc::ipc_client> ipc_client_;
 	};
 }

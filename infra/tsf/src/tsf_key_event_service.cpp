@@ -7,7 +7,9 @@
 
 namespace modian::brush::infra::tsf {
     tsf_key_event_service::tsf_key_event_service(std::shared_ptr<manager::engine_manager> engine_manager)
-        : ref_count_{1}, engine_manager_{std::move(engine_manager)} {}
+        : ref_count_{1},
+          engine_manager_{std::move(engine_manager)},
+          ipc_client_{std::make_shared<ipc::ipc_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
         return (vk_code >= 'A' && vk_code <= 'Z');
@@ -28,16 +30,21 @@ namespace modian::brush::infra::tsf {
         if (!pf_eaten) return E_POINTER;
 
         if (w_param == VK_BACK) {
-            engine_manager_->handle_backspace();
+            core::logger_service::logger()->info("Brush: Sending Backspace to Inkstone");
+            ipc_client_->send(std::string(1, '\b'));
+
             *pf_eaten = FALSE;
             return S_OK;
         }
-
         if (_is_key_supported(w_param)) {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const auto lower_char = std::towlower(static_cast<wchar_t>(w_param));
 
+            std::string msg(1, static_cast<char>(lower_char)); // 简单转换，假定 ASCII
+            ipc_client_->send(msg);
+
+            // TODO: should remove engine manager later
             engine_manager_->update_input_state(lower_char);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
@@ -47,7 +54,6 @@ namespace modian::brush::infra::tsf {
 
                 HRESULT hr = S_OK;
                 pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
-
                 session->Release();
             }
 

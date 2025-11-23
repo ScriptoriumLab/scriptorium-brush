@@ -55,7 +55,7 @@ if(WIN32)
     )
 
     add_custom_target(unregister_modian_brush
-            COMMAND powershell -Command "tasklist /m ModianTSF.dll"
+            COMMAND powershell -Command "tasklist /m modian-brush.dll"
 
             COMMAND powershell -Command "Stop-Process -Name ctfmon -Force -ErrorAction SilentlyContinue; exit 0"
             COMMAND powershell -Command "Stop-Process -Name regsvr32 -Force -ErrorAction SilentlyContinue; exit 0"

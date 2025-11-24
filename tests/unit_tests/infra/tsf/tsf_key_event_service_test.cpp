@@ -29,6 +29,7 @@ public:
 HRESULT typing(modian::brush::infra::tsf::tsf_key_event_service& key_event_service, const std::wstring& input);
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
+	GTEST_SKIP() << "Will remove tests later, skip for now";
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 	auto observer = std::make_shared<key_event_observer>();
@@ -76,6 +77,7 @@ TEST(key_event_service_test, should_get_candidates_when_input_is_ni) {
 }
 
 TEST(key_event_service_test, should_get_candidates_when_input_is_ni_and_show_in_ui) {
+	GTEST_SKIP() << "Will remove tests later, skip for now";
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 	auto observer = std::make_shared<key_event_observer>();

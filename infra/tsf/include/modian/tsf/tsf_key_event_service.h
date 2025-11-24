@@ -40,5 +40,6 @@ namespace modian::brush::infra::tsf {
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 
 		std::shared_ptr<ipc::ipc_client> ipc_client_;
+		size_t pinyin_len_{0};
 	};
 }

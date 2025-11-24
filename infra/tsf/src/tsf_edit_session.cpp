@@ -4,33 +4,66 @@
 namespace modian::brush::infra::tsf {
 
 	STDMETHODIMP tsf_edit_session::DoEditSession(TfEditCookie ec) {
-		TF_SELECTION tfSelection;
-		ULONG cFetched;
-		if (FAILED(context_->GetSelection(ec, TF_DEFAULT_SELECTION, 1, &tfSelection, &cFetched)) || cFetched != 1) {
-			return E_FAIL;
-		}
+       TF_SELECTION tfSelection;
+       ULONG cFetched;
 
-		ITfRange* range = tfSelection.range;
+       // 1. 获取当前光标位置
+       if (FAILED(context_->GetSelection(ec, TF_DEFAULT_SELECTION, 1, &tfSelection, &cFetched)) || cFetched != 1) {
+          core::logger_service::logger()->error("DoEditSession: Failed to get selection");
+          return E_FAIL;
+       }
 
-		HRESULT hr = range->SetText(ec, 0, text_.data(), static_cast<LONG>(text_.size()));
+       // ⚠️ 关键点 1: 克隆 Range
+       // 直接操作 selection.range 有时会导致光标行为怪异或 Shift 失败
+       ITfRange* pRange = nullptr;
+       if (FAILED(tfSelection.range->Clone(&pRange))) {
+           core::logger_service::logger()->error("DoEditSession: Failed to clone range");
+           tfSelection.range->Release();
+           return E_FAIL;
+       }
 
-		if (SUCCEEDED(hr)) {
-			range->Collapse(ec, TF_ANCHOR_END);
+       // 释放原始 selection range，我们只操作 clone
+       tfSelection.range->Release();
 
-			TF_SELECTION sel;
-			sel.range = range;
-			sel.style.ase = TF_AE_NONE;
-			sel.style.fInterimChar = FALSE;
+       // 2. 向前扩展 Range 以覆盖需要删除的字符
+       if (backspace_count_ > 0) {
+          LONG cchShifted = 0;
+          // 尝试向前移动 Start 锚点
+          HRESULT hrShift = pRange->ShiftStart(ec, -static_cast<LONG>(backspace_count_), &cchShifted, nullptr);
 
-			context_->SetSelection(ec, 1, &sel);
-		} else {
-			core::logger_service::logger()->error("Failed to insert text");
-		}
+          if (FAILED(hrShift)) {
+              core::logger_service::logger()->error("DoEditSession: ShiftStart failed");
+          } else {
+              core::logger_service::logger()->info("DoEditSession: ShiftStart requested {}, actual {}", -static_cast<LONG>(backspace_count_), cchShifted);
+          }
+       }
 
-		range->Release();
-		return hr;
-	}
+       // 3. 替换文本 (SetText)
+       // 如果 Range 刚才成功扩大了，SetText 会覆盖范围内的内容 (即删除了旧的)
+       // 如果 Range 还是空的 (Shift 失败)，SetText 会直接插入
+       HRESULT hr = pRange->SetText(ec, 0, text_.data(), static_cast<LONG>(text_.size()));
 
+       if (SUCCEEDED(hr)) {
+          // 4. 更新光标位置
+          // 将 Range 折叠到末尾 (即新插入文本的后面)
+          pRange->Collapse(ec, TF_ANCHOR_END);
+
+          TF_SELECTION sel;
+          sel.range = pRange;
+          sel.style.ase = TF_AE_NONE;
+          sel.style.fInterimChar = FALSE;
+
+          context_->SetSelection(ec, 1, &sel);
+
+          core::logger_service::logger()->info("DoEditSession: backspace '{}'", backspace_count_);
+          core::logger_service::logger()->info("DoEditSession: Success. Inserted '{}'", std::string(text_.begin(), text_.end()).c_str()); // 简单的 log，中文可能乱码但能看长度
+       } else {
+          core::logger_service::logger()->error("DoEditSession: Failed to SetText");
+       }
+
+       pRange->Release();
+       return hr;
+    }
 	STDMETHODIMP tsf_edit_session::QueryInterface(const IID& riid, void** ppv_object) {
 		if (!ppv_object) return E_POINTER;
 		if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_ITfEditSession)) {

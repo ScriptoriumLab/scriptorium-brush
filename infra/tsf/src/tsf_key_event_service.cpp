@@ -1,8 +1,9 @@
 #include "modian/tsf/tsf_key_event_service.h"
 
 #include <cwctype>
-#include <modian/tsf/tsf_edit_session.h>
+#include <windows.h>
 
+#include "modian/tsf/tsf_edit_session.h"
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
@@ -13,6 +14,15 @@ namespace modian::brush::infra::tsf {
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
         return (vk_code >= 'A' && vk_code <= 'Z');
+    }
+
+    // TODO: move to utils
+    std::wstring utf8_to_wstring(const std::string& str) {
+        if (str.empty()) return {};
+        int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), NULL, 0);
+        std::wstring wstrTo(size_needed, 0);
+        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), &wstrTo[0], size_needed);
+        return wstrTo;
     }
 
     STDMETHODIMP tsf_key_event_service::OnTestKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
@@ -33,24 +43,46 @@ namespace modian::brush::infra::tsf {
             core::logger_service::logger()->info("Brush: Sending Backspace to Inkstone");
             ipc_client_->send(std::string(1, '\b'));
 
+            if (pinyin_len_ > 0) {
+                pinyin_len_--;
+            }
+
             *pf_eaten = FALSE;
             return S_OK;
         }
+
         if (_is_key_supported(w_param)) {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const auto lower_char = std::towlower(static_cast<wchar_t>(w_param));
 
             std::string msg(1, static_cast<char>(lower_char)); // 简单转换，假定 ASCII
-            ipc_client_->send(msg);
+            auto response = ipc_client_->send_and_wait(msg);
 
             // TODO: should remove engine manager later
             engine_manager_->update_input_state(lower_char);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 std::wstring text_to_insert(1, lower_char);
+                size_t backspace_count = 0;
 
-                auto* session = new tsf_edit_session(pic, text_to_insert);
+                if (!response.empty()) {
+                    core::logger_service::logger()->info("Inkstone returned candidate: {}", response);
+
+                    text_to_insert = utf8_to_wstring(response);
+
+                    backspace_count = pinyin_len_;
+
+                    pinyin_len_ = 0;
+                } else {
+                    text_to_insert = std::wstring(1, lower_char);
+
+                    backspace_count = 0;
+
+                    pinyin_len_++;
+                }
+
+                auto* session = new tsf_edit_session(pic, text_to_insert, backspace_count);
 
                 HRESULT hr = S_OK;
                 pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);

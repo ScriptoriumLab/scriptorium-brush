@@ -15,6 +15,7 @@ namespace modian::brush::infra::ipc {
 
 		// 发送消息
 		void send(std::string_view message);
+		std::string send_and_wait(std::string_view message);
 
 	private:
 		// 尝试连接管道

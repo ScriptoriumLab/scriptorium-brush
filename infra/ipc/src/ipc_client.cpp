@@ -26,7 +26,7 @@ namespace modian::brush::infra::ipc {
 
         HANDLE hPipe = CreateFileW(
             PIPE_NAME.c_str(),
-            GENERIC_WRITE,
+            GENERIC_READ | GENERIC_WRITE,
             0,              // No sharing
             nullptr,        // Default security attributes
             OPEN_EXISTING,  // Opens existing pipe
@@ -63,5 +63,38 @@ namespace modian::brush::infra::ipc {
             core::logger_service::logger()->error("IPC Write failed. Error: {}", GetLastError());
             close(); // 关闭句柄，下次重试连接
         }
+    }
+
+    std::string ipc_client::send_and_wait(std::string_view message) {
+        std::lock_guard lock(mutex_);
+
+        if (!ensure_connection()) return "";
+
+        DWORD bytesWritten;
+        BOOL success = WriteFile(
+            pipe_handle_,
+            message.data(), static_cast<DWORD>(message.size()),
+            &bytesWritten, nullptr
+        );
+
+        if (!success) {
+            core::logger_service::logger()->error("IPC Write failed. Error: {}", GetLastError());
+            return "";
+        }
+
+        char buffer[1024];
+        DWORD bytesRead;
+        success = ReadFile(
+            static_cast<HANDLE>(pipe_handle_),
+            buffer, sizeof(buffer) - 1,
+            &bytesRead, nullptr
+        );
+
+        if (success && bytesRead > 0) {
+            buffer[bytesRead] = '\0';
+            return {buffer};
+        }
+
+        return "";
     }
 }

@@ -7,8 +7,8 @@
 namespace modian::brush::infra::tsf {
 	class tsf_edit_session final : public ITfEditSession {
 	public:
-		tsf_edit_session(ITfContext* context, std::wstring text)
-			: ref_count_(1), context_(context), text_(std::move(text)) {
+		tsf_edit_session(ITfContext* context, std::wstring text, size_t backspace_count = 0)
+			: ref_count_(1), context_(context), text_(std::move(text)), backspace_count_(backspace_count) {
 			context_->AddRef();
 		}
 
@@ -26,5 +26,6 @@ namespace modian::brush::infra::tsf {
 		std::atomic<ULONG> ref_count_;
 		ITfContext* context_;
 		std::wstring text_;
+		size_t backspace_count_;
 	};
 }

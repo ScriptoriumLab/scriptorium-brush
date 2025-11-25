@@ -1,3 +1,5 @@
+set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
     modian_inkstone
     GIT_REPOSITORY https://github.com/ModianIME/modian-inkstone
@@ -5,6 +7,8 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(modian_inkstone)
+
+set(BUILD_TESTING ON CACHE BOOL "" FORCE)
 
 add_executable(modian_brush_integration_tests
     test_template.cpp

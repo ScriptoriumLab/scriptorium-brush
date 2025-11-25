@@ -41,5 +41,5 @@ add_dependencies(modian_brush_integration_tests
 
 add_custom_command(TARGET modian_brush_integration_tests POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "${CMAKE_BINARY_DIR}/ModianIME/${CMAKE_CFG_INTDIR}/modian-brush.dll" $<TARGET_FILE_DIR:modian_brush_unit_tests>
+    "${CMAKE_BINARY_DIR}/ModianIME/${CMAKE_CFG_INTDIR}/modian-brush.dll" $<TARGET_FILE_DIR:modian_brush_integration_tests>
 )

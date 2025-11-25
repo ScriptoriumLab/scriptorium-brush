@@ -46,4 +46,4 @@ jobs:
 
     - name: Run Integration Test
       working-directory: ${{github.workspace}}/build
-      run: .\tests\integration_tests\${{env.BUILD_TYPE}}\modian_brush_integration_test.exe --gtest_shuffle
+      run: .\tests\integration_tests\${{env.BUILD_TYPE}}\modian_brush_integration_tests.exe --gtest_shuffle

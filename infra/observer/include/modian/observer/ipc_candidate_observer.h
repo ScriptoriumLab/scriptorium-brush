@@ -14,8 +14,6 @@ namespace modian::brush::infra::observer {
 		void on_candidate_update(const std::vector<std::wstring>& candidates) override {
 			// 1. 处理空列表
 			if (candidates.empty()) {
-				// 发送一个特殊的清空指令
-				client_.send(std::string{1, '\x1B'});
 				return;
 			}
 

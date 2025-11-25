@@ -15,7 +15,7 @@ namespace modian::brush::infra::observer {
 			// 1. 处理空列表
 			if (candidates.empty()) {
 				// 发送一个特殊的清空指令
-				client_.send("CMD:CLEAR");
+				client_.send(std::string{1, '\x1B'});
 				return;
 			}
 

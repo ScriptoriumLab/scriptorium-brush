@@ -7,9 +7,8 @@
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
-    tsf_key_event_service::tsf_key_event_service(std::shared_ptr<manager::engine_manager> engine_manager)
+    tsf_key_event_service::tsf_key_event_service()
         : ref_count_{1},
-          engine_manager_{std::move(engine_manager)},
           ipc_client_{std::make_shared<ipc::ipc_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
@@ -58,9 +57,6 @@ namespace modian::brush::infra::tsf {
 
             std::string msg(1, static_cast<char>(lower_char)); // 简单转换，假定 ASCII
             auto response = ipc_client_->send_and_wait(msg);
-
-            // TODO: should remove engine manager later
-            engine_manager_->update_input_state(lower_char);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 std::wstring text_to_insert(1, lower_char);

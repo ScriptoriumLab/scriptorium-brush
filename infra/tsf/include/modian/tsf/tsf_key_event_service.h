@@ -6,12 +6,11 @@
 #include <atomic>
 
 #include "modian/ipc/ipc_client.h"
-#include "modian/manager/engine_manager.h"
 
 namespace modian::brush::infra::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink {
 	public:
-		explicit tsf_key_event_service(std::shared_ptr<manager::engine_manager> engine_manager);
+		explicit tsf_key_event_service();
 		virtual ~tsf_key_event_service() = default;
 
 		void set_client_id(const TfClientId id) { client_id_ = id; }
@@ -36,7 +35,6 @@ namespace modian::brush::infra::tsf {
 		std::atomic<ULONG> ref_count_;
 
 		std::wstring input_pinyin_;
-		std::shared_ptr<manager::engine_manager> engine_manager_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 
 		std::shared_ptr<ipc::ipc_client> ipc_client_;

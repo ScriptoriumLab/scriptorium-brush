@@ -28,7 +28,6 @@ target_include_directories(modian_brush_tsf PUBLIC
 target_link_libraries(modian_brush_tsf
     PRIVATE
     modian_brush_core
-    modian_brush_manager
     modian_brush_logger
     modian_brush_ipc
 )

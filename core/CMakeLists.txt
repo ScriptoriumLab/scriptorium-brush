@@ -1,5 +1,4 @@
 add_library(modian_brush_core STATIC
-    src/engine/pinyin_engine.cpp
     src/logger/console_logger.cpp
     src/logger/logger_service.cpp
     src/utils/utils.cpp

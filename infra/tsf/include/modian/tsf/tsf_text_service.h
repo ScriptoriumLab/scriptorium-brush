@@ -19,7 +19,6 @@ namespace modian::brush::infra::tsf {
 		tsf_text_service(); // 构造函数在 cpp 实现
 		virtual ~tsf_text_service();
 
-		// ... 接口保持不变 ...
 		STDMETHODIMP Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) override;
 		STDMETHODIMP Deactivate() override;
 		STDMETHODIMP QueryInterface(REFIID riid, void** ppv_obj) override;
@@ -31,9 +30,6 @@ namespace modian::brush::infra::tsf {
 		std::atomic<ULONG> ref_count_{1};
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 		ITfThreadMgr* thread_mgr_ = nullptr;
-
-		std::shared_ptr<manager::candidate_manager> candidate_manager_;
-		std::shared_ptr<manager::engine_manager> engine_manager_;
 
 		tsf_key_event_service key_event_service_;
 	};

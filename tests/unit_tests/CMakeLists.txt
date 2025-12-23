@@ -1,13 +1,11 @@
 add_executable(modian_brush_unit_tests
     infra/tsf/dll_main_test.cpp
-    infra/tsf/tsf_key_event_service_test.cpp
 )
 
 target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)
 
 target_link_libraries(modian_brush_unit_tests PRIVATE
     modian_brush_core
-    modian_brush_manager
     modian_brush_ipc
     modian_brush_tsf
     modian_brush

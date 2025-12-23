@@ -3,12 +3,9 @@
 #include <future>
 
 #include "modian/core/logger/logger_service.h"
-#include "modian/observer/ipc_candidate_observer.h"
 
 namespace modian::brush::infra::tsf {
 	tsf_text_service::tsf_text_service() {
-		const auto ipc_observer = std::make_shared<observer::ipc_candidate_observer>();
-
 		++g_active_objects;
 	}
 	tsf_text_service::~tsf_text_service() {

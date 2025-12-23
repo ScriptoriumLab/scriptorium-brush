@@ -1,5 +1,4 @@
 #include "modian/logger/spdlog_logger.h"
-#include "modian/core/utils/utils.h"
 
 #include <iostream>
 #include <filesystem>

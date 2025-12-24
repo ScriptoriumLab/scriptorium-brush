@@ -11,7 +11,7 @@ FetchContent_MakeAvailable(modian_inkstone)
 set(BUILD_TESTING ON CACHE BOOL "" FORCE)
 
 add_executable(modian_brush_integration_tests
-    test_template.cpp
+    modian_brush_integration_test.cpp
 )
 
 target_link_libraries(modian_brush_integration_tests PRIVATE

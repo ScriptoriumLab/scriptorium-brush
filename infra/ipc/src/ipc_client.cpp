@@ -43,28 +43,6 @@ namespace modian::brush::infra::ipc {
         return false;
     }
 
-    void ipc_client::send(std::string_view message) {
-        std::lock_guard lock(mutex_);
-
-        if (!ensure_connection()) {
-            return;
-        }
-
-        DWORD bytesWritten;
-        BOOL success = WriteFile(
-            static_cast<HANDLE>(pipe_handle_),
-            message.data(),
-            static_cast<DWORD>(message.size()),
-            &bytesWritten,
-            nullptr
-        );
-
-        if (!success) {
-            core::logger_service::logger()->error("IPC Write failed. Error: {}", GetLastError());
-            close(); // 关闭句柄，下次重试连接
-        }
-    }
-
     std::string ipc_client::send_and_wait(std::string_view message) {
         std::lock_guard lock(mutex_);
 
@@ -79,6 +57,7 @@ namespace modian::brush::infra::ipc {
 
         if (!success) {
             core::logger_service::logger()->error("IPC Write failed. Error: {}", GetLastError());
+            close();
             return "";
         }
 

@@ -14,7 +14,6 @@ namespace modian::brush::infra::ipc {
 		ipc_client& operator=(const ipc_client&) = delete;
 
 		// 发送消息
-		void send(std::string_view message);
 		std::string send_and_wait(std::string_view message);
 
 	private:

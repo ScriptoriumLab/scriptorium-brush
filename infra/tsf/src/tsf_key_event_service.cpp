@@ -40,7 +40,7 @@ namespace modian::brush::infra::tsf {
 
         if (w_param == VK_BACK) {
             core::logger_service::logger()->info("Brush: Sending Backspace to Inkstone");
-            ipc_client_->send(std::string(1, '\b'));
+            const auto response = ipc_client_->send_and_wait(std::string(1, '\b'));
 
             if (pinyin_len_ > 0) {
                 pinyin_len_--;

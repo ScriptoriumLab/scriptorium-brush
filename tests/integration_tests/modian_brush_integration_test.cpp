@@ -62,21 +62,21 @@ TEST_F(InkstoneIntegrationTest, ConnectAndInput) {
 
     std::string response = client.send_and_wait("n");
     response = client.send_and_wait("i");
-    EXPECT_EQ(response, "你");
+    EXPECT_EQ(response, "C:你");
 
     client.send_and_wait("h");
     client.send_and_wait("a");
     response = client.send_and_wait("o");
-    EXPECT_EQ(response, "好");
+    EXPECT_EQ(response, "C:好");
 
 
     client.send_and_wait("m");
     response = client.send_and_wait("o");
-    EXPECT_EQ(response, "墨");
+    EXPECT_EQ(response, "C:墨");
 
     client.send_and_wait("d");
     client.send_and_wait("i");
     client.send_and_wait("a");
     response = client.send_and_wait("n");
-    EXPECT_EQ(response, "点");
+    EXPECT_EQ(response, "C:点");
 }

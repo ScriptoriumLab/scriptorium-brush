@@ -32,5 +32,10 @@ namespace modian::brush::infra::tsf {
 		size_t backspace_count_;
 		tsf_key_event_service* service_;
 		bool is_commit_;
+
+		void _cleanup_zombie_composition();
+		bool _ensure_active_composition(TfEditCookie ec);
+		void _update_composition_text(TfEditCookie ec);
+		void _commit_and_destroy(TfEditCookie ec);
 	};
 }

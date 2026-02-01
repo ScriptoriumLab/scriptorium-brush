@@ -8,7 +8,7 @@
 #include "modian/ipc/ipc_client.h"
 
 namespace modian::brush::infra::tsf {
-	class tsf_key_event_service final : public ITfKeyEventSink {
+	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
 		explicit tsf_key_event_service();
 		virtual ~tsf_key_event_service() = default;
@@ -29,6 +29,8 @@ namespace modian::brush::infra::tsf {
 		STDMETHODIMP_(ULONG) AddRef() override;
 		STDMETHODIMP_(ULONG) Release() override;
 
+		STDMETHODIMP OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition* pComposition) override;
+
 	private:
 		[[nodiscard]] static bool _is_key_supported(WPARAM vk_code);
 
@@ -38,6 +40,8 @@ namespace modian::brush::infra::tsf {
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 
 		std::shared_ptr<ipc::ipc_client> ipc_client_;
-		size_t pinyin_len_{0};
+
+	public:
+		ITfComposition* current_composition_{nullptr};
 	};
 }

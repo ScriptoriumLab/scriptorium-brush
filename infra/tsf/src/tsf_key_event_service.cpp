@@ -12,7 +12,7 @@ namespace modian::brush::infra::tsf {
           ipc_client_{std::make_shared<ipc::ipc_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
-        return (vk_code >= 'A' && vk_code <= 'Z');
+        return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK);
     }
 
     // TODO: move to utils
@@ -38,14 +38,9 @@ namespace modian::brush::infra::tsf {
     STDMETHODIMP tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
         if (!pf_eaten) return E_POINTER;
 
-        if (w_param == VK_BACK) {
-            core::logger_service::logger()->info("Brush: Sending Backspace to Inkstone");
-            const auto response = ipc_client_->send_and_wait(std::string(1, '\b'));
+        const bool is_backspace = (w_param == VK_BACK);
 
-            if (pinyin_len_ > 0) {
-                pinyin_len_--;
-            }
-
+        if (is_backspace && current_composition_ == nullptr) {
             *pf_eaten = FALSE;
             return S_OK;
         }
@@ -53,43 +48,40 @@ namespace modian::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto lower_char = std::towlower(static_cast<wchar_t>(w_param));
+            std::string req_data;
+            if (is_backspace) {
+                req_data = "\b";
+            } else {
+                req_data = std::string(1, static_cast<char>(w_param));
+            }
 
-            std::string msg(1, static_cast<char>(lower_char)); // 简单转换，假定 ASCII
-            auto response = ipc_client_->send_and_wait(msg);
+            const std::string response = ipc_client_->send_and_wait(req_data);
+
+            bool is_commit = false;
+            std::wstring content;
+
+            if (response.size() >= 2 && response[1] == ':') {
+                const char type = response[0];
+                content = utf8_to_wstring(response.substr(2));
+                if (type == 'C') is_commit = true;
+            } else {
+                content = utf8_to_wstring(response);
+            }
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
-                std::wstring text_to_insert(1, lower_char);
-                size_t backspace_count = 0;
-
-                if (!response.empty()) {
-                    core::logger_service::logger()->info("Inkstone returned candidate: {}", response);
-
-                    text_to_insert = utf8_to_wstring(response);
-
-                    backspace_count = pinyin_len_;
-
-                    pinyin_len_ = 0;
-                } else {
-                    text_to_insert = std::wstring(1, lower_char);
-
-                    backspace_count = 0;
-
-                    pinyin_len_++;
+                if (!content.empty() || current_composition_) {
+                    auto* session = new tsf_edit_session(pic, this, content, is_commit);
+                    HRESULT hr = S_OK;
+                    pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
+                    session->Release();
                 }
-
-                auto* session = new tsf_edit_session(pic, text_to_insert, backspace_count);
-
-                HRESULT hr = S_OK;
-                pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
-                session->Release();
             }
 
             *pf_eaten = TRUE;
-        } else {
-            *pf_eaten = FALSE;
+            return S_OK;
         }
 
+        *pf_eaten = FALSE;
         return S_OK;
     }
 
@@ -117,12 +109,16 @@ namespace modian::brush::infra::tsf {
 
         if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_ITfKeyEventSink)) {
             *ppv_object = static_cast<ITfKeyEventSink*>(this);
-            AddRef();
-            return S_OK;
+
+        } else if (IsEqualIID(riid, IID_ITfCompositionSink)) {
+            *ppv_object = static_cast<ITfCompositionSink*>(this);
+        } else {
+            *ppv_object = nullptr;
+            return E_NOINTERFACE;
         }
 
-        *ppv_object = nullptr;
-        return E_NOINTERFACE;
+        AddRef();
+        return S_OK;
     }
 
     STDMETHODIMP_(ULONG) tsf_key_event_service::AddRef() {
@@ -135,5 +131,13 @@ namespace modian::brush::infra::tsf {
             delete this;
         }
         return count;
+    }
+
+    STDMETHODIMP tsf_key_event_service::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition* pComposition) {
+        if (current_composition_ == pComposition) {
+            current_composition_ = nullptr;
+        }
+
+        return S_OK;
     }
 }

@@ -90,12 +90,23 @@ namespace modian::brush::infra::tsf {
 		ITfRange* p_range = nullptr;
 		if (FAILED(service_->current_composition_->GetRange(&p_range))) return;
 
-		p_range->SetText(ec, 0, text_.c_str(), (LONG)text_.length());
+		if (text_.empty()) {
+			p_range->SetText(ec, 0, L"", 0);
 
-		p_range->Collapse(ec, TF_ANCHOR_END);
-		TF_SELECTION sel = {0};
-		sel.range = p_range;
-		context_->SetSelection(ec, 1, &sel);
+			service_->current_composition_->EndComposition(ec);
+
+			if (service_->current_composition_) {
+				service_->current_composition_->Release();
+				service_->current_composition_ = nullptr;
+			}
+		} else {
+			p_range->SetText(ec, 0, text_.c_str(), static_cast<LONG>(text_.length()));
+
+			p_range->Collapse(ec, TF_ANCHOR_END);
+			TF_SELECTION sel = {0};
+			sel.range = p_range;
+			context_->SetSelection(ec, 1, &sel);
+		}
 
 		p_range->Release();
 	}

@@ -51,6 +51,7 @@ According to clean architecture, the architecture of Modian is designed like bel
 - [x] Move load engine function to engine instead of in engine manager constructor
 - [ ] Refactor to use unique_ptr of `tsf_key_event_service` in text service
 - [ ] Packing open source Chinese character font into Modian
+- [ ] `unpack` function in `composition_protocol.h` may become an over design. Need to check if there'll be reusable case in the future.
 
 ### Architecture
 - [x] Introduce `app` layer to maintain `dll_main` and `server`

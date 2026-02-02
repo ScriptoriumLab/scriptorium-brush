@@ -2,6 +2,7 @@
 
 #include <cwctype>
 #include <windows.h>
+#include <modian/core/protocol/composition_protocol.h>
 
 #include "modian/tsf/tsf_edit_session.h"
 #include "modian/core/logger/logger_service.h"
@@ -56,17 +57,9 @@ namespace modian::brush::infra::tsf {
             }
 
             const std::string response = ipc_client_->send_and_wait(req_data);
-
-            bool is_commit = false;
-            std::wstring content;
-
-            if (response.size() >= 2 && response[1] == ':') {
-                const char type = response[0];
-                content = utf8_to_wstring(response.substr(2));
-                if (type == 'C') is_commit = true;
-            } else {
-                content = utf8_to_wstring(response);
-            }
+            const auto protocol = core::protocol::composition_protocol::decode(response);
+            const auto content = utf8_to_wstring(protocol.payload);
+            const bool is_commit = protocol.type == core::protocol::composition_protocol::message_type::COMMIT;
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 if (!content.empty() || current_composition_) {

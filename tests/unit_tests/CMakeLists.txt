@@ -1,4 +1,5 @@
 add_executable(modian_brush_unit_tests
+    core/protocol/composition_protocol_test.cpp
     infra/tsf/dll_main_test.cpp
 )
 

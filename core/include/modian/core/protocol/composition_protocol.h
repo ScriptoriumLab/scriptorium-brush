@@ -1,0 +1,22 @@
+#pragma once
+
+#include <string>
+
+namespace modian::brush::core::protocol {
+	class composition_protocol {
+	public:
+		enum class message_type {
+			NONE = 'N',
+			UPDATE = 'U',
+			COMMIT = 'C'
+		};
+
+		message_type type;
+		std::string payload;
+
+		composition_protocol();
+		composition_protocol(const message_type& type, std::string payload);
+
+		static composition_protocol decode(const std::string& raw);
+	};
+}

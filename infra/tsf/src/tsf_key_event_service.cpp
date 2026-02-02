@@ -16,15 +16,6 @@ namespace modian::brush::infra::tsf {
         return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK);
     }
 
-    // TODO: move to utils
-    std::wstring utf8_to_wstring(const std::string& str) {
-        if (str.empty()) return {};
-        int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), NULL, 0);
-        std::wstring wstrTo(size_needed, 0);
-        MultiByteToWideChar(CP_UTF8, 0, str.c_str(), (int)str.size(), &wstrTo[0], size_needed);
-        return wstrTo;
-    }
-
     STDMETHODIMP tsf_key_event_service::OnTestKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
         if (!pf_eaten) return E_POINTER;
 
@@ -57,9 +48,8 @@ namespace modian::brush::infra::tsf {
             }
 
             const std::string response = ipc_client_->send_and_wait(req_data);
-            const auto protocol = core::protocol::composition_protocol::decode(response);
-            const auto content = utf8_to_wstring(protocol.payload);
-            const bool is_commit = protocol.type == core::protocol::composition_protocol::message_type::COMMIT;
+            const auto [content, is_commit] = core::protocol::composition_protocol::decode(response)
+                .unpack(parse_content, parse_commit_flag);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 if (!content.empty() || current_composition_) {

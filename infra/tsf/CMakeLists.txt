@@ -15,6 +15,7 @@ add_library(modian_brush_tsf STATIC
     src/tsf_edit_session.cpp
     src/class_factory.cpp
     src/dll/register.cpp
+    src/utils/utils.cpp
 )
 
 target_include_directories(modian_brush_tsf PUBLIC

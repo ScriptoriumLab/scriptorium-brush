@@ -5,9 +5,14 @@
 #include <memory>
 #include <atomic>
 
+#include "modian/tsf/utils/utils.h"
+#include "modian/core/protocol/composition_protocol.h"
 #include "modian/ipc/ipc_client.h"
 
 namespace modian::brush::infra::tsf {
+	constexpr auto parse_content = [](const auto& p){ return utils::utf8_to_wstring(p.payload); };
+	constexpr auto parse_commit_flag = [](const auto& p){ return p.type == core::protocol::composition_protocol::message_type::COMMIT; };
+
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
 		explicit tsf_key_event_service();

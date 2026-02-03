@@ -4,13 +4,14 @@
 #include <string>
 #include <atomic>
 
+#include "utils/utils.h"
 #include "tsf_key_event_service.h"
 
 namespace modian::brush::infra::tsf {
 	class tsf_edit_session final : public ITfEditSession {
 	public:
-		tsf_edit_session(ITfContext* context, tsf_key_event_service* service, const std::wstring& text, bool is_commit)
-			: context_{context}, text_{text}, backspace_count_{0}, service_{service}, is_commit_{is_commit} {
+		tsf_edit_session(ITfContext* context, tsf_key_event_service* service, const std::string& text, bool is_commit)
+			: context_{context}, text_{utils::utf8_to_wstring(text)}, backspace_count_{0}, service_{service}, is_commit_{is_commit} {
 			context_->AddRef();
 			service_->AddRef();
 		}

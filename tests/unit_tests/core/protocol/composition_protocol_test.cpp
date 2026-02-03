@@ -19,3 +19,13 @@ TEST(composition_protocol_test, should_get_none_when_decode_empty_message) {
 	ASSERT_EQ(protocol.type, modian::brush::core::protocol::composition_protocol::message_type::NONE);
 	ASSERT_EQ(protocol.payload, "");
 }
+
+TEST(composition_protocol_test, should_return_values_according_to_rules_when_pass_with_customized_rules) {
+	const auto& [parsed_content, is_commit] = modian::brush::core::protocol::composition_protocol::decode("C:你").unpack(
+		[](const auto& p){ return p.payload; },
+		[](const auto& p){ return p.type == modian::brush::core::protocol::composition_protocol::message_type::COMMIT; }
+	);
+
+	ASSERT_EQ(parsed_content, "你");
+	ASSERT_TRUE(is_commit);
+}

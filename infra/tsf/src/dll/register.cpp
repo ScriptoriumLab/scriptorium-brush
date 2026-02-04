@@ -131,9 +131,9 @@ namespace modian::brush::infra::tsf::dll {
             return false;
         }
 
+        const auto desc_size = static_cast<DWORD>((info::MODIAN_IME_DESC.size() + 1) * sizeof(WCHAR));
         if (RegSetValueEx(h_key, nullptr, 0, REG_SZ,
-            reinterpret_cast<const BYTE*>(info::MODIAN_IME_DESC.data()),
-            static_cast<DWORD>(info::MODIAN_IME_DESC.size() * sizeof(WCHAR))) != ERROR_SUCCESS) {
+            reinterpret_cast<const BYTE*>(info::MODIAN_IME_DESC.data()), desc_size) != ERROR_SUCCESS) {
             close_keys(h_key, nullptr);
             return false;
         }
@@ -145,11 +145,9 @@ namespace modian::brush::infra::tsf::dll {
         }
 
         std::vector<WCHAR> file_name(MAX_PATH);
-        DWORD len = GetModuleFileNameW(modian_instance, file_name.data(), static_cast<DWORD>(file_name.size()));
-
+        const auto len = GetModuleFileNameW(modian_instance, file_name.data(), static_cast<DWORD>(file_name.size()));
         if (RegSetValueEx(h_sub_key, nullptr, 0, REG_SZ,
-            reinterpret_cast<const BYTE*>(file_name.data()),
-            len * sizeof(WCHAR)) == ERROR_SUCCESS) {
+            reinterpret_cast<const BYTE*>(file_name.data()), (len + 1) * sizeof(WCHAR)) == ERROR_SUCCESS) {
 
             if (RegSetValueEx(h_sub_key, info::MODIAN_IME_REGINFO_KEY_THREADMODEL.data(), 0, REG_SZ,
                 reinterpret_cast<const BYTE*>(info::MODIAN_IME_MODEL.data()),

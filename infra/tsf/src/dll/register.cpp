@@ -11,7 +11,7 @@
 using Microsoft::WRL::ComPtr;
 
 namespace modian::brush::infra::tsf::dll {
-    constexpr UINT DEFAULT_ICON_INDEX = static_cast<UINT>(-12);
+    constexpr UINT DEFAULT_ICON_INDEX {0};
 
     bool com_registration::register_profiles() {
         ComPtr<ITfInputProcessorProfileMgr> profile_mgr;

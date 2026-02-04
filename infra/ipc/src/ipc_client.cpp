@@ -5,10 +5,9 @@
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::ipc {
-    const std::wstring PIPE_NAME = L"\\\\.\\pipe\\modian_ipc_pipe";
     constexpr DWORD BUFFER_SIZE = 4096;
 
-    ipc_client::ipc_client() : pipe_handle_(INVALID_HANDLE_VALUE) {}
+    ipc_client::ipc_client(std::wstring_view pipe_name) : pipe_name_{pipe_name}, pipe_handle_(INVALID_HANDLE_VALUE) {}
 
     ipc_client::~ipc_client() {
         close();
@@ -26,7 +25,7 @@ namespace modian::brush::infra::ipc {
             return true;
         }
 
-        if (!WaitNamedPipeW(PIPE_NAME.c_str(), 20)) {
+        if (!WaitNamedPipeW(pipe_name_.c_str(), 20)) {
             if (GetLastError() != ERROR_FILE_NOT_FOUND) {
                 core::logger_service::logger()->debug("retrying...");
             }
@@ -34,7 +33,7 @@ namespace modian::brush::infra::ipc {
         }
 
         HANDLE hPipe = CreateFileW(
-            PIPE_NAME.c_str(),
+            pipe_name_.c_str(),
             GENERIC_READ | GENERIC_WRITE,
             0,
             nullptr,

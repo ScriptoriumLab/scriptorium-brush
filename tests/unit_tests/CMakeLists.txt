@@ -1,6 +1,7 @@
 add_executable(modian_brush_unit_tests
     core/protocol/composition_protocol_test.cpp
     infra/tsf/dll_main_test.cpp
+    infra/ipc/ipc_client_test.cpp
 )
 
 target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)

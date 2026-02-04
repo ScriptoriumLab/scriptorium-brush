@@ -72,9 +72,25 @@ namespace modian::brush::infra::ipc {
         );
 
         if (!success) {
-            core::logger_service::logger()->error("IPC Write failed. Error: {}", GetLastError());
+            core::logger_service::logger()->debug("IPC Write failed. Error: {}. Retrying...", GetLastError());
             close();
-            return "";
+
+            if (!ensure_connection()) {
+                core::logger_service::logger()->error("IPC Reconnect failed.");
+                return "";
+            }
+
+            success = WriteFile(
+                static_cast<HANDLE>(pipe_handle_),
+                message.data(), static_cast<DWORD>(message.size()),
+                &bytesWritten, nullptr
+            );
+
+            if (!success) {
+                core::logger_service::logger()->error("IPC Retry Write failed. Error: {}", GetLastError());
+                close();
+                return "";
+            }
         }
 
         std::vector<char> buffer(BUFFER_SIZE);

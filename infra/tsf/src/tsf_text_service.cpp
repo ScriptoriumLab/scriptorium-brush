@@ -6,7 +6,7 @@
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
-	tsf_text_service::tsf_text_service() {
+	tsf_text_service::tsf_text_service() : key_event_service_(static_cast<IUnknown*>(this)) {
 		++g_active_objects;
 	}
 	tsf_text_service::~tsf_text_service() {

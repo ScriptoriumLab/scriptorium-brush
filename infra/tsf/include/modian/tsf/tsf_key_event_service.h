@@ -14,7 +14,7 @@ namespace modian::brush::infra::tsf {
 
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
-		explicit tsf_key_event_service();
+		explicit tsf_key_event_service(IUnknown* owner);
 		virtual ~tsf_key_event_service() = default;
 
 		void set_client_id(const TfClientId id) { client_id_ = id; }
@@ -38,7 +38,7 @@ namespace modian::brush::infra::tsf {
 	private:
 		[[nodiscard]] static bool _is_key_supported(WPARAM vk_code);
 
-		std::atomic<ULONG> ref_count_;
+		IUnknown* owner_{nullptr};
 
 		std::wstring input_pinyin_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;

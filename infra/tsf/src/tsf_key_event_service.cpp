@@ -8,8 +8,8 @@
 #include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
-    tsf_key_event_service::tsf_key_event_service()
-        : ref_count_{1},
+    tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
+        : owner_{owner},
           ipc_client_{std::make_shared<ipc::ipc_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
@@ -105,15 +105,17 @@ namespace modian::brush::infra::tsf {
     }
 
     STDMETHODIMP_(ULONG) tsf_key_event_service::AddRef() {
-        return ++ref_count_;
+        if (owner_) {
+            return owner_->AddRef();
+        }
+        return 0;
     }
 
     STDMETHODIMP_(ULONG) tsf_key_event_service::Release() {
-        const ULONG count = --ref_count_;
-        if (count == 0) {
-            delete this;
+        if (owner_) {
+            return owner_->Release();
         }
-        return count;
+        return 0;
     }
 
     STDMETHODIMP tsf_key_event_service::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition* pComposition) {

@@ -165,31 +165,6 @@ namespace modian::brush::infra::tsf::dll {
     void com_registration::unregister_server() {
         const std::wstring key_path = info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() +
                                       util::convert_clsid_to_string(info::MODIAN_IME_CLSID);
-        recurse_delete_key(HKEY_CLASSES_ROOT, key_path.c_str());
-    }
-
-	LONG com_registration::recurse_delete_key(HKEY h_parent_key, LPCTSTR lpsz_key) {
-		HKEY reg_key_handle = nullptr;
-		LONG res = 0;
-		FILETIME time;
-		WCHAR string_buffer[256] = {'\0'};
-		DWORD size = ARRAYSIZE(string_buffer);
-
-		if (RegOpenKey(h_parent_key, lpsz_key, &reg_key_handle) != ERROR_SUCCESS) {
-			return ERROR_SUCCESS;
-		}
-
-		res = ERROR_SUCCESS;
-		while (RegEnumKeyEx(reg_key_handle, 0, string_buffer, &size, nullptr, nullptr, nullptr, &time) == ERROR_SUCCESS) {
-			string_buffer[ARRAYSIZE(string_buffer) - 1] = '\0';
-			res = recurse_delete_key(reg_key_handle, string_buffer);
-			if (res != ERROR_SUCCESS) {
-				break;
-			}
-			size = ARRAYSIZE(string_buffer);
-		}
-		RegCloseKey(reg_key_handle);
-
-		return res == ERROR_SUCCESS ? RegDeleteKey(h_parent_key, lpsz_key) : res;
+        RegDeleteTreeW(HKEY_CLASSES_ROOT, key_path.c_str());
     }
 }

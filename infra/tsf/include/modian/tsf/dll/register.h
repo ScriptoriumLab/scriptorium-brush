@@ -16,7 +16,5 @@ namespace modian::brush::infra::tsf::dll {
 
 		static bool register_server();
 		static void unregister_server();
-	private:
-		static LONG recurse_delete_key(_In_ HKEY h_parent_key, _In_ LPCTSTR lpsz_key);
 	};
 }

@@ -1,6 +1,7 @@
 #include "modian/tsf/tsf_text_service.h"
 
 #include <future>
+#include <wrl/client.h>
 
 #include "modian/core/logger/logger_service.h"
 
@@ -44,18 +45,22 @@ namespace modian::brush::infra::tsf {
 
 	STDMETHODIMP tsf_text_service::Deactivate() {
 		core::logger_service::logger()->info("Deactivating Modian IME...");
-		ITfKeystrokeMgr* keystroke_mgr{nullptr};
-		HRESULT hr = thread_mgr_->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
-		if (SUCCEEDED(hr)) {
-			hr = keystroke_mgr->UnadviseKeyEventSink(client_id_);
-			keystroke_mgr->Release();
+		if (thread_mgr_ && client_id_ != TF_CLIENTID_NULL) {
+			Microsoft::WRL::ComPtr<ITfKeystrokeMgr> keystroke_mgr;
+			if (SUCCEEDED(thread_mgr_->QueryInterface(IID_PPV_ARGS(&keystroke_mgr)))) {
+				keystroke_mgr->UnadviseKeyEventSink(client_id_);
+			}
 		}
 
-		thread_mgr_ = nullptr;
+		if (thread_mgr_) {
+			thread_mgr_->Release();
+			thread_mgr_ = nullptr;
+		}
+
 		client_id_ = TF_CLIENTID_NULL;
 		is_active_.store(false);
 
-		return hr;
+		return S_OK;
 	}
 
 	STDMETHODIMP tsf_text_service::QueryInterface(REFIID riid, void** ppv_obj) {

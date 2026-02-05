@@ -4,7 +4,7 @@
 #include <mutex>
 
 namespace modian::brush::infra::ipc {
-	constexpr std::wstring_view DEFAULT_PIPE_NAME = L"\\\\.\\pipe\\modian_ipc_pipe";
+	constexpr std::wstring_view DEFAULT_PIPE_NAME = L"\\\\.\\pipe\\modian_ipc_brush";
 
 	class ipc_client {
 	public:

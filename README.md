@@ -35,7 +35,7 @@ This design ensures maximum **crash resistance**—even if the core engine fails
 
 Modian Brush follows the **Clean Architecture** principles, acting as the interface adapter between the Windows OS and the Modian Core Protocol.
 
-![Modian Brush Architecture V1.0](docs/Modian Brush Architecture V1.0.png)
+![Modian Brush Architecture V1.0](./docs/Modian_Brush_Architecture_V1.0.png)
 
 * **Infra Layer**: Handles raw TSF COM interfaces (`ITfTextInputProcessor`) and Named Pipe communication.
 * **Core Layer**: Defines the protocol and event structures, remaining purely independent of Windows headers.
@@ -49,7 +49,7 @@ Since `modian-brush` is a DLL deeply integrated with Windows COM/TSF, our testin
 * **Unit Tests**: Focus on the `Adapter Layer`. We verify that raw `WPARAM`/`LPARAM` inputs are correctly converted into Modian's `InputEvent` JSON protocol.
 * **Integration Tests**: Mock the `Named Pipe Server` to verify that the Brush client can correctly connect, send heartbeats, and handle reconnection scenarios.
 
-![Modian Brush Test Strategy](docs/Modian Brush Test Strategy.png)
+![Modian Brush Test Strategy](./docs/Modian_Brush_Test_Strategy.png)
 
 ---
 

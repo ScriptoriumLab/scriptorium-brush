@@ -21,63 +21,50 @@ Yb, `88'  `88'  `88                     8I                                      
 
 ## 1. Introduction
 
-This repository is now for the Windows version of Modian. Modian is a simple and easy-to-use Input Method Editor. It is designed to be user-friendly and easy to use. It is also designed to be lightweight and fast. Windows version of Modian is currently in development and is not yet complete.
+**Modian Brush** is the **Windows Client (Sensor & Actuator)** for the Modian IME ecosystem.
+
+It is a lightweight **In-Process DLL** built upon the Microsoft Text Services Framework (TSF). Unlike traditional IMEs, `modian-brush` contains **no logic, no dictionary, and no UI**. Its sole responsibilities are:
+
+1.  **Sensor**: Intercept OS key events via TSF.
+2.  **Messenger**: Normalize events and forward them to the `modian-inkstone` core server via Named Pipes.
+3.  **Actuator**: Receive text composition commands from the server and commit text to the application.
+
+This design ensures maximum **crash resistance**—even if the core engine fails, the host application (e.g., Word, Notepad) remains unaffected.
 
 ## 2. Architecture
 
-According to clean architecture, the architecture of Modian is designed like below:
+Modian Brush follows the **Clean Architecture** principles, acting as the interface adapter between the Windows OS and the Modian Core Protocol.
 
-![Modian Architecture V0.1.3](./docs/Modian%20Architecture%20V0.1.3.png)
+![Modian Brush Architecture V1.0](docs/Modian Brush Architecture V1.0.png)
 
----
-
-## TODO
-- [ ] design automation test strategies for Modian IME
-- [ ] introduce e2e test
-- [ ] introduce UI e2e test
+* **Infra Layer**: Handles raw TSF COM interfaces (`ITfTextInputProcessor`) and Named Pipe communication.
+* **Core Layer**: Defines the protocol and event structures, remaining purely independent of Windows headers.
 
 ---
 
-## Tech debt
+## 3. Test Strategy
 
-### C++ Code
-- [x] Use `#pragma once` instead of `#ifndef` in header file
-- [x] Move `class_factory` into `namespace modian::tsf`
-- [ ] Refactor code in tsf
-- [x] Introduce logger framework -- introduced `spdlog`
-  - [x] Shutdown spdlog when Modian is unregistered from the system
-  - [x] spdlog cannot log to `modian.log`
-- [x] Remove redundant code in `util.h` and `registry_info.h`
-- [x] Move load engine function to engine instead of in engine manager constructor
-- [ ] Refactor to use unique_ptr of `tsf_key_event_service` in text service
-- [ ] Packing open source Chinese character font into Modian
-- [ ] `unpack` function in `composition_protocol.h` may become an over design. Need to check if there'll be reusable case in the future.
+Since `modian-brush` is a DLL deeply integrated with Windows COM/TSF, our testing strategy focuses on isolation and integration:
 
-### Architecture
-- [x] Introduce `app` layer to maintain `dll_main` and `server`
-- [x] Introduce `manager` layer to manage different types of input engine
-- [x] Add abstract of `Logger` in core
-- [ ] Refactor `candidate` from `std::vector<std::wstring>` to `virtual_candidate` and `candidate : public virtual candidate`
-- [ ] Refactor observer pattern to event channel pattern
+* **Unit Tests**: Focus on the `Adapter Layer`. We verify that raw `WPARAM`/`LPARAM` inputs are correctly converted into Modian's `InputEvent` JSON protocol.
+* **Integration Tests**: Mock the `Named Pipe Server` to verify that the Brush client can correctly connect, send heartbeats, and handle reconnection scenarios.
 
-### Thread Safety
-- [ ] Implement Thread Safety Mechanisms: Introduce appropriate synchronization techniques to manage concurrent access to shared resources, preventing race conditions and ensuring data integrity.
-- [ ] Designate Separate Read and Write Threads: Establish distinct threads for reading and writing operations to optimize performance and maintain data consistency during dictionary updates.
-- [ ] Integrate SQLite for Dictionary Management: Transition to using SQLite for handling the dictionary, facilitating efficient storage, retrieval, and updates in a thread-safe manner.
-- [ ] Develop a Strategy for Dynamic Dictionary Updates: Create a robust plan to handle real-time dictionary updates without disrupting ongoing input processing, ensuring that new entries are seamlessly incorporated.
-- [ ] Conduct Comprehensive Testing: Perform thorough testing under various scenarios to identify and resolve potential threading issues, ensuring the stability and reliability of the input method.
+![Modian Brush Test Strategy](docs/Modian Brush Test Strategy.png)
 
-### Input Event Handling
-- [ ] Refactor TSF key event handling
+---
+
+## 4. Roadmap & Tech Debt
+
+Since the heavy lifting has moved to `modian-inkstone`, the roadmap for Brush is focused on **stability** and **protocol normalization**.
+
+### TSF & Input Handling
+- [ ] **Refactor TSF Key Event Handling (Critical)**
   - Normalize `WPARAM`/`LPARAM` into a platform-independent **KeyEvent abstraction**.
-  - Stop treating `WPARAM` as `wchar_t` (it's VK, not character).
-  - Extract **VK**, **ScanCode**, **modifiers**, and **repeat** info from parameters.
-  - Use `ToUnicodeEx` (or `WM_CHAR`) to translate into **UTF-8 text events**.
-  - Route **control keys** (Backspace, Enter, arrows, etc.) via dedicated `handle_raw_keydown`.
-  - Forward **text input** (UTF-8) via `handle_text_input`.
-  - Ensure `OnTestKeyDown` mirrors `OnKeyDown` decision logic (no side effects).
-  - Keep `OnKeyUp` and `OnTestKeyUp` consistent with the same abstraction.
+  - Stop treating `WPARAM` as `wchar_t`; extract **VK**, **ScanCode**, and **modifiers**.
+  - Use `ToUnicodeEx` to translate keys into **UTF-8** characters before sending to Core.
+  - Route **control keys** (Backspace, Enter, Arrows) via a dedicated `handle_raw_keydown` path.
+- [ ] Refactor `tsf_key_event_service` to use `std::unique_ptr` for better lifecycle management.
 
-## Bug
-- [x] Cannot rebuild modian and remove modian directory after unregistering modian IME
-- [x] Cannot show Chinese character candidates in ImGui framework
+### IPC & Stability
+- [ ] **Robust Reconnection**: Implement exponential backoff strategies when the `modian-inkstone` server is unreachable or restarts.
+- [ ] **Fail-safe Mode**: If IPC fails, ensure the IME acts as a pass-through (transparent) keyboard to prevent blocking user input.

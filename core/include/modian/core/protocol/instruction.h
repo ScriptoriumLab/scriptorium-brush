@@ -3,14 +3,14 @@
 #include <string>
 
 namespace modian::brush::core::protocol::input::v1 {
+	enum class message_type {
+		NONE = 'N',
+		UPDATE = 'U',
+		COMMIT = 'C'
+	};
+
 	class instruction {
 	public:
-		enum class message_type {
-			NONE = 'N',
-			UPDATE = 'U',
-			COMMIT = 'C'
-		};
-
 		message_type type;
 		std::string payload;
 

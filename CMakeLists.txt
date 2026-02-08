@@ -27,6 +27,7 @@ endif()
 
 # add subdirectory
 add_subdirectory(core)
+add_subdirectory(service)
 add_subdirectory(infra)
 add_subdirectory(app)
 add_subdirectory(tests)

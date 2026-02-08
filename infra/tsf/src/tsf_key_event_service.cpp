@@ -2,10 +2,12 @@
 
 #include <cwctype>
 #include <windows.h>
-#include <modian/core/protocol/composition_protocol.h>
 
 #include "modian/tsf/tsf_edit_session.h"
 #include "modian/core/logger/logger_service.h"
+
+#include "modian/core/protocol/composition_protocol.h"
+#include "modian/service/input_protocol_service.h"
 
 namespace modian::brush::infra::tsf {
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
@@ -38,13 +40,7 @@ namespace modian::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            std::string req_data;
-            if (w_param == VK_BACK) {
-                req_data = "\b";
-            } else {
-                req_data = std::string(1, static_cast<char>(w_param));
-            }
-
+            const std::string req_data = service::input_protocol_service::build_key_event_request(w_param);
             const std::string response = ipc_client_->send_and_wait(req_data);
             const auto [content, is_commit] = core::protocol::composition_protocol::decode(response)
                 .unpack(parse_content, parse_commit_flag);

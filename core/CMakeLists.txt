@@ -1,7 +1,7 @@
 add_library(modian_brush_core STATIC
     src/logger/console_logger.cpp
     src/logger/logger_service.cpp
-    src/protocol/composition_protocol.cpp
+    src/protocol/instruction.cpp
 )
 
 target_include_directories(modian_brush_core PUBLIC

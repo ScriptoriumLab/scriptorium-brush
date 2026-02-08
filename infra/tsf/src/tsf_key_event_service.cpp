@@ -6,7 +6,6 @@
 #include "modian/tsf/tsf_edit_session.h"
 #include "modian/core/logger/logger_service.h"
 
-#include "modian/core/protocol/composition_protocol.h"
 #include "modian/service/input_protocol_service.h"
 
 namespace modian::brush::infra::tsf {

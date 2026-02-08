@@ -3,7 +3,7 @@
 #include <string>
 
 namespace modian::brush::core::protocol {
-	class composition_protocol {
+	class instruction {
 	public:
 		enum class message_type {
 			NONE = 'N',
@@ -14,8 +14,8 @@ namespace modian::brush::core::protocol {
 		message_type type;
 		std::string payload;
 
-		composition_protocol();
-		composition_protocol(const message_type& type, std::string payload);
+		instruction();
+		instruction(const message_type& type, std::string payload);
 
 		template<typename ...F>
 		auto unpack(F... rules) const {

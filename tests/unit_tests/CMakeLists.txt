@@ -1,5 +1,5 @@
 add_executable(modian_brush_unit_tests
-    core/protocol/composition_protocol_test.cpp
+        core/protocol/instruction_test.cpp
     service/input_protocol_service_test.cpp
     infra/tsf/dll_main_test.cpp
     infra/ipc/ipc_client_test.cpp

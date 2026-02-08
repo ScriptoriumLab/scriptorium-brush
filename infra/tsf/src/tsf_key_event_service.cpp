@@ -30,9 +30,7 @@ namespace modian::brush::infra::tsf {
     STDMETHODIMP tsf_key_event_service::OnKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
         if (!pf_eaten) return E_POINTER;
 
-        const bool is_backspace = (w_param == VK_BACK);
-
-        if (is_backspace && current_composition_ == nullptr) {
+        if (w_param == VK_BACK && current_composition_ == nullptr) {
             *pf_eaten = FALSE;
             return S_OK;
         }
@@ -41,7 +39,7 @@ namespace modian::brush::infra::tsf {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             std::string req_data;
-            if (is_backspace) {
+            if (w_param == VK_BACK) {
                 req_data = "\b";
             } else {
                 req_data = std::string(1, static_cast<char>(w_param));

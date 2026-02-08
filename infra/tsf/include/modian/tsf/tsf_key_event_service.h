@@ -3,14 +3,13 @@
 #include <msctf.h>
 #include <string>
 #include <memory>
-#include <atomic>
 
 #include "modian/core/protocol/instruction.h"
 #include "modian/ipc/ipc_client.h"
 
 namespace modian::brush::infra::tsf {
 	constexpr auto parse_content = [](const auto& p){ return p.payload; };
-	constexpr auto parse_commit_flag = [](const auto& p){ return p.type == core::protocol::instruction::message_type::COMMIT; };
+	constexpr auto parse_commit_flag = [](const auto& p){ return p.type == core::protocol::input::v1::instruction::message_type::COMMIT; };
 
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:

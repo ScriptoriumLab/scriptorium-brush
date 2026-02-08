@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace modian::brush::core::protocol {
+namespace modian::brush::core::protocol::input::v1 {
 	class instruction {
 	public:
 		enum class message_type {

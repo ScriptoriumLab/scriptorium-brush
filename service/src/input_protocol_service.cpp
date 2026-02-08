@@ -12,4 +12,8 @@ namespace modian::brush::service {
 
 		return req_data;
 	}
+
+	core::protocol::composition_protocol input_protocol_service::parse_instruction_response(const std::string& response) {
+		return core::protocol::composition_protocol::decode(response);
+	}
 }

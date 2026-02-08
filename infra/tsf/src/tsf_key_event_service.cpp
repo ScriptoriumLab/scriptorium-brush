@@ -42,7 +42,7 @@ namespace modian::brush::infra::tsf {
 
             const std::string req_data = service::input_protocol_service::build_key_event_request(w_param);
             const std::string response = ipc_client_->send_and_wait(req_data);
-            const auto [content, is_commit] = core::protocol::composition_protocol::decode(response)
+            const auto [content, is_commit] = service::input_protocol_service::parse_instruction_response(response)
                 .unpack(parse_content, parse_commit_flag);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {

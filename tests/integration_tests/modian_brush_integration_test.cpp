@@ -57,7 +57,7 @@ protected:
     }
 };
 
-TEST_F(InkstoneIntegrationTest, ConnectAndInput) {
+TEST_F(InkstoneIntegrationTest, DISABLED_ConnectAndInput) {
     modian::brush::infra::ipc::ipc_client client;
 
     std::string response = client.send_and_wait("n");

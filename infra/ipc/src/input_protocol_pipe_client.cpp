@@ -1,4 +1,4 @@
-#include "modian/ipc/ipc_client.h"
+#include "modian/ipc/input_protocol_pipe_client.h"
 
 #include <windows.h>
 #include <vector>
@@ -7,20 +7,20 @@
 namespace modian::brush::infra::ipc {
     constexpr DWORD BUFFER_SIZE = 4096;
 
-    ipc_client::ipc_client(std::wstring_view pipe_name) : pipe_name_{pipe_name}, pipe_handle_(INVALID_HANDLE_VALUE) {}
+    input_protocol_pipe_client::input_protocol_pipe_client(std::wstring_view pipe_name) : pipe_name_{pipe_name}, pipe_handle_(INVALID_HANDLE_VALUE) {}
 
-    ipc_client::~ipc_client() {
+    input_protocol_pipe_client::~input_protocol_pipe_client() {
         close();
     }
 
-    void ipc_client::close() {
+    void input_protocol_pipe_client::close() {
         if (pipe_handle_ != INVALID_HANDLE_VALUE) {
             CloseHandle(static_cast<HANDLE>(pipe_handle_));
             pipe_handle_ = INVALID_HANDLE_VALUE;
         }
     }
 
-    bool ipc_client::ensure_connection() {
+    bool input_protocol_pipe_client::ensure_connection() {
         if (pipe_handle_ != INVALID_HANDLE_VALUE) {
             return true;
         }
@@ -59,7 +59,7 @@ namespace modian::brush::infra::ipc {
         return true;
     }
 
-    std::string ipc_client::send_and_wait(std::string_view message) {
+    std::string input_protocol_pipe_client::send_and_wait(std::string_view message) {
         std::lock_guard lock(mutex_);
 
         if (!ensure_connection()) return "";

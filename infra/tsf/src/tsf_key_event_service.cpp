@@ -11,7 +11,7 @@
 namespace modian::brush::infra::tsf {
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
         : owner_{owner},
-          ipc_client_{std::make_shared<ipc::ipc_client>()} {}
+          input_protocol_pipe_client_{std::make_shared<ipc::input_protocol_pipe_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
         return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK) || (vk_code == VK_SPACE) || (vk_code == VK_LEFT) || (vk_code == VK_RIGHT);
@@ -40,7 +40,7 @@ namespace modian::brush::infra::tsf {
             core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const std::string req_data = service::input_protocol_service::build_key_event_request(w_param);
-            const std::string response = ipc_client_->send_and_wait(req_data);
+            const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);
             const auto [content, is_commit] = service::input_protocol_service::parse_instruction_response(response)
                 .unpack(parse_content, parse_commit_flag);
 

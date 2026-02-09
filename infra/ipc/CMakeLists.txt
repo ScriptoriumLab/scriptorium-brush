@@ -1,5 +1,5 @@
 add_library(modian_brush_ipc STATIC
-    src/ipc_client.cpp
+    src/input_protocol_pipe_client.cpp
 )
 
 target_include_directories(modian_brush_ipc PUBLIC

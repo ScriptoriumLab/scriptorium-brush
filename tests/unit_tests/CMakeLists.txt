@@ -1,8 +1,8 @@
 add_executable(modian_brush_unit_tests
-        core/protocol/instruction_test.cpp
+    core/protocol/instruction_test.cpp
     service/input_protocol_service_test.cpp
     infra/tsf/dll_main_test.cpp
-    infra/ipc/ipc_client_test.cpp
+    infra/ipc/input_protocol_pipe_client_test.cpp
 )
 
 target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)

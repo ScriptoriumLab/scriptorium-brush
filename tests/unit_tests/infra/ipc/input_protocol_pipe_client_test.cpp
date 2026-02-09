@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include <thread>
 #include <windows.h>
-#include "modian/ipc/ipc_client.h"
+#include "modian/ipc/input_protocol_pipe_client.h"
 
 using namespace modian::brush::infra::ipc;
 
 const std::wstring TEST_PIPE_NAME = L"\\\\.\\pipe\\modian_test_pipe_001";
 
-class ipc_client_test : public ::testing::Test {
+class input_protocol_pipe_client_test : public ::testing::Test {
 protected:
     void SetUp() override {
         server_ready_ = false;
@@ -78,21 +78,21 @@ protected:
     std::atomic<bool> server_ready_{false};
 };
 
-TEST_F(ipc_client_test, should_return_empty_string_when_server_is_not_running) {
-    ipc_client client(TEST_PIPE_NAME);
+TEST_F(input_protocol_pipe_client_test, should_return_empty_string_when_server_is_not_running) {
+    input_protocol_pipe_client client(TEST_PIPE_NAME);
 
     const auto response = client.send_and_wait("hello");
 
     ASSERT_TRUE(response.empty());
 }
 
-TEST_F(ipc_client_test, should_get_response_successfully_when_server_is_running) {
+TEST_F(input_protocol_pipe_client_test, should_get_response_successfully_when_server_is_running) {
     const std::string expected_response = "C:你";
 
     run_mock_server(expected_response);
     wait_for_server_ready();
 
-    ipc_client client(TEST_PIPE_NAME);
+    input_protocol_pipe_client client(TEST_PIPE_NAME);
 
     const auto actual_response = client.send_and_wait("ni");
 
@@ -101,10 +101,10 @@ TEST_F(ipc_client_test, should_get_response_successfully_when_server_is_running)
     join_server();
 }
 
-TEST_F(ipc_client_test, should_successfully_reconnect_when_server_restart) {
+TEST_F(input_protocol_pipe_client_test, should_successfully_reconnect_when_server_restart) {
     run_mock_server("Response 1");
     wait_for_server_ready();
-    ipc_client client(TEST_PIPE_NAME);
+    input_protocol_pipe_client client(TEST_PIPE_NAME);
     ASSERT_EQ(client.send_and_wait("Req 1"), "Response 1");
     join_server();
 

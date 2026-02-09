@@ -3,7 +3,7 @@
 #include <filesystem>
 #include <string>
 #include <thread>
-#include "modian/ipc/ipc_client.h"
+#include "modian/ipc/input_protocol_pipe_client.h"
 
 namespace fs = std::filesystem;
 
@@ -58,7 +58,7 @@ protected:
 };
 
 TEST_F(InkstoneIntegrationTest, DISABLED_ConnectAndInput) {
-    modian::brush::infra::ipc::ipc_client client;
+    modian::brush::infra::ipc::input_protocol_pipe_client client;
 
     std::string response = client.send_and_wait("n");
     response = client.send_and_wait("i");

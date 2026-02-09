@@ -6,7 +6,28 @@ TEST(input_protocol_service_test, should_build_backspace_request_when_user_input
 	constexpr WPARAM key{VK_BACK};
 	const auto request = modian::brush::service::input_protocol_service::build_key_event_request(key);
 
-	ASSERT_EQ(request, "\b");
+	ASSERT_EQ(request, "cmd:backspace");
+}
+
+TEST(input_protocol_service_test, should_build_right_request_when_user_input_is_vb_right) {
+	constexpr WPARAM key{VK_RIGHT};
+	const auto request = modian::brush::service::input_protocol_service::build_key_event_request(key);
+
+	ASSERT_EQ(request, "cmd:right");
+}
+
+TEST(input_protocol_service_test, should_build_left_request_when_user_input_is_vb_left) {
+	constexpr WPARAM key{VK_LEFT};
+	const auto request = modian::brush::service::input_protocol_service::build_key_event_request(key);
+
+	ASSERT_EQ(request, "cmd:left");
+}
+
+TEST(input_protocol_service_test, should_build_space_request_when_user_input_is_vb_space) {
+	constexpr WPARAM key{VK_SPACE};
+	const auto request = modian::brush::service::input_protocol_service::build_key_event_request(key);
+
+	ASSERT_EQ(request, "cmd:space");
 }
 
 TEST(input_protocol_service_test, should_build_request_when_user_input_other_keys) {

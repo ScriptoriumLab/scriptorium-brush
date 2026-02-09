@@ -14,7 +14,7 @@ namespace modian::brush::infra::tsf {
           ipc_client_{std::make_shared<ipc::ipc_client>()} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
-        return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK);
+        return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK) || (vk_code == VK_SPACE) || (vk_code == VK_LEFT) || (vk_code == VK_RIGHT);
     }
 
     STDMETHODIMP tsf_key_event_service::OnTestKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {

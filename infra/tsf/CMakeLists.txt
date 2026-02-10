@@ -30,5 +30,5 @@ target_link_libraries(modian_brush_tsf PRIVATE
     modian::brush::core
     modian_brush_service
     modian_brush_logger
-    modian_brush_ipc
+    modian::brush::ipc
 )

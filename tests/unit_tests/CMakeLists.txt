@@ -10,7 +10,7 @@ target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/t
 target_link_libraries(modian_brush_unit_tests PRIVATE
     modian::brush::core
     modian_brush_service
-    modian_brush_ipc
+    modian::brush::ipc
     modian_brush_tsf
     modian_brush
     gtest_main

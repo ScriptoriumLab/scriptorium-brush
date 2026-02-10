@@ -12,3 +12,4 @@ target_link_libraries(modian_brush_ipc
     modian::brush::core
 )
 
+add_library(modian::brush::ipc ALIAS modian_brush_ipc)

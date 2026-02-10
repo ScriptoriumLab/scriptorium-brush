@@ -32,3 +32,5 @@ target_link_libraries(modian_brush_tsf PRIVATE
     modian::brush::logger
     modian::brush::ipc
 )
+
+add_library(modian::brush::tsf ALIAS modian_brush_tsf)

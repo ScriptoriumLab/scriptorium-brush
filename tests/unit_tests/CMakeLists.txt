@@ -11,7 +11,7 @@ target_link_libraries(modian_brush_unit_tests PRIVATE
     modian::brush::core
     modian_brush_service
     modian::brush::ipc
-    modian_brush_tsf
+    modian::brush::tsf
     modian_brush
     gtest_main
     gmock_main

@@ -10,7 +10,7 @@ target_include_directories(modian_brush PUBLIC
 
 target_link_libraries(modian_brush
     PRIVATE
-    modian_brush_tsf
+    modian::brush::tsf
     modian::brush::logger
     modian::brush::core
     ole32

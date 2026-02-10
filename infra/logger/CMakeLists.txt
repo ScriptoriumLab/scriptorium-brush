@@ -20,3 +20,5 @@ target_link_libraries(modian_brush_logger
     PRIVATE modian::brush::core
     PUBLIC spdlog::spdlog
 )
+
+add_library(modian::brush::logger ALIAS modian_brush_logger)

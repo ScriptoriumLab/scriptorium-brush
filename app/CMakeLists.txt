@@ -27,6 +27,8 @@ set_target_properties(modian_brush PROPERTIES
     OUTPUT_NAME "modian-brush"
 )
 
+add_library(modian::brush ALIAS modian_brush)
+
 if(WIN32)
     set(MODIAN_BRUSH_DLL $<TARGET_FILE:modian_brush>)
 

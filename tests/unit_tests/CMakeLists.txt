@@ -12,7 +12,7 @@ target_link_libraries(modian_brush_unit_tests PRIVATE
     modian::brush::service
     modian::brush::ipc
     modian::brush::tsf
-    modian_brush
+    modian::brush
     gtest_main
     gmock_main
     Advapi32

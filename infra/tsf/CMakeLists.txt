@@ -28,7 +28,7 @@ target_include_directories(modian_brush_tsf PUBLIC
 
 target_link_libraries(modian_brush_tsf PRIVATE
     modian::brush::core
-    modian_brush_service
+    modian::brush::service
     modian::brush::logger
     modian::brush::ipc
 )

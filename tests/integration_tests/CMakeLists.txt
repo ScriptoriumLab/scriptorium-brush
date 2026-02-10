@@ -34,7 +34,7 @@ target_compile_definitions(modian_brush_integration_tests PRIVATE
 )
 
 add_dependencies(modian_brush_integration_tests
-    modian_inkstone
+    modian::inkstone
     set_up_modian_inkstone_env
 )
 

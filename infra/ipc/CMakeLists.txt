@@ -9,6 +9,6 @@ target_include_directories(modian_brush_ipc PUBLIC
 
 target_link_libraries(modian_brush_ipc
     PRIVATE
-    modian_brush_core
+    modian::brush::core
 )
 

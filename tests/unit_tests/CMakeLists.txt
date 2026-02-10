@@ -8,7 +8,7 @@ add_executable(modian_brush_unit_tests
 target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)
 
 target_link_libraries(modian_brush_unit_tests PRIVATE
-    modian_brush_core
+    modian::brush::core
     modian_brush_service
     modian_brush_ipc
     modian_brush_tsf

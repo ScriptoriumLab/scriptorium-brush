@@ -17,6 +17,6 @@ target_include_directories(modian_brush_logger PUBLIC
 )
 
 target_link_libraries(modian_brush_logger
-    PRIVATE modian_brush_core
+    PRIVATE modian::brush::core
     PUBLIC spdlog::spdlog
 )

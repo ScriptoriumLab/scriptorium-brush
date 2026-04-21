@@ -6,6 +6,11 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+if (WIN32 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(/clang:-Wno-character-conversion)
+    # add_compile_options(/clang:-Wno-error)
+endif()
+
 if(MSVC)
     # force to use UTF-8
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")

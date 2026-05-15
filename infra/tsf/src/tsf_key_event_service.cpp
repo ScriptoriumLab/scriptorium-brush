@@ -4,7 +4,7 @@
 #include <windows.h>
 
 #include "modian/tsf/tsf_edit_session.h"
-#include "modian/core/logger/logger_service.h"
+#include "modian/common/core/logger/logger_service.h"
 
 #include "modian/service/input_protocol_service.h"
 
@@ -37,7 +37,7 @@ namespace modian::brush::infra::tsf {
         }
 
         if (_is_key_supported(w_param)) {
-            core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
+            common::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const std::string req_data = service::input_protocol_service::build_key_event_request(w_param);
             const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);

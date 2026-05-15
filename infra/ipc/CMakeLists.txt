@@ -7,9 +7,8 @@ target_include_directories(modian_brush_ipc PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(modian_brush_ipc
-    PRIVATE
-    modian::brush::core
+target_link_libraries(modian_brush_ipc PRIVATE
+    modian::common::core::logger
 )
 
 add_library(modian::brush::ipc ALIAS modian_brush_ipc)

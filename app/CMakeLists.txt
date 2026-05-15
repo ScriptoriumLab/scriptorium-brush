@@ -10,9 +10,9 @@ target_include_directories(modian_brush PUBLIC
 
 target_link_libraries(modian_brush
     PRIVATE
+    modian::common::core::logger
     modian::brush::tsf
     modian::brush::logger
-    modian::brush::core
     ole32
     delayimp
     runtimeobject.lib

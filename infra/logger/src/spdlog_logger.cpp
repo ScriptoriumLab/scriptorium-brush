@@ -61,21 +61,21 @@ namespace modian::brush::infra::logger {
         spdlog::shutdown();
     }
 
-    void spdlog_logger::sink_it(core::log_level level, std::string_view msg) {
+    void spdlog_logger::sink_it(common::core::log_level level, std::string_view msg) {
         if (!logger_) return;
 
         switch (level) {
-        case core::log_level::debug:
+        case common::core::log_level::debug:
             logger_->debug(msg);
             break;
-        case core::log_level::info:
+        case common::core::log_level::info:
             logger_->info(msg);
             break;
-        case core::log_level::error:
+        case common::core::log_level::error:
             logger_->error(msg);
             break;
         }
 
-        if (level == core::log_level::error) logger_->flush();
+        if (level == common::core::log_level::error) logger_->flush();
     }
 }

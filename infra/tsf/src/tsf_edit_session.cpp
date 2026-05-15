@@ -1,5 +1,4 @@
 #include "modian/tsf/tsf_edit_session.h"
-#include "modian/core/logger/logger_service.h"
 
 namespace modian::brush::infra::tsf {
 	STDMETHODIMP tsf_edit_session::DoEditSession(TfEditCookie ec) {

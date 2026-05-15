@@ -2,7 +2,7 @@
 
 #include <windows.h>
 #include <vector>
-#include "modian/core/logger/logger_service.h"
+#include "modian/common/core/logger/logger_service.h"
 
 namespace modian::brush::infra::ipc {
     constexpr DWORD BUFFER_SIZE = 4096;
@@ -27,7 +27,7 @@ namespace modian::brush::infra::ipc {
 
         if (!WaitNamedPipeW(pipe_name_.c_str(), 20)) {
             if (GetLastError() != ERROR_FILE_NOT_FOUND) {
-                core::logger_service::logger()->debug("retrying...");
+                common::core::logger_service::logger()->debug("retrying...");
             }
             return false;
         }
@@ -43,19 +43,19 @@ namespace modian::brush::infra::ipc {
         );
 
         if (hPipe == INVALID_HANDLE_VALUE) {
-            core::logger_service::logger()->error("Failed to connect pipe. Error: {}", GetLastError());
+            common::core::logger_service::logger()->error("Failed to connect pipe. Error: {}", GetLastError());
             return false;
         }
 
         DWORD mode = PIPE_READMODE_MESSAGE;
         if (!SetNamedPipeHandleState(hPipe, &mode, nullptr, nullptr)) {
-            core::logger_service::logger()->error("Failed to set pipe mode. Error: {}", GetLastError());
+            common::core::logger_service::logger()->error("Failed to set pipe mode. Error: {}", GetLastError());
             CloseHandle(hPipe);
             return false;
         }
 
         pipe_handle_ = hPipe;
-        core::logger_service::logger()->info("IPC Connected to Inkstone!");
+        common::core::logger_service::logger()->info("IPC Connected to Inkstone!");
         return true;
     }
 
@@ -72,11 +72,11 @@ namespace modian::brush::infra::ipc {
         );
 
         if (!success) {
-            core::logger_service::logger()->debug("IPC Write failed. Error: {}. Retrying...", GetLastError());
+            common::core::logger_service::logger()->debug("IPC Write failed. Error: {}. Retrying...", GetLastError());
             close();
 
             if (!ensure_connection()) {
-                core::logger_service::logger()->error("IPC Reconnect failed.");
+                common::core::logger_service::logger()->error("IPC Reconnect failed.");
                 return "";
             }
 
@@ -87,7 +87,7 @@ namespace modian::brush::infra::ipc {
             );
 
             if (!success) {
-                core::logger_service::logger()->error("IPC Retry Write failed. Error: {}", GetLastError());
+                common::core::logger_service::logger()->error("IPC Retry Write failed. Error: {}", GetLastError());
                 close();
                 return "";
             }
@@ -107,7 +107,7 @@ namespace modian::brush::infra::ipc {
         }
 
         if (!success) {
-             core::logger_service::logger()->error("IPC Read failed. Error: {}", GetLastError());
+            common::core::logger_service::logger()->error("IPC Read failed. Error: {}", GetLastError());
              close();
         }
 

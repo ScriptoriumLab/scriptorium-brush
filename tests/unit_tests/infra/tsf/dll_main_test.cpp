@@ -3,13 +3,12 @@
 #include <msctf.h>
 #include <windows.h>
 #include <string>
-#include <vector>
 
 #include "dll/registry_operator.h"
 #include "modian/tsf/tsf_text_service.h"
 #include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/dll/dll_util.h"
-#include "modian/core/logger/logger_service.h"
+#include "modian/common/core/logger/logger_service.h"
 
 STDAPI DllRegisterServer();
 STDAPI DllUnregisterServer();
@@ -21,7 +20,7 @@ protected:
         ASSERT_TRUE(SUCCEEDED(hr));
 
         _ = DllUnregisterServer();
-        modian::brush::core::update_logger_times = 1;
+        modian::common::core::update_logger_times = 1;
     }
 
     void TearDown() override {

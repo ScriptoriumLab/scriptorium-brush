@@ -40,7 +40,6 @@ FetchContent_MakeAvailable(modian_common)
 
 include(CTest)
 
-add_subdirectory(core)
 add_subdirectory(service)
 add_subdirectory(infra)
 add_subdirectory(app)

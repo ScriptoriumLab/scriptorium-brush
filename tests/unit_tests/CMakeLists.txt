@@ -8,7 +8,7 @@ target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/t
 
 target_link_libraries(modian_brush_unit_tests PRIVATE
     modian::common::core::protocol
-    modian::brush::core
+    modian::common::core::logger
     modian::brush::service
     modian::brush::ipc
     modian::brush::tsf

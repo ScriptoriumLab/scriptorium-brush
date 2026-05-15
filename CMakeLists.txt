@@ -30,7 +30,14 @@ else()
     endif()
 endif()
 
-# add subdirectory
+include(FetchContent)
+FetchContent_Declare(
+    modian_common
+    GIT_REPOSITORY https://github.com/ModianIME/modian-common
+    BRANCH main
+)
+FetchContent_MakeAvailable(modian_common)
+
 add_subdirectory(core)
 add_subdirectory(service)
 add_subdirectory(infra)

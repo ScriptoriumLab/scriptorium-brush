@@ -40,8 +40,8 @@ namespace modian::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             common::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto command = utils::translate_os_key(w_param);
-            const std::string req_data = service::input_protocol_service::build_key_event_request(command);
+            const auto key_event = utils::translate_os_key(w_param);
+            const std::string req_data = service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);
             const auto [content, is_commit] = service::input_protocol_service::parse_instruction_response(response)
                 .unpack(parse_content, parse_commit_flag);

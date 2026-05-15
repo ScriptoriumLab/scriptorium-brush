@@ -1,20 +1,8 @@
 #include "modian/service/input_protocol_service.h"
 
 namespace modian::brush::service {
-	std::string input_protocol_service::build_key_event_request(const WPARAM& key) {
-		// 1. 处理特殊功能键
-		switch (key) {
-			case VK_LEFT:  return "cmd:left";
-			case VK_RIGHT: return "cmd:right";
-			case VK_SPACE: return "cmd:space";
-			case VK_BACK:  return "cmd:backspace";
-		}
-
-		if (key >= 'A' && key <= 'Z') {
-			return std::string(1, static_cast<char>(key));
-		}
-
-		return "";
+	std::string input_protocol_service::build_key_event_request(const std::string& semantic_command) {
+        return semantic_command;
 	}
 
     common::core::protocol::input::v1::instruction input_protocol_service::parse_instruction_response(std::string response) {

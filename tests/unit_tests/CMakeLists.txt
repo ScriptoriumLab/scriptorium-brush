@@ -1,6 +1,7 @@
 add_executable(modian_brush_unit_tests
     service/input_protocol_service_test.cpp
     infra/tsf/dll_main_test.cpp
+    infra/tsf/utils/key_translator_test.cpp
     infra/ipc/input_protocol_pipe_client_test.cpp
 )
 

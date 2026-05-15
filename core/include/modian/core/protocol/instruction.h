@@ -9,13 +9,9 @@ namespace modian::brush::core::protocol::input::v1 {
 		COMMIT = 'C'
 	};
 
-	class instruction {
-	public:
+	struct instruction {
 		message_type type;
 		std::string payload;
-
-		instruction();
-		instruction(const message_type& type, std::string payload);
 
 		template<typename ...F>
 		auto unpack(F... rules) const {

@@ -3,7 +3,7 @@ add_library(modian_brush_service STATIC
 )
 
 target_link_libraries(modian_brush_service PRIVATE
-    modian::brush::core
+    modian::common::core::protocol
 )
 
 target_include_directories(modian_brush_service PUBLIC

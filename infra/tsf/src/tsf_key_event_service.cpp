@@ -7,7 +7,7 @@
 #include "modian/common/core/logger/logger_service.h"
 
 #include "modian/common/core/protocol/v1/input/key_event.h"
-#include "modian/service/input_protocol_service.h"
+#include "modian/common/service/protocol/input_protocol_service.h"
 
 namespace modian::brush::infra::tsf {
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
@@ -41,9 +41,9 @@ namespace modian::brush::infra::tsf {
             common::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
             const auto key_event = common::core::protocol::input::v1::key_event::from_os_key(w_param);
-            const std::string req_data = service::input_protocol_service::build_key_event_request(key_event);
+            const std::string req_data = common::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);
-            const auto [content, is_commit] = service::input_protocol_service::parse_instruction_response(response)
+            const auto [content, is_commit] = common::service::input_protocol_service::parse_instruction_response(response)
                 .unpack(parse_content, parse_commit_flag);
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {

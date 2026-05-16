@@ -27,9 +27,10 @@ target_include_directories(modian_brush_tsf PUBLIC
 )
 
 target_link_libraries(modian_brush_tsf PRIVATE
+    modian::common::core::ipc
     modian::common::core::logger
     modian::common::service::protocol
-    modian::brush::ipc
+    modian::common::infra::ipc
 )
 
 add_library(modian::brush::tsf ALIAS modian_brush_tsf)

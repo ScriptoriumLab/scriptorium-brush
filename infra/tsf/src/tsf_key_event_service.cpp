@@ -9,10 +9,14 @@
 #include "modian/common/core/protocol/v1/input/key_event.h"
 #include "modian/common/service/protocol/input_protocol_service.h"
 
+#include "modian/common/infra/ipc/ipc_client_factory.h"
+
 namespace modian::brush::infra::tsf {
+	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\modian_input_protocol_pipe)";
+
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
         : owner_{owner},
-          input_protocol_pipe_client_{std::make_shared<ipc::input_protocol_pipe_client>()} {}
+          input_protocol_ipc_client_{modian::common::infra::ipc::ipc_client_factory::create_sync_ipc_client(INPUT_PROTOCOL_PIPE_NAME)} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
         return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK) || (vk_code == VK_SPACE) || (vk_code == VK_LEFT) || (vk_code == VK_RIGHT);
@@ -42,7 +46,7 @@ namespace modian::brush::infra::tsf {
 
             const auto key_event = common::core::protocol::input::v1::key_event::from_os_key(w_param);
             const std::string req_data = common::service::input_protocol_service::build_key_event_request(key_event);
-            const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);
+            const std::string response = input_protocol_ipc_client_->sync_send(req_data);
             const auto [content, is_commit] = common::service::input_protocol_service::parse_instruction_response(response)
                 .unpack(parse_content, parse_commit_flag);
 

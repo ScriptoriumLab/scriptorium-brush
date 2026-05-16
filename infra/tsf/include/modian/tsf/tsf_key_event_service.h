@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "modian/common/core/protocol/v1/input/instruction.h"
-#include "modian/ipc/input_protocol_pipe_client.h"
+#include "modian/common/core/ipc/isync_ipc_client.h"
 
 namespace modian::brush::infra::tsf {
 	constexpr auto parse_content = [](const auto& p){ return p.payload; };
@@ -42,7 +42,7 @@ namespace modian::brush::infra::tsf {
 		std::wstring input_pinyin_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 
-		std::shared_ptr<ipc::input_protocol_pipe_client> input_protocol_pipe_client_;
+		std::unique_ptr<common::core::ipc::isync_ipc_client<std::string, std::string>> input_protocol_ipc_client_;
 
 	public:
 		ITfComposition* current_composition_{nullptr};

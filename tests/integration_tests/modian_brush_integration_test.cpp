@@ -3,7 +3,8 @@
 #include <filesystem>
 #include <string>
 #include <thread>
-#include "modian/ipc/input_protocol_pipe_client.h"
+
+#include "modian/common/infra/ipc/ipc_client_factory.h"
 
 namespace fs = std::filesystem;
 
@@ -58,25 +59,26 @@ protected:
 };
 
 TEST_F(InkstoneIntegrationTest, DISABLED_ConnectAndInput) {
-    modian::brush::infra::ipc::input_protocol_pipe_client client;
+	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\modian_input_protocol_pipe)";
+    auto client = modian::common::infra::ipc::ipc_client_factory::create_sync_ipc_client(INPUT_PROTOCOL_PIPE_NAME);
 
-    std::string response = client.send_and_wait("n");
-    response = client.send_and_wait("i");
+    std::string response = client->sync_send("n");
+    response = client->sync_send("i");
     EXPECT_EQ(response, "C:你");
 
-    client.send_and_wait("h");
-    client.send_and_wait("a");
-    response = client.send_and_wait("o");
+    client->sync_send("h");
+    client->sync_send("a");
+    response = client->sync_send("o");
     EXPECT_EQ(response, "C:好");
 
 
-    client.send_and_wait("m");
-    response = client.send_and_wait("o");
+    client->sync_send("m");
+    response = client->sync_send("o");
     EXPECT_EQ(response, "C:墨");
 
-    client.send_and_wait("d");
-    client.send_and_wait("i");
-    client.send_and_wait("a");
-    response = client.send_and_wait("n");
+    client->sync_send("d");
+    client->sync_send("i");
+    client->sync_send("a");
+    response = client->sync_send("n");
     EXPECT_EQ(response, "C:点");
 }

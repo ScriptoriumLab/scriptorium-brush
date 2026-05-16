@@ -1,14 +1,13 @@
 add_executable(modian_brush_unit_tests
     infra/tsf/dll_main_test.cpp
-    infra/ipc/input_protocol_pipe_client_test.cpp
 )
 
 target_include_directories(modian_brush_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/tests/unit_tests/include)
 
 target_link_libraries(modian_brush_unit_tests PRIVATE
     modian::common::core::protocol
+    modian::common::core::ipc
     modian::common::core::logger
-    modian::brush::ipc
     modian::brush::tsf
     modian::brush
     gtest_main

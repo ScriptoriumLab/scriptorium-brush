@@ -15,7 +15,8 @@ add_executable(modian_brush_integration_tests
 )
 
 target_link_libraries(modian_brush_integration_tests PRIVATE
-    modian::brush::ipc
+    modian::common::core::ipc
+    modian::common::infra::ipc
     modian::brush::tsf
     modian::brush
     gtest_main

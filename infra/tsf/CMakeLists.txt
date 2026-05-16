@@ -16,7 +16,6 @@ add_library(modian_brush_tsf STATIC
     src/class_factory.cpp
     src/dll/register.cpp
     src/utils/utils.cpp
-    src/utils/key_translator.cpp
 )
 
 target_include_directories(modian_brush_tsf PUBLIC

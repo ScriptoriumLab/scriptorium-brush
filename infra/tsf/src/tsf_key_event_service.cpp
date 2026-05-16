@@ -6,8 +6,8 @@
 #include "modian/tsf/tsf_edit_session.h"
 #include "modian/common/core/logger/logger_service.h"
 
+#include "modian/common/core/protocol/v1/input/key_event.h"
 #include "modian/service/input_protocol_service.h"
-#include "modian/tsf/utils/key_translator.h"
 
 namespace modian::brush::infra::tsf {
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
@@ -40,7 +40,7 @@ namespace modian::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             common::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto key_event = utils::translate_os_key(w_param);
+            const auto key_event = common::core::protocol::input::v1::key_event::from_os_key(w_param);
             const std::string req_data = service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_pipe_client_->send_and_wait(req_data);
             const auto [content, is_commit] = service::input_protocol_service::parse_instruction_response(response)

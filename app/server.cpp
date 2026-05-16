@@ -1,6 +1,6 @@
 #include <new>
 
-#include "modian/logger/spdlog_logger.h"
+#include "modian/common/infra/logger/spdlog_logger.h"
 #include "modian/common/core/logger/logger_service.h"
 #include "modian/tsf/dll/info/registry_info.h"
 #include "modian/tsf/class_factory.h"
@@ -15,7 +15,7 @@ STDAPI DllCanUnloadNow() {
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, void** ppv) {
     modian::common::core::logger_service::update_logger([](){
-        return std::make_shared<modian::brush::infra::logger::spdlog_logger>();
+        return std::make_shared<modian::common::infra::logger::spdlog_logger>("brush");
     });
 
     modian::common::core::logger_service::logger()->info("Getting class object...");
@@ -58,7 +58,7 @@ STDAPI DllUnregisterServer() {
 
 STDAPI DllRegisterServer() {
     modian::common::core::logger_service::update_logger([](){
-        return std::make_shared<modian::brush::infra::logger::spdlog_logger>();
+        return std::make_shared<modian::common::infra::logger::spdlog_logger>("brush");
     });
 
     modian::common::core::logger_service::print_logo();

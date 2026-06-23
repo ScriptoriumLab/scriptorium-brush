@@ -4,13 +4,9 @@
 #include <string>
 #include <memory>
 
-#include "modian/common/core/protocol/v1/input/instruction.h"
 #include "modian/common/core/ipc/isync_ipc_client.h"
 
 namespace modian::brush::infra::tsf {
-	constexpr auto parse_content = [](const auto& p){ return p.payload; };
-	constexpr auto parse_commit_flag = [](const auto& p){ return p.type == common::core::protocol::input::v1::message_type::COMMIT; };
-
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
 		explicit tsf_key_event_service(IUnknown* owner);

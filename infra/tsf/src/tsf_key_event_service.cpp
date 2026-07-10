@@ -46,9 +46,9 @@ namespace modian::brush::infra::tsf {
             const auto key_event = common::core::protocol::input::v1::key_event::from_os_key(w_param);
             const std::string req_data = common::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
-            const auto instruction = common::service::input_protocol_service::parse_instruction_response(response);
-            const auto content = instruction.payload;
-            const auto is_commit = instruction.type == common::core::protocol::input::v1::message_type::COMMIT;
+            const auto [type, candidate_info] = common::service::input_protocol_service::parse_instruction_response(response);
+            const auto content = candidate_info.payload;
+            const auto is_commit = type == common::core::protocol::input::v1::message_type::COMMIT;
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 if (!content.empty() || current_composition_) {

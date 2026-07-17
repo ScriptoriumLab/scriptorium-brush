@@ -1,4 +1,4 @@
-# Modian Brush
+# Scriptorium Brush
 
 [![Modian IME Brush platform CI](https://github.com/ModianIME/modian-brush/actions/workflows/modian-ime-brush-platform-ci.yml/badge.svg)](https://github.com/ModianIME/modian-brush/actions/workflows/modian-ime-brush-platform-ci.yml)
 

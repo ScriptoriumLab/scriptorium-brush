@@ -3,7 +3,7 @@
 #include <Unknwn.h>
 #include <atomic>
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	extern std::atomic<long> g_server_lock;
 	extern std::atomic<long> g_active_objects;
 

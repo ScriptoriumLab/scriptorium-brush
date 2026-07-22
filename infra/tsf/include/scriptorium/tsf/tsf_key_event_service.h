@@ -4,9 +4,9 @@
 #include <string>
 #include <memory>
 
-#include "modian/common/core/ipc/isync_ipc_client.h"
+#include "scriptorium/felt/core/ipc/isync_ipc_client.h"
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
 		explicit tsf_key_event_service(IUnknown* owner);
@@ -38,7 +38,7 @@ namespace modian::brush::infra::tsf {
 		std::wstring input_pinyin_;
 		TfClientId client_id_ = TF_CLIENTID_NULL;
 
-		std::unique_ptr<common::core::ipc::isync_ipc_client<std::string, std::string>> input_protocol_ipc_client_;
+		std::unique_ptr<felt::core::ipc::isync_ipc_client<std::string, std::string>> input_protocol_ipc_client_;
 
 	public:
 		ITfComposition* current_composition_{nullptr};

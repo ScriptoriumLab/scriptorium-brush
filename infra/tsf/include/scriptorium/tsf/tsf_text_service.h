@@ -8,12 +8,12 @@
 #include "class_factory.h"
 #include "tsf_key_event_service.h"
 
-namespace modian::brush::manager {
+namespace scriptorium::brush::manager {
 	class candidate_manager;
 	class engine_manager;
 }
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	class tsf_text_service final : public ITfTextInputProcessor {
 	public:
 		tsf_text_service(); // 构造函数在 cpp 实现

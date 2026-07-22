@@ -1,6 +1,6 @@
-#include "modian/tsf/tsf_edit_session.h"
+#include "scriptorium/tsf/tsf_edit_session.h"
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	STDMETHODIMP tsf_edit_session::DoEditSession(TfEditCookie ec) {
 		if (!context_ || !service_) return E_FAIL;
 

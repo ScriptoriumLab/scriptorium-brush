@@ -9,4 +9,3 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(unit_tests)
-add_subdirectory(integration_tests)

@@ -2,8 +2,8 @@
 
 #include <Windows.h>
 
-namespace modian::brush::infra::tsf::dll {
-	inline HINSTANCE modian_instance{nullptr};
+namespace scriptorium::brush::infra::tsf::dll {
+	inline HINSTANCE scriptorium_instance{nullptr};
 
 	struct com_registration {
 		com_registration() = delete;

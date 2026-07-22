@@ -9,7 +9,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(WIL)
 
-add_library(modian_brush_tsf STATIC
+add_library(scriptorium_brush_tsf STATIC
     src/tsf_text_service.cpp
     src/tsf_key_event_service.cpp
     src/tsf_edit_session.cpp
@@ -18,7 +18,7 @@ add_library(modian_brush_tsf STATIC
     src/utils/utils.cpp
 )
 
-target_include_directories(modian_brush_tsf PUBLIC
+target_include_directories(scriptorium_brush_tsf PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
     PRIVATE
@@ -26,11 +26,11 @@ target_include_directories(modian_brush_tsf PUBLIC
         ${CMAKE_SOURCE_DIR}/infra/observer/include
 )
 
-target_link_libraries(modian_brush_tsf PRIVATE
-    modian::common::core::ipc
-    modian::common::core::logger
-    modian::common::service::protocol
-    modian::common::infra::ipc
+target_link_libraries(scriptorium_brush_tsf PRIVATE
+    scriptorium::felt::core::ipc
+    scriptorium::felt::core::logger
+    scriptorium::felt::service::protocol
+    scriptorium::felt::infra::ipc
 )
 
-add_library(modian::brush::tsf ALIAS modian_brush_tsf)
+add_library(scriptorium::brush::tsf ALIAS scriptorium_brush_tsf)

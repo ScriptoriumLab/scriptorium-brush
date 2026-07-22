@@ -7,7 +7,7 @@
 #include "utils/utils.h"
 #include "tsf_key_event_service.h"
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	class tsf_edit_session final : public ITfEditSession {
 	public:
 		tsf_edit_session(ITfContext* context, tsf_key_event_service* service, const std::string& text, bool is_commit)

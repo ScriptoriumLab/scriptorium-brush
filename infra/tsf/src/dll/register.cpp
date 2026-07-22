@@ -1,16 +1,16 @@
-#include "modian/tsf/dll/register.h"
+#include "scriptorium/tsf/dll/register.h"
 
 #include <msctf.h>
 #include <wrl/client.h>
 #include <string>
 #include <vector>
 
-#include "modian/tsf/dll/info/registry_info.h"
-#include "modian/tsf/dll/dll_util.h"
+#include "scriptorium/tsf/dll/info/registry_info.h"
+#include "scriptorium/tsf/dll/dll_util.h"
 
 using Microsoft::WRL::ComPtr;
 
-namespace modian::brush::infra::tsf::dll {
+namespace scriptorium::brush::infra::tsf::dll {
     constexpr UINT DEFAULT_ICON_INDEX {0};
 
     bool com_registration::register_profiles() {
@@ -28,18 +28,18 @@ namespace modian::brush::infra::tsf::dll {
         }
 
         std::vector<WCHAR> file_name_buf(MAX_PATH);
-        const DWORD copied_len = GetModuleFileNameW(modian_instance, file_name_buf.data(), static_cast<DWORD>(file_name_buf.size()));
+        const DWORD copied_len = GetModuleFileNameW(scriptorium_instance, file_name_buf.data(), static_cast<DWORD>(file_name_buf.size()));
 
         if (copied_len == 0) {
             return false;
         }
 
         hr = profile_mgr->RegisterProfile(
-            info::MODIAN_IME_CLSID,
-            info::MODIAN_IME_LANG_ID,
-            info::MODIAN_IME_GUID_PROFILE,
-            info::MODIAN_IME_DESC.data(),
-            static_cast<ULONG>(info::MODIAN_IME_DESC.size()),
+            info::SCRIPTORIUM_IME_CLSID,
+            info::SCRIPTORIUM_IME_LANG_ID,
+            info::SCRIPTORIUM_IME_GUID_PROFILE,
+            info::SCRIPTORIUM_IME_DESC.data(),
+            static_cast<ULONG>(info::SCRIPTORIUM_IME_DESC.size()),
             file_name_buf.data(), // 图标文件路径 (DLL 本身)
             static_cast<ULONG>(copied_len),
             DEFAULT_ICON_INDEX,   // 图标索引
@@ -66,9 +66,9 @@ namespace modian::brush::infra::tsf::dll {
         }
 
         profile_mgr->UnregisterProfile(
-            info::MODIAN_IME_CLSID,
-            info::MODIAN_IME_LANG_ID,
-            info::MODIAN_IME_GUID_PROFILE,
+            info::SCRIPTORIUM_IME_CLSID,
+            info::SCRIPTORIUM_IME_LANG_ID,
+            info::SCRIPTORIUM_IME_GUID_PROFILE,
             0
         );
     }
@@ -86,11 +86,11 @@ namespace modian::brush::infra::tsf::dll {
             return false;
         }
 
-        for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
+        for (const auto& guid : info::SCRIPTORIUM_SUPPORT_CATEGORIES) {
             hr = category_mgr->RegisterCategory(
-                info::MODIAN_IME_CLSID,
+                info::SCRIPTORIUM_IME_CLSID,
                 guid,
-                info::MODIAN_IME_CLSID
+                info::SCRIPTORIUM_IME_CLSID
             );
         }
 
@@ -103,18 +103,18 @@ namespace modian::brush::infra::tsf::dll {
             return;
         }
 
-        for (const auto& guid : info::MODIAN_SUPPORT_CATEGORIES) {
+        for (const auto& guid : info::SCRIPTORIUM_SUPPORT_CATEGORIES) {
             category_mgr->UnregisterCategory(
-                info::MODIAN_IME_CLSID,
+                info::SCRIPTORIUM_IME_CLSID,
                 guid,
-                info::MODIAN_IME_CLSID
+                info::SCRIPTORIUM_IME_CLSID
             );
         }
     }
 
     bool com_registration::register_server() {
-        const std::wstring key_path = info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() +
-                                      util::convert_clsid_to_string(info::MODIAN_IME_CLSID);
+        const std::wstring key_path = info::SCRIPTORIUM_IME_REGINFO_PREFIX_CLSID.data() +
+                                      util::convert_clsid_to_string(info::SCRIPTORIUM_IME_CLSID);
 
         HKEY h_key = nullptr;
         HKEY h_sub_key = nullptr;
@@ -131,27 +131,27 @@ namespace modian::brush::infra::tsf::dll {
             return false;
         }
 
-        const auto desc_size = static_cast<DWORD>((info::MODIAN_IME_DESC.size() + 1) * sizeof(WCHAR));
+        const auto desc_size = static_cast<DWORD>((info::SCRIPTORIUM_IME_DESC.size() + 1) * sizeof(WCHAR));
         if (RegSetValueEx(h_key, nullptr, 0, REG_SZ,
-            reinterpret_cast<const BYTE*>(info::MODIAN_IME_DESC.data()), desc_size) != ERROR_SUCCESS) {
+            reinterpret_cast<const BYTE*>(info::SCRIPTORIUM_IME_DESC.data()), desc_size) != ERROR_SUCCESS) {
             close_keys(h_key, nullptr);
             return false;
         }
 
-        if (RegCreateKeyEx(h_key, info::MODIAN_IME_REGINFO_KEY_INPROSVR32.data(), 0, nullptr,
+        if (RegCreateKeyEx(h_key, info::SCRIPTORIUM_IME_REGINFO_KEY_INPROSVR32.data(), 0, nullptr,
             REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr, &h_sub_key, nullptr) != ERROR_SUCCESS) {
             close_keys(h_key, nullptr);
             return false;
         }
 
         std::vector<WCHAR> file_name(MAX_PATH);
-        const auto len = GetModuleFileNameW(modian_instance, file_name.data(), static_cast<DWORD>(file_name.size()));
+        const auto len = GetModuleFileNameW(scriptorium_instance, file_name.data(), static_cast<DWORD>(file_name.size()));
         if (RegSetValueEx(h_sub_key, nullptr, 0, REG_SZ,
             reinterpret_cast<const BYTE*>(file_name.data()), (len + 1) * sizeof(WCHAR)) == ERROR_SUCCESS) {
 
-            if (RegSetValueEx(h_sub_key, info::MODIAN_IME_REGINFO_KEY_THREADMODEL.data(), 0, REG_SZ,
-                reinterpret_cast<const BYTE*>(info::MODIAN_IME_MODEL.data()),
-                static_cast<DWORD>(info::MODIAN_IME_MODEL.size() * sizeof(WCHAR))) == ERROR_SUCCESS) {
+            if (RegSetValueEx(h_sub_key, info::SCRIPTORIUM_IME_REGINFO_KEY_THREADMODEL.data(), 0, REG_SZ,
+                reinterpret_cast<const BYTE*>(info::SCRIPTORIUM_IME_MODEL.data()),
+                static_cast<DWORD>(info::SCRIPTORIUM_IME_MODEL.size() * sizeof(WCHAR))) == ERROR_SUCCESS) {
                 success = true;
             }
         }
@@ -161,8 +161,8 @@ namespace modian::brush::infra::tsf::dll {
     }
 
     void com_registration::unregister_server() {
-        const std::wstring key_path = info::MODIAN_IME_REGINFO_PREFIX_CLSID.data() +
-                                      util::convert_clsid_to_string(info::MODIAN_IME_CLSID);
+        const std::wstring key_path = info::SCRIPTORIUM_IME_REGINFO_PREFIX_CLSID.data() +
+                                      util::convert_clsid_to_string(info::SCRIPTORIUM_IME_CLSID);
         RegDeleteTreeW(HKEY_CLASSES_ROOT, key_path.c_str());
     }
 }

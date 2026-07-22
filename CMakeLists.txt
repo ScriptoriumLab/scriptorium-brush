@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(modian-brush LANGUAGES CXX)
+project(scriptorium-brush LANGUAGES CXX)
 
 # global config
 set(CMAKE_CXX_STANDARD 23)
@@ -32,11 +32,11 @@ endif()
 
 include(FetchContent)
 FetchContent_Declare(
-    modian_common
-    GIT_REPOSITORY https://github.com/ModianIME/modian-common
-    BRANCH main
+    scriptorium_felt
+    GIT_REPOSITORY https://github.com/ScriptoriumLab/scriptorium-felt
+    BRANCH master
 )
-FetchContent_MakeAvailable(modian_common)
+FetchContent_MakeAvailable(scriptorium_felt)
 
 include(CTest)
 

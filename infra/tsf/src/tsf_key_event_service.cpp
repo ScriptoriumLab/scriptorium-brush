@@ -1,21 +1,21 @@
-#include "modian/tsf/tsf_key_event_service.h"
+#include "scriptorium/tsf/tsf_key_event_service.h"
 
 #include <windows.h>
 
-#include "modian/tsf/tsf_edit_session.h"
-#include "modian/common/core/logger/logger_service.h"
+#include "scriptorium/tsf/tsf_edit_session.h"
+#include "scriptorium/felt/core/logger/logger_service.h"
 
-#include "modian/common/core/protocol/v1/input/key_event.h"
-#include "modian/common/service/protocol/input_protocol_service.h"
+#include "scriptorium/felt/core/protocol/v1/input/key_event.h"
+#include "scriptorium/felt/service/protocol/input_protocol_service.h"
 
-#include "modian/common/infra/ipc/ipc_client_factory.h"
+#include "scriptorium/felt/infra/ipc/ipc_client_factory.h"
 
-namespace modian::brush::infra::tsf {
-	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\modian_input_protocol_pipe)";
+namespace scriptorium::brush::infra::tsf {
+	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\scriptorium_input_protocol_pipe)";
 
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
         : owner_{owner},
-          input_protocol_ipc_client_{modian::common::infra::ipc::ipc_client_factory::create_sync_ipc_client(INPUT_PROTOCOL_PIPE_NAME)} {}
+          input_protocol_ipc_client_{scriptorium::felt::infra::ipc::ipc_client_factory::create_sync_ipc_client(INPUT_PROTOCOL_PIPE_NAME)} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
         return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK) || (vk_code == VK_SPACE) || (vk_code == VK_LEFT) || (vk_code == VK_RIGHT);
@@ -41,14 +41,14 @@ namespace modian::brush::infra::tsf {
         }
 
         if (_is_key_supported(w_param)) {
-            common::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
+            felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto key_event = common::core::protocol::input::v1::key_event::from_os_key(w_param);
-            const std::string req_data = common::service::input_protocol_service::build_key_event_request(key_event);
+            const auto key_event = felt::core::protocol::input::v1::key_event::from_os_key(w_param);
+            const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
-            const auto [type, candidate_info] = common::service::input_protocol_service::parse_instruction_response(response);
+            const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);
             const auto content = candidate_info.payload;
-            const auto is_commit = type == common::core::protocol::input::v1::message_type::COMMIT;
+            const auto is_commit = type == felt::core::protocol::input::v1::message_type::COMMIT;
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 if (!content.empty() || current_composition_) {

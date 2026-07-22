@@ -1,14 +1,14 @@
-#include "modian/tsf/class_factory.h"
+#include "scriptorium/tsf/class_factory.h"
 
 #include <new>
 #include <wrl/client.h>
 
-#include "modian/common/core/logger/logger_service.h"
-#include "modian/tsf/tsf_text_service.h"
+#include "scriptorium/felt/core/logger/logger_service.h"
+#include "scriptorium/tsf/tsf_text_service.h"
 
 using Microsoft::WRL::ComPtr;
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
     std::atomic<long> g_server_lock{0};
     std::atomic<long> g_active_objects{0};
 
@@ -39,7 +39,7 @@ namespace modian::brush::infra::tsf {
     }
 
     STDMETHODIMP class_factory::CreateInstance(IUnknown* p_unk_outer, const IID& riid, void** ppv) {
-        common::core::logger_service::logger()->info("Creating class_factory instance...");
+        felt::core::logger_service::logger()->info("Creating class_factory instance...");
 
         if (p_unk_outer) return CLASS_E_NOAGGREGATION;
         if (!ppv) return E_POINTER;

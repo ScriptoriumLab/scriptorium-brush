@@ -1,11 +1,11 @@
-#include "modian/tsf/tsf_text_service.h"
+#include "scriptorium/tsf/tsf_text_service.h"
 
 #include <future>
 #include <wrl/client.h>
 
-#include "modian/common/core/logger/logger_service.h"
+#include "scriptorium/felt/core/logger/logger_service.h"
 
-namespace modian::brush::infra::tsf {
+namespace scriptorium::brush::infra::tsf {
 	tsf_text_service::tsf_text_service() : key_event_service_(static_cast<IUnknown*>(this)) {
 		++g_active_objects;
 	}
@@ -23,7 +23,7 @@ namespace modian::brush::infra::tsf {
 			return S_OK;
 		}
 
-        common::core::logger_service::logger()->info("Activating Modian IME...");
+        felt::core::logger_service::logger()->info("Activating Scriptorium IME...");
 
 		if (thread_mgr_) thread_mgr_->Release();
 		thread_mgr_ = p_thread_mgr;
@@ -35,7 +35,7 @@ namespace modian::brush::infra::tsf {
 		ITfKeystrokeMgr* keystroke_mgr{nullptr};
 		HRESULT hr = p_thread_mgr->QueryInterface(IID_ITfKeystrokeMgr, reinterpret_cast<void**>(&keystroke_mgr));
 		if (SUCCEEDED(hr)) {
-            common::core::logger_service::logger()->info("Activating Modian IME key event handler...");
+            felt::core::logger_service::logger()->info("Activating Scriptorium IME key event handler...");
 			hr = keystroke_mgr->AdviseKeyEventSink(tf_client_id, &key_event_service_, TRUE);
 			keystroke_mgr->Release();
 		}
@@ -44,7 +44,7 @@ namespace modian::brush::infra::tsf {
 	}
 
 	STDMETHODIMP tsf_text_service::Deactivate() {
-        common::core::logger_service::logger()->info("Deactivating Modian IME...");
+        felt::core::logger_service::logger()->info("Deactivating Scriptorium IME...");
 		if (thread_mgr_ && client_id_ != TF_CLIENTID_NULL) {
 			Microsoft::WRL::ComPtr<ITfKeystrokeMgr> keystroke_mgr;
 			if (SUCCEEDED(thread_mgr_->QueryInterface(IID_PPV_ARGS(&keystroke_mgr)))) {

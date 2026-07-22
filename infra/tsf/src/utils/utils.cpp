@@ -1,8 +1,8 @@
-#include "modian/tsf/utils/utils.h"
+#include "scriptorium/tsf/utils/utils.h"
 
 #include <activation.h>
 
-namespace modian::brush::infra::tsf::utils {
+namespace scriptorium::brush::infra::tsf::utils {
 	std::wstring utf8_to_wstring(const std::string& str) {
 		if (str.empty()) return {};
 		int size_needed = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), static_cast<int>(str.size()), nullptr, 0);

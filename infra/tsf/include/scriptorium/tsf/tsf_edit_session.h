@@ -38,5 +38,6 @@ namespace scriptorium::brush::infra::tsf {
 		bool _ensure_active_composition(TfEditCookie ec);
 		void _update_composition_text(TfEditCookie ec);
 		void _commit_and_destroy(TfEditCookie ec);
+        void _apply_display_attributes(TfEditCookie ec, ITfRange* composition_range, const std::vector<LONG>& segment_lengths);
 	};
 }

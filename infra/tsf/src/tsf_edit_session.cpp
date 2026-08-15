@@ -46,12 +46,10 @@ namespace scriptorium::brush::infra::tsf {
 		if (!service_->current_composition_) return;
 
 		ITfRange* p_range = nullptr;
-		// 试探性获取 Range，失败说明是僵尸
 		if (FAILED(service_->current_composition_->GetRange(&p_range))) {
 			service_->current_composition_->Release();
 			service_->current_composition_ = nullptr;
 		} else {
-			// 记得 Release 试探用的指针
 			p_range->Release();
 		}
 	}
@@ -85,24 +83,48 @@ namespace scriptorium::brush::infra::tsf {
 		return success;
 	}
 
-	void tsf_edit_session::_update_composition_text(const TfEditCookie ec) {
+    void tsf_edit_session::_update_composition_text(const TfEditCookie ec) {
 		if (!service_->current_composition_) return;
 
 		ITfRange* p_range = nullptr;
 		if (FAILED(service_->current_composition_->GetRange(&p_range))) return;
 
-		if (candidate_info_.word.empty()) {
+		std::wstring display_text;
+		std::vector<LONG> segment_lengths;
+
+		if (is_commit_) {
+			display_text = utils::utf8_to_wstring(candidate_info_.word);
+		} else {
+			const auto& path = candidate_info_.spelling_path;
+			if (!path.empty()) {
+				for (size_t i = 0; i < path.size(); ++i) {
+					std::wstring segment = utils::utf8_to_wstring(path[i]);
+					if (segment.empty()) continue;
+
+					if (i > 0) {
+						display_text.push_back(L'\'');
+					}
+					
+					display_text += segment;
+					segment_lengths.push_back(static_cast<LONG>(segment.length()));
+				}
+			} else {
+				display_text = utils::utf8_to_wstring(candidate_info_.word);
+			}
+		}
+
+		if (display_text.empty()) {
 			p_range->SetText(ec, 0, L"", 0);
-
 			service_->current_composition_->EndComposition(ec);
-
 			if (service_->current_composition_) {
 				service_->current_composition_->Release();
 				service_->current_composition_ = nullptr;
 			}
 		} else {
-            std::wstring w_text = utils::utf8_to_wstring(candidate_info_.word);
-            p_range->SetText(ec, 0, w_text.c_str(), static_cast<LONG>(w_text.length()));
+			p_range->SetText(ec, 0, display_text.c_str(), static_cast<LONG>(display_text.length()));
+			if (!is_commit_ && !segment_lengths.empty()) {
+				_apply_display_attributes(ec, p_range, segment_lengths);
+			}
 
 			p_range->Collapse(ec, TF_ANCHOR_END);
 			TF_SELECTION sel = {0};
@@ -111,6 +133,38 @@ namespace scriptorium::brush::infra::tsf {
 		}
 
 		p_range->Release();
+	}
+
+    void tsf_edit_session::_apply_display_attributes(const TfEditCookie ec, ITfRange* composition_range, const std::vector<LONG>& segment_lengths) {
+		ITfProperty* p_prop = nullptr;
+		if (FAILED(context_->GetProperty(GUID_PROP_ATTRIBUTE, &p_prop))) {
+			return;
+		}
+
+		LONG current_offset = 0;
+
+		for (size_t i = 0; i < segment_lengths.size(); ++i) {
+			LONG seg_len = segment_lengths[i];
+
+			ITfRange* p_segment_range = nullptr;
+			if (SUCCEEDED(composition_range->Clone(&p_segment_range))) {
+				p_segment_range->Collapse(ec, TF_ANCHOR_START);
+				LONG cch_shifted = 0;
+				p_segment_range->ShiftStart(ec, current_offset, &cch_shifted, nullptr);
+				p_segment_range->ShiftEnd(ec, seg_len, &cch_shifted, nullptr);
+				VARIANT var;
+				VariantInit(&var);
+				var.vt = VT_I4;
+				var.lVal = static_cast<LONG>(TF_ATTR_INPUT);
+				p_prop->SetValue(ec, p_segment_range, &var);
+
+				p_segment_range->Release();
+			}
+
+			current_offset += seg_len + 1; 
+		}
+
+		p_prop->Release();
 	}
 
 	void tsf_edit_session::_commit_and_destroy(const TfEditCookie ec) {

@@ -47,7 +47,7 @@ namespace scriptorium::brush::infra::tsf {
             const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
             const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);
-            const auto content = candidate_info.payload;
+            const auto content = candidate_info.word;
             const auto is_commit = type == felt::core::protocol::input::v1::message_type::COMMIT;
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {

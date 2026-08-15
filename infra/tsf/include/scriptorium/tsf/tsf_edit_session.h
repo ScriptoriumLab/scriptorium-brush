@@ -1,10 +1,8 @@
 #pragma once
 
 #include <msctf.h>
-#include <string>
 #include <atomic>
 
-#include "utils/utils.h"
 #include "tsf_key_event_service.h"
 
 #include "scriptorium/felt/core/protocol/v1/input/instruction.h"
@@ -13,7 +11,7 @@ namespace scriptorium::brush::infra::tsf {
 	class tsf_edit_session final : public ITfEditSession {
 	public:
         tsf_edit_session(ITfContext* context, tsf_key_event_service* service, felt::core::protocol::input::v1::candidate_info candidate_info, bool is_commit)
-			: context_{context}, text_{utils::utf8_to_wstring(candidate_info.word)}, backspace_count_{0}, service_{service}, is_commit_{is_commit} {
+			: context_{context}, candidate_info_{std::move(candidate_info)}, backspace_count_{0}, service_{service}, is_commit_{is_commit} {
 			context_->AddRef();
 			service_->AddRef();
 		}
@@ -31,7 +29,7 @@ namespace scriptorium::brush::infra::tsf {
 	private:
 		std::atomic<ULONG> ref_count_;
 		ITfContext* context_;
-		std::wstring text_;
+        felt::core::protocol::input::v1::candidate_info candidate_info_;
 		size_t backspace_count_;
 		tsf_key_event_service* service_;
 		bool is_commit_;

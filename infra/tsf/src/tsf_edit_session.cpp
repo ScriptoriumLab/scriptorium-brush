@@ -1,5 +1,7 @@
 #include "scriptorium/tsf/tsf_edit_session.h"
 
+#include "scriptorium/tsf/utils/utils.h"
+
 namespace scriptorium::brush::infra::tsf {
 	STDMETHODIMP tsf_edit_session::DoEditSession(TfEditCookie ec) {
 		if (!context_ || !service_) return E_FAIL;
@@ -57,7 +59,7 @@ namespace scriptorium::brush::infra::tsf {
 	bool tsf_edit_session::_ensure_active_composition(const TfEditCookie ec) {
 		if (service_->current_composition_) return true;
 
-		if (text_.empty()) return false;
+		if (candidate_info_.word.empty()) return false;
 
 		TF_SELECTION tf_selection;
 		ULONG c_fetched;
@@ -89,7 +91,7 @@ namespace scriptorium::brush::infra::tsf {
 		ITfRange* p_range = nullptr;
 		if (FAILED(service_->current_composition_->GetRange(&p_range))) return;
 
-		if (text_.empty()) {
+		if (candidate_info_.word.empty()) {
 			p_range->SetText(ec, 0, L"", 0);
 
 			service_->current_composition_->EndComposition(ec);
@@ -99,7 +101,8 @@ namespace scriptorium::brush::infra::tsf {
 				service_->current_composition_ = nullptr;
 			}
 		} else {
-			p_range->SetText(ec, 0, text_.c_str(), static_cast<LONG>(text_.length()));
+            std::wstring w_text = utils::utf8_to_wstring(candidate_info_.word);
+            p_range->SetText(ec, 0, w_text.c_str(), static_cast<LONG>(w_text.length()));
 
 			p_range->Collapse(ec, TF_ANCHOR_END);
 			TF_SELECTION sel = {0};

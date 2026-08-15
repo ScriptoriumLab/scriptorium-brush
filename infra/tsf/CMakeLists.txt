@@ -13,6 +13,7 @@ add_library(scriptorium_brush_tsf STATIC
     src/tsf_text_service.cpp
     src/tsf_key_event_service.cpp
     src/tsf_edit_session.cpp
+    src/tsf_display_attribute_info.cpp
     src/class_factory.cpp
     src/dll/register.cpp
     src/utils/utils.cpp

@@ -82,16 +82,16 @@ TEST_F(scriptorium_registry_test, should_successfully_create_input_processor) {
     ASSERT_EQ(hr, S_OK);
     ASSERT_NE(p_factory, nullptr);
 
-    scriptorium::brush::infra::tsf::tsf_text_service* tsf_text_service = nullptr;
+    ITfTextInputProcessor* p_processor = nullptr;
     hr = p_factory->CreateInstance(
         nullptr,
         IID_ITfTextInputProcessor,
-        reinterpret_cast<void**>(&tsf_text_service)
+        reinterpret_cast<void**>(&p_processor)
     );
 
     ASSERT_EQ(hr, S_OK);
-    ASSERT_NE(tsf_text_service, nullptr);
+    ASSERT_NE(p_processor, nullptr);
 
-    if (tsf_text_service) tsf_text_service->Release();
+    if (p_processor) p_processor->Release();
     if (p_factory) p_factory->Release();
 }

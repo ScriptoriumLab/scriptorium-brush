@@ -1,6 +1,9 @@
 #include "scriptorium/tsf/tsf_edit_session.h"
 
+#include <wrl/client.h>
+
 #include "scriptorium/tsf/utils/utils.h"
+#include "scriptorium/tsf/dll/info/registry_info.h"
 
 namespace scriptorium::brush::infra::tsf {
 	STDMETHODIMP tsf_edit_session::DoEditSession(TfEditCookie ec) {
@@ -141,6 +144,17 @@ namespace scriptorium::brush::infra::tsf {
 			return;
 		}
 
+		TfGuidAtom attr_atom = TF_INVALID_GUIDATOM;
+        Microsoft::WRL::ComPtr<ITfCategoryMgr> category_mgr;
+		if (SUCCEEDED(CoCreateInstance(CLSID_TF_CategoryMgr, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&category_mgr)))) {
+			category_mgr->RegisterGUID(dll::info::SCRIPTORIUM_IME_GUID_DISPLAY_ATTRIBUTE_INPUT, &attr_atom);
+		}
+
+		if (attr_atom == TF_INVALID_GUIDATOM) {
+			p_prop->Release();
+			return;
+		}
+
 		LONG current_offset = 0;
 
 		for (size_t i = 0; i < segment_lengths.size(); ++i) {
@@ -149,13 +163,16 @@ namespace scriptorium::brush::infra::tsf {
 			ITfRange* p_segment_range = nullptr;
 			if (SUCCEEDED(composition_range->Clone(&p_segment_range))) {
 				p_segment_range->Collapse(ec, TF_ANCHOR_START);
+
 				LONG cch_shifted = 0;
 				p_segment_range->ShiftStart(ec, current_offset, &cch_shifted, nullptr);
 				p_segment_range->ShiftEnd(ec, seg_len, &cch_shifted, nullptr);
+
 				VARIANT var;
 				VariantInit(&var);
 				var.vt = VT_I4;
-				var.lVal = static_cast<LONG>(TF_ATTR_INPUT);
+				var.lVal = static_cast<LONG>(attr_atom);
+
 				p_prop->SetValue(ec, p_segment_range, &var);
 
 				p_segment_range->Release();

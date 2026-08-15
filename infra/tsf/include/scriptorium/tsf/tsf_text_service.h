@@ -14,9 +14,9 @@ namespace scriptorium::brush::manager {
 }
 
 namespace scriptorium::brush::infra::tsf {
-	class tsf_text_service final : public ITfTextInputProcessor {
+	class tsf_text_service final : public ITfTextInputProcessor, public ITfDisplayAttributeProvider {
 	public:
-		tsf_text_service(); // 构造函数在 cpp 实现
+		tsf_text_service();
 		virtual ~tsf_text_service();
 
 		STDMETHODIMP Activate(ITfThreadMgr* p_thread_mgr, TfClientId tf_client_id) override;
@@ -25,6 +25,8 @@ namespace scriptorium::brush::infra::tsf {
 		STDMETHODIMP_(ULONG) AddRef() override;
 		STDMETHODIMP_(ULONG) Release() override;
 
+        STDMETHODIMP EnumDisplayAttributeInfo(IEnumTfDisplayAttributeInfo** ppEnum) override;
+		STDMETHODIMP GetDisplayAttributeInfo(REFGUID guid, ITfDisplayAttributeInfo** ppInfo) override;
 	private:
 		std::atomic<bool> is_active_{false};
 		std::atomic<ULONG> ref_count_{1};

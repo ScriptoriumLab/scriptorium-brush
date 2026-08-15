@@ -64,7 +64,6 @@ Since the heavy lifting has moved to `scriptorium-inkstone`, the roadmap for Bru
   - Stop treating `WPARAM` as `wchar_t`; extract **VK**, **ScanCode**, and **modifiers**.
   - Use `ToUnicodeEx` to translate keys into **UTF-8** characters before sending to Core.
   - Route **control keys** (Backspace, Enter, Arrows) via a dedicated `handle_raw_keydown` path.
-- [ ] Refactor `tsf_key_event_service` to use `std::unique_ptr` for better lifecycle management.
 
 ### IPC & Stability
 - [ ] **Robust Reconnection**: Implement exponential backoff strategies when the `scriptorium-inkstone` server is unreachable or restarts.

@@ -51,7 +51,7 @@ namespace scriptorium::brush::infra::tsf {
 
             if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
                 if (!candidate_info.word.empty() || current_composition_) {
-                    auto* session = new tsf_edit_session(pic, this, std::move(candidate_info), is_commit);
+                    auto* session = new tsf_edit_session(pic, this, candidate_info, is_commit);
                     HRESULT hr = S_OK;
                     pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
                     session->Release();

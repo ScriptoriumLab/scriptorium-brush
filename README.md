@@ -2,6 +2,8 @@
 
 [![Scriptorium IME Brush CI](https://github.com/ScriptoriumLab/scriptorium-brush/actions/workflows/scriptorium-ime-brush-platform-ci.yml/badge.svg)](https://github.com/ScriptoriumLab/scriptorium-brush/actions/workflows/scriptorium-ime-brush-platform-ci.yml)
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ```
 ================================================================================================================================================
 
@@ -68,3 +70,15 @@ Since the heavy lifting has moved to `scriptorium-inkstone`, the roadmap for Bru
 ### IPC & Stability
 - [ ] **Robust Reconnection**: Implement exponential backoff strategies when the `scriptorium-inkstone` server is unreachable or restarts.
 - [ ] **Fail-safe Mode**: If IPC fails, ensure the IME acts as a pass-through (transparent) keyboard to prevent blocking user input.
+
+---
+
+## License
+
+Licensed under the **Apache License 2.0**.
+
+See `LICENSE` for details.
+
+---
+
+*Copyright © 2026 ScriptoriumLab.*

@@ -25,7 +25,7 @@ add_custom_command(
     TARGET scriptorium_brush_unit_tests
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_BINARY_DIR}/ScriptoriumLabIME/${CMAKE_CFG_INTDIR}/scriptorium-brush.dll"
+        $<TARGET_FILE:scriptorium_brush>
         $<TARGET_FILE_DIR:scriptorium_brush_unit_tests>
 )
 

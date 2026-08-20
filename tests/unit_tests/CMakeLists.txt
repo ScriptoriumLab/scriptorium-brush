@@ -30,4 +30,8 @@ add_custom_command(
 )
 
 include(GoogleTest)
-gtest_discover_tests(scriptorium_brush_unit_tests)
+gtest_discover_tests(scriptorium_brush_unit_tests
+    PROPERTIES
+      LABELS "brush-unit"
+
+)

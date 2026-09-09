@@ -57,34 +57,76 @@ namespace scriptorium::brush::infra::tsf {
 		}
 	}
 
-	bool tsf_edit_session::_ensure_active_composition(const TfEditCookie ec) {
-		if (service_->current_composition_) return true;
+    bool tsf_edit_session::_ensure_active_composition(const TfEditCookie ec) {
+        if (service_->current_composition_) return true;
 
-		if (candidate_info_.word.empty()) return false;
+        if (candidate_info_.word.empty()) return false;
 
-		TF_SELECTION tf_selection;
-		ULONG c_fetched;
-		if (FAILED(context_->GetSelection(ec, TF_DEFAULT_SELECTION, 1, &tf_selection, &c_fetched))) {
-			return false;
-		}
+        TF_SELECTION selection{};
+        ULONG fetched = 0;
 
-		ITfContextComposition* p_context_comp = nullptr;
-		bool success = false;
+        if (FAILED(context_->GetSelection(
+                ec,
+                TF_DEFAULT_SELECTION,
+                1,
+                &selection,
+                &fetched)) ||
+            fetched == 0 ||
+            !selection.range) {
+            return false;
+        }
 
-		if (SUCCEEDED(context_->QueryInterface(IID_ITfContextComposition, (void**)&p_context_comp))) {
-			HRESULT hr = p_context_comp->StartComposition(
-				ec, tf_selection.range, service_, &service_->current_composition_);
+        _capture_composition_anchor(ec, selection.range);
 
-			if (SUCCEEDED(hr) && service_->current_composition_) {
-				success = true;
-			}
-			p_context_comp->Release();
-		}
+        ITfContextComposition* context_composition = nullptr;
+        bool success = false;
 
-		tf_selection.range->Release();
+        if (SUCCEEDED(context_->QueryInterface(
+                IID_ITfContextComposition,
+                reinterpret_cast<void**>(&context_composition)))) {
 
-		return success;
-	}
+            const HRESULT hr = context_composition->StartComposition(
+                ec,
+                selection.range,
+                service_,
+                &service_->current_composition_
+            );
+
+            success =
+                SUCCEEDED(hr) &&
+                service_->current_composition_ != nullptr;
+
+            context_composition->Release();
+        }
+
+        selection.range->Release();
+
+        return success;
+    }
+
+    void tsf_edit_session::_capture_composition_anchor(const TfEditCookie ec, ITfRange* range) {
+
+        ITfContextView* view = nullptr;
+
+        if (FAILED(context_->GetActiveView(&view)) || !view) {
+            return;
+        }
+
+        RECT rect{};
+        BOOL clipped = FALSE;
+
+        const HRESULT hr =
+            view->GetTextExt(ec, range, &rect, &clipped);
+
+        if (SUCCEEDED(hr)) {
+            service_->composition_anchor_ = {
+                rect.left,
+                rect.bottom
+            };
+        }
+
+        view->Release();
+    }
 
     void tsf_edit_session::_update_composition_text(const TfEditCookie ec) {
 		if (!service_->current_composition_) return;

@@ -18,6 +18,7 @@ namespace scriptorium::brush::infra::tsf {
 
 		virtual ~tsf_edit_session() {
 			context_->Release();
+            service_->Release();
 		}
 
 		STDMETHODIMP DoEditSession(TfEditCookie ec) override;
@@ -36,6 +37,7 @@ namespace scriptorium::brush::infra::tsf {
 
 		void _cleanup_zombie_composition();
 		bool _ensure_active_composition(TfEditCookie ec);
+        void _capture_composition_anchor(const TfEditCookie ec, ITfRange* range);
 		void _update_composition_text(TfEditCookie ec);
 		void _commit_and_destroy(TfEditCookie ec);
         void _apply_display_attributes(TfEditCookie ec, ITfRange* composition_range, const std::vector<LONG>& segment_lengths);

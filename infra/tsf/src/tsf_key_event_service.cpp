@@ -138,6 +138,7 @@ namespace scriptorium::brush::infra::tsf {
     STDMETHODIMP tsf_key_event_service::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition* pComposition) {
         if (current_composition_ == pComposition) {
             current_composition_ = nullptr;
+            composition_anchor_.reset();
         }
 
         return S_OK;

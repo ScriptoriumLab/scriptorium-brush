@@ -43,7 +43,7 @@ namespace scriptorium::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto key_event = felt::core::protocol::input::v1::key_event::from_os_key(w_param);
+            const auto key_event = felt::core::protocol::input::v1::key_event{static_cast<uint32_t>(w_param)};
             const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
             const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);

@@ -1,5 +1,6 @@
 #include "scriptorium/tsf/tsf_key_event_service.h"
 
+#include <optional>
 #include <windows.h>
 
 #include "scriptorium/tsf/tsf_edit_session.h"
@@ -11,6 +12,24 @@
 #include "scriptorium/felt/infra/ipc/ipc_client_factory.h"
 
 namespace scriptorium::brush::infra::tsf {
+    namespace {
+        scriptorium::felt::core::protocol::input::v1::key_event from_os_key(WPARAM key) {
+            switch (key) {
+            case VK_LEFT:  return { scriptorium::felt::core::protocol::input::v1::key_event_type::LEFT, std::nullopt };
+            case VK_RIGHT: return { scriptorium::felt::core::protocol::input::v1::key_event_type::RIGHT, std::nullopt };
+            case VK_SPACE: return { scriptorium::felt::core::protocol::input::v1::key_event_type::SPACE, std::nullopt };
+            case VK_BACK:  return { scriptorium::felt::core::protocol::input::v1::key_event_type::BACKSPACE, std::nullopt };
+            }
+
+            if (key >= 'A' && key <= 'Z') {
+                return  { scriptorium::felt::core::protocol::input::v1::key_event_type::TEXT, std::string(1, static_cast<char>(key))};
+            }
+
+            return {};
+        }
+
+    }
+
 	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\scriptorium_input_protocol_pipe)";
 
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
@@ -43,7 +62,7 @@ namespace scriptorium::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto key_event = felt::core::protocol::input::v1::key_event{static_cast<uint32_t>(w_param)};
+            const auto key_event = from_os_key(w_param);
             const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
             const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);

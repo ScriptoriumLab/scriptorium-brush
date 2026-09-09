@@ -13,7 +13,7 @@
 
 namespace scriptorium::brush::infra::tsf {
     namespace {
-        scriptorium::felt::core::protocol::input::v1::key_event from_os_key(WPARAM key) {
+        scriptorium::felt::core::protocol::input::v1::key_event map_virtual_key_to_key_event(WPARAM key) {
             switch (key) {
             case VK_LEFT:  return { scriptorium::felt::core::protocol::input::v1::key_event_type::LEFT, std::nullopt };
             case VK_RIGHT: return { scriptorium::felt::core::protocol::input::v1::key_event_type::RIGHT, std::nullopt };
@@ -62,7 +62,7 @@ namespace scriptorium::brush::infra::tsf {
         if (_is_key_supported(w_param)) {
             felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
 
-            const auto key_event = from_os_key(w_param);
+            const auto key_event = map_virtual_key_to_key_event(w_param);
             const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
             const std::string response = input_protocol_ipc_client_->sync_send(req_data);
             const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);

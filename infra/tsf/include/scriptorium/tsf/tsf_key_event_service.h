@@ -5,14 +5,10 @@
 #include <string>
 #include <memory>
 
+#include "scriptorium/felt/core/protocol/v1/input/key_event.h"
 #include "scriptorium/felt/core/ipc/isync_ipc_client.h"
 
 namespace scriptorium::brush::infra::tsf {
-    struct screen_point {
-        LONG x{};
-        LONG y{};
-    };
-
 	class tsf_key_event_service final : public ITfKeyEventSink, public ITfCompositionSink {
 	public:
 		explicit tsf_key_event_service(IUnknown* owner);
@@ -48,6 +44,6 @@ namespace scriptorium::brush::infra::tsf {
 
 	public:
 		ITfComposition* current_composition_{nullptr};
-        std::optional<screen_point> composition_anchor_;
+        std::optional<felt::core::protocol::input::v1::point> composition_anchor_;
 	};
 }

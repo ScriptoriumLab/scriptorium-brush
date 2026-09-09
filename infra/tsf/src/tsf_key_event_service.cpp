@@ -13,41 +13,78 @@
 
 namespace scriptorium::brush::infra::tsf {
     namespace {
-        scriptorium::felt::core::protocol::input::v1::key_event map_virtual_key_to_key_event(WPARAM key) {
+        namespace input_protocol = scriptorium::felt::core::protocol::input::v1;
+
+        input_protocol::key_event map_virtual_key_to_key_event(const WPARAM key) {
             switch (key) {
-            case VK_LEFT:  return { scriptorium::felt::core::protocol::input::v1::key_event_type::LEFT, std::nullopt };
-            case VK_RIGHT: return { scriptorium::felt::core::protocol::input::v1::key_event_type::RIGHT, std::nullopt };
-            case VK_SPACE: return { scriptorium::felt::core::protocol::input::v1::key_event_type::SPACE, std::nullopt };
-            case VK_BACK:  return { scriptorium::felt::core::protocol::input::v1::key_event_type::BACKSPACE, std::nullopt };
+            case VK_LEFT:
+                return {
+                    input_protocol::key_event_type::LEFT,
+                    std::nullopt
+                };
+
+            case VK_RIGHT:
+                return {
+                    input_protocol::key_event_type::RIGHT,
+                    std::nullopt
+                };
+
+            case VK_SPACE:
+                return {
+                    input_protocol::key_event_type::SPACE,
+                    std::nullopt
+                };
+
+            case VK_BACK:
+                return {
+                    input_protocol::key_event_type::BACKSPACE,
+                    std::nullopt
+                };
             }
 
             if (key >= 'A' && key <= 'Z') {
-                return  { scriptorium::felt::core::protocol::input::v1::key_event_type::TEXT, std::string(1, static_cast<char>(key))};
+                return {
+                    input_protocol::key_event_type::TEXT,
+                    std::string(
+                        1,
+                        static_cast<char>(key)
+                    )
+                };
             }
 
             return {};
         }
 
+        input_protocol::key_event_request build_key_event_request(const WPARAM key, const std::optional<input_protocol::point>& anchor) {
+            return {
+                .event = map_virtual_key_to_key_event(key),
+                .context = {
+                    .anchor = anchor
+                }
+            };
+        }
     }
 
-	const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\scriptorium_input_protocol_pipe)";
+    const std::string INPUT_PROTOCOL_PIPE_NAME = R"(\\.\pipe\scriptorium_input_protocol_pipe)";
 
     tsf_key_event_service::tsf_key_event_service(IUnknown* owner)
         : owner_{owner},
           input_protocol_ipc_client_{scriptorium::felt::infra::ipc::ipc_client_factory::create_sync_ipc_client(INPUT_PROTOCOL_PIPE_NAME)} {}
 
     bool tsf_key_event_service::_is_key_supported(const WPARAM vk_code) {
-        return (vk_code >= 'A' && vk_code <= 'Z') || (vk_code == VK_BACK) || (vk_code == VK_SPACE) || (vk_code == VK_LEFT) || (vk_code == VK_RIGHT);
+        return
+            (vk_code >= 'A' && vk_code <= 'Z') ||
+            vk_code == VK_BACK ||
+            vk_code == VK_SPACE ||
+            vk_code == VK_LEFT ||
+            vk_code == VK_RIGHT;
     }
 
     STDMETHODIMP tsf_key_event_service::OnTestKeyDown(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
         if (!pf_eaten) return E_POINTER;
 
-        if (_is_key_supported(w_param)) {
-            *pf_eaten = TRUE;
-        } else {
-            *pf_eaten = FALSE;
-        }
+        *pf_eaten = _is_key_supported(w_param) ? TRUE : FALSE;
+
         return S_OK;
     }
 
@@ -59,43 +96,56 @@ namespace scriptorium::brush::infra::tsf {
             return S_OK;
         }
 
-        if (_is_key_supported(w_param)) {
-            felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
-
-            const auto key_event = map_virtual_key_to_key_event(w_param);
-            const std::string req_data = felt::service::input_protocol_service::build_key_event_request(key_event);
-            const std::string response = input_protocol_ipc_client_->sync_send(req_data);
-            const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);
-            const auto is_commit = type == felt::core::protocol::input::v1::message_type::COMMIT;
-
-            if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
-                if (!candidate_info.word.empty() || current_composition_) {
-                    auto* session = new tsf_edit_session(pic, this, candidate_info, is_commit);
-                    HRESULT hr = S_OK;
-                    pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
-                    session->Release();
-                }
-            }
-
-            *pf_eaten = TRUE;
+        if (!_is_key_supported(w_param)) {
+            *pf_eaten = FALSE;
             return S_OK;
         }
 
-        *pf_eaten = FALSE;
+        felt::core::logger_service::logger()->info("Key intercepted: {}", static_cast<char>(w_param));
+
+        const auto request = build_key_event_request(w_param, composition_anchor_);
+
+        const std::string req_data = felt::service::input_protocol_service::build_key_event_request(request);
+
+        const std::string response = input_protocol_ipc_client_->sync_send(req_data);
+
+        const auto [type, candidate_info] = felt::service::input_protocol_service::parse_instruction_response(response);
+
+        const bool is_commit = type == felt::core::protocol::input::v1::message_type::COMMIT;
+
+        if (pic != nullptr && client_id_ != TF_CLIENTID_NULL) {
+            if (!candidate_info.word.empty() || current_composition_) {
+                auto* session = new tsf_edit_session(pic, this, candidate_info, is_commit);
+
+                HRESULT hr = S_OK;
+
+                pic->RequestEditSession(client_id_, session, TF_ES_READWRITE | TF_ES_ASYNCDONTCARE, &hr);
+
+                session->Release();
+            }
+        }
+
+        *pf_eaten = TRUE;
         return S_OK;
     }
 
     STDMETHODIMP tsf_key_event_service::OnKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
+        if (!pf_eaten) return E_POINTER;
+
         *pf_eaten = FALSE;
         return S_OK;
     }
 
     STDMETHODIMP tsf_key_event_service::OnTestKeyUp(ITfContext* pic, WPARAM w_param, LPARAM l_param, BOOL* pf_eaten) {
+        if (!pf_eaten) return E_POINTER;
+
         *pf_eaten = FALSE;
         return S_OK;
     }
 
     STDMETHODIMP tsf_key_event_service::OnPreservedKey(ITfContext* pic, const GUID& r_guid, BOOL* pf_eaten) {
+        if (!pf_eaten) return E_POINTER;
+
         *pf_eaten = FALSE;
         return S_OK;
     }
@@ -107,7 +157,8 @@ namespace scriptorium::brush::infra::tsf {
     STDMETHODIMP tsf_key_event_service::QueryInterface(const IID& riid, void** ppv_object) {
         if (!ppv_object) return E_POINTER;
 
-        if (IsEqualIID(riid, IID_IUnknown) || IsEqualIID(riid, IID_ITfKeyEventSink)) {
+        if (IsEqualIID(riid, IID_IUnknown)
+         || IsEqualIID(riid, IID_ITfKeyEventSink)) {
             *ppv_object = static_cast<ITfKeyEventSink*>(this);
 
         } else if (IsEqualIID(riid, IID_ITfCompositionSink)) {
@@ -122,21 +173,19 @@ namespace scriptorium::brush::infra::tsf {
     }
 
     STDMETHODIMP_(ULONG) tsf_key_event_service::AddRef() {
-        if (owner_) {
-            return owner_->AddRef();
-        }
+        if (owner_) return owner_->AddRef();
+
         return 0;
     }
 
     STDMETHODIMP_(ULONG) tsf_key_event_service::Release() {
-        if (owner_) {
-            return owner_->Release();
-        }
+        if (owner_) return owner_->Release();
+
         return 0;
     }
 
-    STDMETHODIMP tsf_key_event_service::OnCompositionTerminated(TfEditCookie ecWrite, ITfComposition* pComposition) {
-        if (current_composition_ == pComposition) {
+    STDMETHODIMP tsf_key_event_service::OnCompositionTerminated(TfEditCookie ec_write, ITfComposition* composition) {
+        if (current_composition_ == composition) {
             current_composition_ = nullptr;
             composition_anchor_.reset();
         }
